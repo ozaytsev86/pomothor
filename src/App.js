@@ -6,12 +6,11 @@ import 'firebase/auth';
 import firebaseConfig from './configs/firebaseConfig';
 
 import {Navbar} from './components/navbar';
+import {BadgeAvatar} from './components/BadgeAvatar';
+import {Status} from './components/Status';
 import Countdown from 'react-countdown';
 
-import {makeStyles} from '@material-ui/core/styles';
-import {green, pink} from '@material-ui/core/colors';
-import {Button, Box, Avatar, Grid, Badge, Card, CardHeader, TextField, Chip, Typography, LinearProgress} from '@material-ui/core';
-import {AlarmOn, Alarm} from '@material-ui/icons';
+import {Button, Box, Grid, Card, CardHeader, TextField, Typography, LinearProgress} from '@material-ui/core';
 
 import {locale} from './locale/en-us';
 
@@ -21,53 +20,15 @@ const providers = {
   googleProvider: new Firebase.auth.GoogleAuthProvider(),
 };
 
-const useStyles = makeStyles(theme => ({
-  avatarLarge: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
-}));
-
 function App(props) {
   const {user, signOut, signInWithGoogle,} = props;
   const [minutes, setMinutes] = useState(0);
   const [pomodorosList, setPomodorosList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const classes = useStyles();
 
   useEffect(() => {
     getPomodorosListData();
   }, []);
-
-  const BadgeAvatar = (props) => {
-    return <Badge overlap="circle"
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  variant="dot"
-                  className={props.completed ? 'badge badgeCompleted' : 'badge badgeIncompleted'}
-    >
-      <Avatar alt={props.userName} src={props.userPhotoURL} className={classes.avatarLarge}/>
-    </Badge>
-  };
-
-  const formatToTwoNumbers = (number) => number.toString().length === 1 ? `0${number}` : number;
-
-  const Status = ({hours, minutes, seconds, completed, userId}) => {
-    const label = completed ? locale.Free : `${formatToTwoNumbers(hours)}:${formatToTwoNumbers(minutes)}:${formatToTwoNumbers(seconds)}`;
-
-    if (userId === user.uid) document.title = `Pomothor - ${label}`;
-
-    return (
-      <Chip label={label}
-            size="small"
-            color="primary"
-            style={{backgroundColor: completed ? green[500] : pink[500]}}
-            icon={completed ? <AlarmOn /> : <Alarm />}
-      />
-    )
-  };
 
   const Counter = (pomodoroKey) => {
     const pomodoro = pomodorosList[pomodoroKey];
@@ -77,9 +38,9 @@ function App(props) {
         <Card>
           <Countdown date={pomodoro.time}
                      renderer={(countdownData) => (
-                       <CardHeader avatar={BadgeAvatar({...countdownData, ...pomodoro})}
+                       <CardHeader avatar={<BadgeAvatar countdownData={countdownData} pomodoro={pomodoro} />}
                                    title={pomodoro.userName}
-                                   subheader={Status({...countdownData, ...pomodoro})}
+                                   subheader={<Status user={user} countdownData={countdownData} pomodoro={pomodoro} />}
                        />)
                      }
           />
@@ -113,22 +74,21 @@ function App(props) {
       ? <LinearProgress />
       : <>
         <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut} />
-          <Grid container
-                direction="column"
-          >
+          <Grid container direction="column">
             {
               user
                 ? <Box px={4}>
                     <Grid item>
-                      <Grid container
-                            justify="flex-end"
-                            alignItems="flex-end"
-                            spacing={2}
-                      >
+                      <Grid container justify="flex-end" alignItems="flex-end" spacing={2}>
                         <Grid item>
                           <Box py={4}>
                             <form onSubmit={(e) => handleStartPomodoro(e)}>
-                              <TextField id="time" label={locale.FocusTimeCapitalize} placeholder={locale.MinutesLowercase} onChange={(e) => setMinutes(e.target.value)}/>
+                              <TextField
+                                id="time"
+                                label={locale.FocusTimeCapitalize}
+                                placeholder={locale.MinutesLowercase}
+                                onChange={(e) => setMinutes(e.target.value)}
+                              />
                               <Button type="submit" variant="contained" color="primary">{locale.Start}</Button>
                             </form>
                           </Box>
@@ -141,13 +101,8 @@ function App(props) {
                       </Box>
                     </Grid>
                     <Grid item xs={12}>
-                      <Grid container
-                            spacing={2}
-                      >
-                          {Object.keys(pomodorosList).map(pomodoroKey => {
-                            console.log(pomodorosList[pomodoroKey])
-                            return Counter(pomodoroKey)
-                          })}
+                      <Grid container spacing={2}>
+                        {Object.keys(pomodorosList).map(pomodoroKey => Counter(pomodoroKey))}
                       </Grid>
                     </Grid>
                   </Box>
