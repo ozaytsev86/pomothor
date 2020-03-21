@@ -55,9 +55,9 @@ function App(props) {
   const formatToTwoNumbers = (number) => number.toString().length === 1 ? `0${number}` : number;
 
   const Status = ({hours, minutes, seconds, completed, userId}) => {
-    const label = completed ? 'Free' : `${formatToTwoNumbers(hours)}:${formatToTwoNumbers(minutes)}:${formatToTwoNumbers(seconds)}`;
+    const label = completed ? locale.Free : `${formatToTwoNumbers(hours)}:${formatToTwoNumbers(minutes)}:${formatToTwoNumbers(seconds)}`;
 
-    if (userId === user.uid && !completed) document.title = `Pomothor - ${label}`;
+    if (userId === user.uid) document.title = `Pomothor - ${label}`;
 
     return (
       <Chip label={label}
