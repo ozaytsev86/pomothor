@@ -52,8 +52,13 @@ function App(props) {
     </Badge>
   };
 
-  const Status = ({hours, minutes, seconds, completed}) => {
-    const label = completed ? 'Free' : `${hours}:${minutes}:${seconds}`;
+  const formatToTwoNumbers = (number) => number.toString().length === 1 ? `0${number}` : number;
+
+  const Status = ({hours, minutes, seconds, completed, userId}) => {
+    const label = completed ? 'Free' : `${formatToTwoNumbers(hours)}:${formatToTwoNumbers(minutes)}:${formatToTwoNumbers(seconds)}`;
+
+    if (userId === user.uid && !completed) document.title = `Pomothor - ${label}`;
+
     return (
       <Chip label={label}
             size="small"
@@ -139,7 +144,10 @@ function App(props) {
                       <Grid container
                             spacing={2}
                       >
-                          {Object.keys(pomodorosList).map(pomodoroKey => Counter(pomodoroKey))}
+                          {Object.keys(pomodorosList).map(pomodoroKey => {
+                            console.log(pomodorosList[pomodoroKey])
+                            return Counter(pomodoroKey)
+                          })}
                       </Grid>
                     </Grid>
                   </Box>
