@@ -14,7 +14,7 @@ import {Button, Box, Grid, Card, CardHeader, IconButton, TextField, Typography, 
 import {Notifications, NotificationsActive} from '@material-ui/icons';
 
 import {locale} from './locale/en-us';
-import notificationAudioSrc from './notification.wav';
+import notificationAudioSrc from './statics/notification.wav';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
