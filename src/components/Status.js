@@ -13,7 +13,19 @@ export const Status = (props) => {
     ? locale.Free
     : `${formatToTwoNumbers(props.countdownData.hours)}:${formatToTwoNumbers(props.countdownData.minutes)}:${formatToTwoNumbers(props.countdownData.seconds)}`;
 
-  if (props.pomodoro.userId === props.user.uid) document.title = `Pomothor - ${label}`;
+  if (props.pomodoro.userId === props.user.uid) {
+    if (props.pomodoro.notifications && props.pomodorosList[props.pomodoro.notifications[0].userId].completed) {
+      if (!props.pomodoro.notifications[0].notified) {
+        props.onNotify();
+      }
+      document.title = `Pomothor - ${label} (x)`;
+    } else {
+      document.title = `Pomothor - ${label}`;
+    }
+  }
+
+  // trigger onComplete
+  !props.pomodoro.completed && props.countdownData.completed && props.onComplete(props.user.uid);
 
   return (
     <Chip label={label}

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 import withFirebaseAuth from 'react-with-firebase-auth'
 import Firebase from 'firebase';
@@ -10,9 +10,11 @@ import {BadgeAvatar} from './components/BadgeAvatar';
 import {Status} from './components/Status';
 import Countdown from 'react-countdown';
 
-import {Button, Box, Grid, Card, CardHeader, TextField, Typography, LinearProgress} from '@material-ui/core';
+import {Button, Box, Grid, Card, CardHeader, IconButton, TextField, Typography, LinearProgress, Tooltip} from '@material-ui/core';
+import {Notifications, NotificationsActive} from '@material-ui/icons';
 
 import {locale} from './locale/en-us';
+import notificationAudioSrc from './notification.wav';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
@@ -25,26 +27,84 @@ function App(props) {
   const [minutes, setMinutes] = useState(0);
   const [pomodorosList, setPomodorosList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const audioRef = useRef();
 
   useEffect(() => {
     getPomodorosListData();
   }, []);
 
+  const MyCard = ({pomodoro}) => {
+    return (
+      <Card>
+        <Countdown
+          date={pomodoro.time}
+          renderer={(countdownData) => (
+            <CardHeader
+              avatar={<BadgeAvatar countdownData={countdownData} pomodoro={pomodoro}/>}
+              title={pomodoro.userName}
+              subheader={
+                <Status
+                  user={user}
+                  countdownData={countdownData}
+                  pomodoro={pomodoro}
+                  pomodorosList={pomodorosList}
+                  onComplete={handleComplete}
+                  onNotify={handleNotify}
+                />
+              }
+            />)
+          }
+        />
+      </Card>
+    )
+  };
+
+  const CardHeaderAction = ({currentPomodoro = {}, pomodoro}) => {
+    const isUserInMyNotifications = currentPomodoro.notifications && currentPomodoro.notifications.filter(item => item.userId === pomodoro.userId);
+
+    return isUserInMyNotifications
+      ? <Tooltip title={locale.RemoveNotification} placement="top">
+          <IconButton onClick={() => handleDeleteNotification()}>
+            <NotificationsActive />
+          </IconButton>
+        </Tooltip>
+      : <Tooltip title={locale.NotifyMeWhenTheUserIsFree} placement="top">
+          <IconButton onClick={() => handleAddNotification(pomodoro)}>
+            <Notifications />
+          </IconButton>
+        </Tooltip>
+  };
+
   const Counter = (pomodoroKey) => {
     const pomodoro = pomodorosList[pomodoroKey];
+    const currentPomodoro = pomodorosList[user.uid];
 
     return (
       <Grid item xs={12} sm={6} md={4} lg={3}>
-        <Card>
-          <Countdown date={pomodoro.time}
-                     renderer={(countdownData) => (
-                       <CardHeader avatar={<BadgeAvatar countdownData={countdownData} pomodoro={pomodoro} />}
-                                   title={pomodoro.userName}
-                                   subheader={<Status user={user} countdownData={countdownData} pomodoro={pomodoro} />}
-                       />)
-                     }
-          />
-        </Card>
+        {user.uid !== pomodoro.userId
+          ? <Card>
+              <Countdown
+                date={pomodoro.time}
+                renderer={(countdownData) => (
+                  <CardHeader
+                    avatar={<BadgeAvatar countdownData={countdownData} pomodoro={pomodoro}/>}
+                    title={pomodoro.userName}
+                    action={<CardHeaderAction currentPomodoro={currentPomodoro} pomodoro={pomodoro} />}
+                    subheader={
+                      <Status
+                        user={user}
+                        pomodorosList={pomodorosList}
+                        countdownData={countdownData}
+                        pomodoro={pomodoro}
+                        onComplete={handleComplete}
+                      />
+                    }
+                  />)
+                }
+              />
+            </Card>
+          : <MyCard pomodoro={pomodoro} />
+        }
       </Grid>
     )
   };
@@ -61,12 +121,65 @@ function App(props) {
 
   const handleStartPomodoro = (e) => {
     e.preventDefault();
+    const currentPomodoro = pomodorosList[user.uid] || {};
+
     const ref = Firebase.database().ref('/pomodoros');
     ref.once('value')
       .then(() => {
-        const pomodoro = {userId: user.uid, userName: user.displayName, userPhotoURL: user.photoURL, time: Date.now() + (minutes * 60000)};
+        const pomodoro = {
+          ...currentPomodoro,
+          userId: user.uid,
+          userName: user.displayName,
+          userPhotoURL: user.photoURL,
+          time: Date.now() + (minutes * 60000),
+          completed: false
+        };
         Firebase.database().ref(`/pomodoros/${user.uid}`).set(pomodoro);
     })
+  };
+
+  const handleAddNotification = (pomodoro) => {
+    const currentPomodoro = pomodorosList[user.uid];
+
+    const ref = Firebase.database().ref('/pomodoros');
+    ref.once('value')
+      .then(() => {
+        const newPomodoro = {...currentPomodoro, notifications: [{userId: pomodoro.userId, notified: false}]};
+        Firebase.database().ref(`/pomodoros/${user.uid}`).set(newPomodoro);
+      })
+  };
+
+  const handleDeleteNotification = () => {
+    const currentPomodoro = pomodorosList[user.uid];
+
+    const ref = Firebase.database().ref('/pomodoros');
+    ref.once('value')
+      .then(() => {
+        const newPomodoro = {...currentPomodoro, notifications: []};
+        Firebase.database().ref(`/pomodoros/${user.uid}`).set(newPomodoro);
+      })
+  };
+
+  const handleComplete = () => {
+    const currentPomodoro = pomodorosList[user.uid];
+    audioRef.current.play();
+
+    const ref = Firebase.database().ref('/pomodoros');
+    ref.once('value')
+      .then(() => {
+        const newPomodoro = {...currentPomodoro, completed: true};
+        Firebase.database().ref(`/pomodoros/${user.uid}`).set(newPomodoro);
+      })
+  };
+
+  const handleNotify = () => {
+    const currentPomodoro = pomodorosList[user.uid];
+    const ref = Firebase.database().ref('/pomodoros');
+    ref.once('value')
+      .then(() => {
+        const newPomodoro = {...currentPomodoro, notifications: [{userId: currentPomodoro.notifications[0].userId, notified: true}]};
+        Firebase.database().ref(`/pomodoros/${user.uid}`).set(newPomodoro);
+      })
   };
 
   return (
@@ -90,6 +203,7 @@ function App(props) {
                                 onChange={(e) => setMinutes(e.target.value)}
                               />
                               <Button type="submit" variant="contained" color="primary">{locale.Start}</Button>
+                              <audio ref={audioRef} src={notificationAudioSrc} />
                             </form>
                           </Box>
                         </Grid>
