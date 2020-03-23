@@ -14,15 +14,16 @@ export const BadgeAvatar = (props) => {
   const classes = useStyles();
 
   return (
-    <Badge overlap="circle"
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                variant="dot"
-                className={props.countdownData.completed ? 'badge badgeCompleted' : 'badge badgeIncompleted'}
+    <Badge
+      overlap="circle"
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      variant="dot"
+      className={props.className}
     >
-      <Avatar alt={props.pomodoro.userName} src={props.pomodoro.userPhotoURL} className={classes.avatarLarge}/>
+      <Avatar alt={props.userName} src={props.userPhotoURL} className={classes.avatarLarge}/>
     </Badge>
   )
 };
