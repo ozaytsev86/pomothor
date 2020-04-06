@@ -6,7 +6,6 @@ import 'firebase/auth';
 import firebaseConfig from './configs/firebaseConfig';
 
 import {addPomodoro, startPomodoro, setCompleted} from './services/pomodoro.service';
-import {updateNotification} from './services/notification.service';
 
 import {Navbar} from './components/Navbar';
 import {Countdown} from './components/Countdown';
@@ -15,23 +14,13 @@ import {CountdownCard} from './components/CountdownCard';
 import {Avatar, Button, Box, Grid, TextField, Typography, LinearProgress} from '@material-ui/core';
 
 import {locale} from './locale/en-us';
-import {notificationsUrl, pomodorosUrl} from './constants/urls';
-
 import notificationAudioSrc from './statics/notification.wav';
-import {makeStyles} from '@material-ui/core/styles';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
 const providers = {
   googleProvider: new Firebase.auth.GoogleAuthProvider(),
 };
-
-const useStyles = makeStyles(theme => ({
-  myCardAvatar: {
-    width: theme.spacing(12),
-    height: theme.spacing(12),
-  },
-}));
 
 function App(props) {
   const {user, signOut, signInWithGoogle} = props;
@@ -40,7 +29,6 @@ function App(props) {
   const [notifications, setNotifications] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef();
-  const classes = useStyles();
 
   useEffect(() => {
     if (user) {
@@ -57,14 +45,14 @@ function App(props) {
 
   useEffect(() => {
     setIsLoading(true);
-    const pomodorosRef = Firebase.database().ref(pomodorosUrl);
+    const pomodorosRef = Firebase.database().ref('/pomodoros');
     pomodorosRef.on('value', snapshot => {
       const list = snapshot.val();
       setPomodorosList(list || {});
       setIsLoading(false);
     });
 
-    const notificationsRef = Firebase.database().ref(notificationsUrl);
+    const notificationsRef = Firebase.database().ref('/notifications');
     notificationsRef.on('value', snapshot => {
       const list = snapshot.val();
       setNotifications(list || {});
@@ -77,7 +65,7 @@ function App(props) {
       const isUserFree = pomodorosList[notifications[user.uid]] && pomodorosList[notifications[user.uid]].completed;
       if (isUserFree) {
         audioRef && audioRef.current && audioRef.current.play();
-        updateNotification('', user.uid);
+        updateNotification('');
       }
     }
   }, [pomodorosList]);
@@ -91,35 +79,32 @@ function App(props) {
 
     return (
       <Grid container direction="row" alignItems="center">
-        <Box mb={4} pt={4} display="flex" alignItems="center">
-          <Box mr={2}>
-            <Avatar gutterBottom className={classes.myCardAvatar} alt={user.displayName} src={user.photoURL} />
-          </Box>
-          <Box>
-            <Typography variant="h6" display="block">
-              {user.displayName}
-            </Typography>
-            <Typography variant="h5" display="block" color="textSecondary">
-              <Countdown time={pomodoro.time} onTick={onTick} />
-            </Typography>
-          </Box>
-        </Box>
+        <Avatar alt={user.displayName} src={user.photoURL} />
+        <Typography variant="h5" component="h5">Time: <Countdown time={pomodoro.time} onTick={onTick} /></Typography>
       </Grid>
     )
   };
 
+  const updateNotification = (notification) => {
+    const ref = Firebase.database().ref(`/notifications`);
+    ref.once('value')
+      .then(() => {
+        Firebase.database().ref(`/notifications/${user.uid}`).set(notification);
+      })
+  };
+
   const handleStartPomodoro = (e) => {
     e.preventDefault();
-    const time = Date.now() + (minutes * 60000);
+    const time = Date.now() + (minutes * 60000); //60000
     startPomodoro(user.uid, time);
   };
 
   const handleAddNotification = (pomodoro) => {
-    updateNotification(pomodoro.userId, user.uid);
+    updateNotification(pomodoro.userId);
   };
 
   const handleDeleteNotification = () => {
-    updateNotification('', user.uid);
+    updateNotification('');
   };
 
   const handleComplete = (userId) => {
@@ -130,7 +115,7 @@ function App(props) {
     isLoading
       ? <LinearProgress />
       : <>
-          <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut} />
+        <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut} />
           <Grid container direction="column">
             {
               user
@@ -163,18 +148,14 @@ function App(props) {
                     </Grid>
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
-                        {Object.keys(pomodorosList).map(pomodoroKey => (
-                          pomodoroKey !== user.uid
-                            ? <CountdownCard
-                                pomodoro={pomodorosList[pomodoroKey]}
-                                currentUserId={user.uid}
-                                notifications={notifications}
-                                onCounterComplete={handleComplete}
-                                onAddNotification={handleAddNotification}
-                                onDeleteNotification={handleDeleteNotification}
-                              />
-                            : null
-                        ))}
+                        {Object.keys(pomodorosList).map(pomodoroKey => <CountdownCard
+                                                                         pomodoro={pomodorosList[pomodoroKey]}
+                                                                         currentUserId={user.uid}
+                                                                         notifications={notifications}
+                                                                         onCounterComplete={handleComplete}
+                                                                         onAddNotification={handleAddNotification}
+                                                                         onDeleteNotification={handleDeleteNotification}
+                                                                       />)}
                       </Grid>
                     </Grid>
                   </Box>
