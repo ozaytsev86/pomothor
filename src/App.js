@@ -18,12 +18,20 @@ import {locale} from './locale/en-us';
 import {notificationsUrl, pomodorosUrl} from './constants/urls';
 
 import notificationAudioSrc from './statics/notification.wav';
+import {makeStyles} from '@material-ui/core/styles';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
 const providers = {
   googleProvider: new Firebase.auth.GoogleAuthProvider(),
 };
+
+const useStyles = makeStyles(theme => ({
+  myCardAvatar: {
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+  },
+}));
 
 function App(props) {
   const {user, signOut, signInWithGoogle} = props;
@@ -32,6 +40,7 @@ function App(props) {
   const [notifications, setNotifications] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef();
+  const classes = useStyles();
 
   useEffect(() => {
     if (user) {
@@ -82,13 +91,18 @@ function App(props) {
 
     return (
       <Grid container direction="row" alignItems="center">
-        <Box mb={4} display="flex" alignItems="center">
+        <Box mb={4} pt={4} display="flex" alignItems="center">
           <Box mr={2}>
-            <Avatar alt={user.displayName} src={user.photoURL} />
+            <Avatar gutterBottom className={classes.myCardAvatar} alt={user.displayName} src={user.photoURL} />
           </Box>
-          <Typography variant="h5" component="h5" pb={4}>
-            <Countdown time={pomodoro.time} onTick={onTick} />
-          </Typography>
+          <Box>
+            <Typography variant="h6" display="block">
+              {user.displayName}
+            </Typography>
+            <Typography variant="h5" display="block" color="textSecondary">
+              <Countdown time={pomodoro.time} onTick={onTick} />
+            </Typography>
+          </Box>
         </Box>
       </Grid>
     )
