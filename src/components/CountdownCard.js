@@ -40,19 +40,15 @@ export const CountdownCard = ({pomodoro, currentUserId, notifications, onAddNoti
   };
 
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3}>
-      {currentUserId !== pomodoro.userId
-        && <Card>
-            <CardHeader
-              avatar={<BadgeAvatar className={badgeAvatarClass} alt={pomodoro.userName} src={pomodoro.userPhotoURL} />}
-              title={pomodoro.userName}
-              action={<CardHeaderAction />}
-              subheader={
-                <Counter pomodoro={pomodoro} onComplete={handleOnComplete} />
-              }
-            />
-        </Card>
-      }
-    </Grid>
+    <Card>
+      <CardHeader
+        avatar={<BadgeAvatar className={badgeAvatarClass} alt={pomodoro.userName} src={pomodoro.userPhotoURL} />}
+        title={pomodoro.userName}
+        action={<CardHeaderAction />}
+        subheader={
+          <Counter pomodoro={pomodoro} onComplete={handleOnComplete} />
+        }
+      />
+    </Card>
   )
 };

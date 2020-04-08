@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {formatToTwoNumbers} from '../utils/number';
 
@@ -26,7 +26,7 @@ export const Countdown = ({time, onTick}) => {
 
   useEffect(() => {
     onTick && onTick({counter, hours, minutes, seconds});
-  }, [counter]);
+  }, [onTick, counter, hours, minutes, seconds]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,9 +34,6 @@ export const Countdown = ({time, onTick}) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [time]);
-
-
-
 
   return (
     counter !== 0 ? `${hours}:${minutes}:${seconds}` : locale.Free

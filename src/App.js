@@ -12,13 +12,14 @@ import {Navbar} from './components/Navbar';
 import {Countdown} from './components/Countdown';
 import {CountdownCard} from './components/CountdownCard';
 
-import {Avatar, Button, Box, Grid, TextField, Typography, LinearProgress} from '@material-ui/core';
+import {Avatar, Button, Box, Grid, TextField, Typography} from '@material-ui/core';
 
 import {locale} from './locale/en-us';
 import {notificationsUrl, pomodorosUrl} from './constants/urls';
 
 import notificationAudioSrc from './statics/notification.wav';
 import {makeStyles} from '@material-ui/core/styles';
+import {LoadingLinearProgress} from './components/loadings/LoadingLinearProgress';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
@@ -35,8 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const {user, signOut, signInWithGoogle} = props;
-  const [minutes, setMinutes] = useState(0);
-  const [pomodorosList, setPomodorosList] = useState(null);
+  const [pomodorosList, setPomodorosList] = useState([]);
   const [notifications, setNotifications] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef();
@@ -73,7 +73,7 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    if (notifications && notifications[user.uid]) {
+    if (user && notifications && notifications[user.uid]) {
       const isUserFree = pomodorosList[notifications[user.uid]] && pomodorosList[notifications[user.uid]].completed;
       if (isUserFree) {
         audioRef && audioRef.current && audioRef.current.play();
@@ -91,9 +91,9 @@ function App(props) {
 
     return (
       <Grid container direction="row" alignItems="center">
-        <Box mb={4} pt={4} display="flex" alignItems="center">
+        <Box display="flex" alignItems="center">
           <Box mr={2}>
-            <Avatar gutterBottom className={classes.myCardAvatar} alt={user.displayName} src={user.photoURL} />
+            <Avatar className={classes.myCardAvatar} alt={user.displayName} src={user.photoURL} />
           </Box>
           <Box>
             <Typography variant="h6" display="block">
@@ -108,8 +108,27 @@ function App(props) {
     )
   };
 
-  const handleStartPomodoro = (e) => {
-    e.preventDefault();
+  const FocusForm = (props) => {
+    const [minutes, setMinutes] = useState(0);
+
+    const handleStart = (e) => {
+      e.preventDefault();
+      props.onStart(minutes)
+    };
+
+    return <form onSubmit={(e) => handleStart(e)}>
+             <TextField
+               id="time"
+               label={locale.FocusTimeCapitalize}
+               placeholder={locale.MinutesLowercase}
+               onChange={(e) => setMinutes(e.target.value)}
+             />
+             <Button type="submit" variant="contained" color="primary">{locale.Start}</Button>
+             <audio ref={audioRef} src={notificationAudioSrc} />
+           </form>
+  };
+
+  const handleStartPomodoro = (minutes) => {
     const time = Date.now() + (minutes * 60000);
     startPomodoro(user.uid, time);
   };
@@ -127,63 +146,54 @@ function App(props) {
   };
 
   return (
-    isLoading
-      ? <LinearProgress />
-      : <>
-          <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut} />
-          <Grid container direction="column">
-            {
-              user
-                ? <Box px={4}>
-                    <Grid item>
-                      <Grid container justify="space-between" alignItems="flex-end" spacing={2}>
-                        <Grid item>
-                          <MyCard />
-                        </Grid>
-                        <Grid item>
-                          <Box py={4}>
-                            <form onSubmit={(e) => handleStartPomodoro(e)}>
-                              <TextField
-                                id="time"
-                                label={locale.FocusTimeCapitalize}
-                                placeholder={locale.MinutesLowercase}
-                                onChange={(e) => setMinutes(e.target.value)}
-                              />
-                              <Button type="submit" variant="contained" color="primary">{locale.Start}</Button>
-                              <audio ref={audioRef} src={notificationAudioSrc} />
-                            </form>
-                          </Box>
-                        </Grid>
+    <LoadingLinearProgress isLoading={isLoading}>
+      <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut} />
+      <Grid container direction="column">
+        {
+          user
+            ? <Box px={4}>
+                <Grid item>
+                  <Box py={4}>
+                    <Grid container justify="space-between" alignItems="flex-end" spacing={2}>
+                      <Grid item>
+                        <MyCard />
                       </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box pb={2}>
-                        <Typography variant="h4" component="h4">{locale.Users}</Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid container spacing={2}>
-                        {Object.keys(pomodorosList).map(pomodoroKey => (
-                          pomodoroKey !== user.uid
-                            ? <CountdownCard
-                                pomodoro={pomodorosList[pomodoroKey]}
-                                currentUserId={user.uid}
-                                notifications={notifications}
-                                onCounterComplete={handleComplete}
-                                onAddNotification={handleAddNotification}
-                                onDeleteNotification={handleDeleteNotification}
-                              />
-                            : null
-                        ))}
+                      <Grid item>
+                        <FocusForm onStart={handleStartPomodoro} />
                       </Grid>
                     </Grid>
                   </Box>
-                : <Grid item xs={12}>
-                    <Typography variant="h4" component="h4">{locale.PleaseSignInCapitalize}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box pb={2}>
+                    <Typography variant="h4" component="h4">{locale.Users}</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={2}>
+                    {Object.keys(pomodorosList).map(pomodoroKey => (
+                      pomodoroKey !== user.uid
+                        ? <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <CountdownCard
+                              pomodoro={pomodorosList[pomodoroKey]}
+                              currentUserId={user.uid}
+                              notifications={notifications}
+                              onCounterComplete={handleComplete}
+                              onAddNotification={handleAddNotification}
+                              onDeleteNotification={handleDeleteNotification}
+                            />
+                          </Grid>
+                        : null
+                    ))}
                   </Grid>
-            }
-          </Grid>
-        </>
+                </Grid>
+              </Box>
+            : <Grid item xs={12}>
+                <Typography variant="h4" component="h4">{locale.PleaseSignInCapitalize}</Typography>
+              </Grid>
+        }
+      </Grid>
+    </LoadingLinearProgress>
   );
 }
 
