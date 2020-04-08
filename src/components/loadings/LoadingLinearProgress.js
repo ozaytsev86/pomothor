@@ -3,6 +3,6 @@ import {LinearProgress} from '@material-ui/core';
 
 export const LoadingLinearProgress = (props) => {
   return props.isLoading
-           ? <LinearProgress />
+           ? <LinearProgress/>
            : props.children
 };

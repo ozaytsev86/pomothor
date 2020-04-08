@@ -25,5 +25,5 @@ export const BadgeAvatar = (props) => {
     >
       <Avatar alt={props.userName} src={props.userPhotoURL} className={classes.avatarLarge}/>
     </Badge>
-  )
+  );
 };

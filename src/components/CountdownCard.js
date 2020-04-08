@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card, CardHeader, Grid, IconButton, Tooltip} from '@material-ui/core';
+import {Card, CardHeader, IconButton, Tooltip} from '@material-ui/core';
 import {Notifications, NotificationsActive} from '@material-ui/icons';
 
 import {BadgeAvatar} from './BadgeAvatar';
@@ -22,13 +22,13 @@ export const CountdownCard = ({pomodoro, currentUserId, notifications, onAddNoti
     return isUserInCurrentPomodoroNotifications
       ? <Tooltip title={locale.RemoveNotification} placement="top">
           <IconButton onClick={onDeleteNotification}>
-            <NotificationsActive />
+            <NotificationsActive/>
           </IconButton>
         </Tooltip>
       : <Tooltip title={locale.NotifyMeWhenTheUserIsFree} placement="top">
           <span>
             <IconButton onClick={() => onAddNotification(pomodoro)} disabled={isCompleted}>
-              <Notifications />
+              <Notifications/>
             </IconButton>
           </span>
         </Tooltip>
@@ -42,13 +42,13 @@ export const CountdownCard = ({pomodoro, currentUserId, notifications, onAddNoti
   return (
     <Card>
       <CardHeader
-        avatar={<BadgeAvatar className={badgeAvatarClass} alt={pomodoro.userName} src={pomodoro.userPhotoURL} />}
+        avatar={<BadgeAvatar className={badgeAvatarClass} alt={pomodoro.userName} src={pomodoro.userPhotoURL}/>}
         title={pomodoro.userName}
-        action={<CardHeaderAction />}
+        action={<CardHeaderAction/>}
         subheader={
-          <Counter pomodoro={pomodoro} onComplete={handleOnComplete} />
+          <Counter pomodoro={pomodoro} onComplete={handleOnComplete}/>
         }
       />
     </Card>
-  )
+  );
 };

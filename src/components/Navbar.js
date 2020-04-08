@@ -9,19 +9,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Navbar = (props) => {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <AppBar position="static">
-            <Toolbar>
-                <Typography variant="h6" className={classes.title}>Pomothor</Typography>
-                {
-                    props.user
-                        ? <Button color="inherit" onClick={props.onSignOut}>Sign out</Button>
-                        : <Button color="inherit" onClick={props.onSignIn}>Sign in with Google</Button>
-
-                }
-            </Toolbar>
-        </AppBar>
-    );
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" className={classes.title}>Pomothor</Typography>
+        {
+          props.user
+            ? <Button color="inherit" onClick={props.onSignOut}>Sign out</Button>
+            : <Button color="inherit" onClick={props.onSignIn}>Sign in with Google</Button>
+        }
+      </Toolbar>
+    </AppBar>
+  );
 };
