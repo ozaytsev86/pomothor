@@ -1,0 +1,15 @@
+:root {
+  --navbar-height: 64px;
+}
+
+.u-full-height {
+  height: calc(100vh - var(--navbar-height));
+}
+
+.u-full-height--centered {
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}

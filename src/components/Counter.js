@@ -15,11 +15,11 @@ export const Counter = (props) => {
   };
 
   return (
-    <Chip label={<Countdown time={props.pomodoro.time} onTick={handleOnTick} />}
+    <Chip label={<Countdown time={props.pomodoro.time} onTick={handleOnTick}/>}
           size="small"
           color="primary"
           style={{backgroundColor: counter === 0 ? green[500] : pink[500]}}
           icon={counter === 0 ? <AlarmOn /> : <Alarm />}
     />
-  )
+  );
 };
