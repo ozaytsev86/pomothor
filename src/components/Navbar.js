@@ -24,7 +24,7 @@ export const Navbar = (props) => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          <img src={logo} className={classes.logo} />
+          <img src={logo} className={classes.logo} alt={locale.Pomothor} />
           {locale.Pomothor}
         </Typography>
         {
