@@ -30,6 +30,11 @@ Your app is ready to be deployed!
 
 ## Changelog
 
+### 1.1.0
+* added router, functionality of pomodoro moved to '/teams' route
+* added logo
+* added home page
+
 ### 1.0.1
 * user's card redesign
 
