@@ -1,8 +1,7 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, TextField} from '@material-ui/core';
 
 import {locale} from '../../locale/en-us';
-import notificationAudioSrc from '../../statics/notification.wav';
 
 export const FocusForm = (props) => {
   const [minutes, setMinutes] = useState(0);

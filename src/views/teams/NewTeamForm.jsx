@@ -4,13 +4,15 @@ import {Box, Button, TextField} from '@material-ui/core';
 
 import {formatTeamName, isDuplicatedTeamName, isValidTeamName} from './teams.helper';
 
+import {locale} from '../../locale/en-us';
+
 const NewTeamForm = (props) => {
   const [name, setName] = useState('');
   const [error, setError] = useState(null);
 
   const handleAddTeam = (e) => {
     e.preventDefault();
-    if (isValidTeamName(name) && !isDuplicatedTeamName(name, props.teamsList)) {
+    if (isValidTeamName(name) && !isDuplicatedTeamName(name, props.teams)) {
       props.history.push(`/teams/${formatTeamName(name)}`);
     } else {
       //TODO: suggest a name and show link to apply
@@ -47,7 +49,7 @@ const NewTeamForm = (props) => {
               variant="contained"
               color="primary"
               size="large"
-      >Create team</Button>
+      >{locale.CreateTeam}</Button>
     </form>
   );
 };

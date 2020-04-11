@@ -1,7 +1,7 @@
 import React from 'react';
 
-import logo from '../statics/logo.png';
 import {locale} from '../locale/en-us';
+import logo from '../statics/images/logo.png';
 
 export const Home = () => {
  return (

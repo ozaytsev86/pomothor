@@ -6,10 +6,10 @@ import Firebase from 'firebase';
 import {addTeam, addTeamUser} from '../../services/team.service';
 import {isValidTeamUrl} from '../teams/teams.helper';
 
-import {LoadingCircularProgress} from '../../components/loadings/LoadingCircularProgress';
-import {Pomodoros} from './Pomodoros';
+import {LoadingCircularProgress} from '../../components';
+import {PomodorosContainer} from './PomodorosContainer';
 
-const Team = (props) => {
+const TeamContainer = (props) => {
   const {user} = props;
   const {id} = useParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +23,7 @@ const Team = (props) => {
         const currTeam = snapshot.val();
 
         if (!currTeam) {
+          // TODO: ask user to create a team instead of directly create it
           addTeam({user, id});
           addTeamUser({user, teamId: id})
         } else {
@@ -35,16 +36,17 @@ const Team = (props) => {
         setIsLoading(false);
       });
     } else {
-      //invalid team url
+      //when is invalid team url
       props.history.push(`/teams/team-not-found`);
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <LoadingCircularProgress full isLoading={isLoading}>
-      <Pomodoros user={user} team={currentTeam}/>
+      <PomodorosContainer user={user} team={currentTeam}/>
     </LoadingCircularProgress>
   );
 };
 
-export default withRouter(Team);
+export default withRouter(TeamContainer);

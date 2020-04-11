@@ -2,16 +2,14 @@ import './styles/utils/utils.css';
 
 import React from 'react';
 import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
-
 import withFirebaseAuth from 'react-with-firebase-auth'
 import Firebase from 'firebase';
 import 'firebase/auth';
 import firebaseConfig from './configs/firebaseConfig';
 
-import {LoadingLinearProgress} from './components/loadings/LoadingLinearProgress';
-import {Navbar} from './components/Navbar';
-import {Teams} from './views/teams/Teams';
-import Team from './views/team/Team';
+import {LoadingLinearProgress, Navbar} from './components';
+import {TeamsContainer} from './views/teams/TeamsContainer';
+import TeamContainer from './views/team/TeamContainer';
 import {Home} from './views/Home';
 import {TeamNotFound} from './views/team/TeamNotFound';
 
@@ -35,13 +33,13 @@ export const App = (props) => {
                   <div>Welcome back! <Link to="/teams">Use Pomothor</Link></div>
                 </Route>
                 <Route exact path="/teams">
-                  <Teams user={user}/>
+                  <TeamsContainer user={user}/>
                 </Route>
                 <Route exact path="/teams/team-not-found">
                   <TeamNotFound/>
                 </Route>
                 <Route path="/teams/:id">
-                  <Team user={user}/>
+                  <TeamContainer user={user}/>
                 </Route>
               </Switch>
             : <Switch>

@@ -2,8 +2,8 @@ import React from 'react';
 import {AppBar, Toolbar, Button, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core';
 
-import logo from '../statics/logo.png';
 import {locale} from '../locale/en-us';
+import logo from '../statics/images/logo.png';
 
 const useStyles = makeStyles(theme => ({
   title: {

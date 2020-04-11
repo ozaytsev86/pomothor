@@ -1,7 +1,8 @@
-import {Avatar, Box, Grid, Typography} from '@material-ui/core';
-import {Countdown} from '../../components/Countdown';
 import React from 'react';
+import {Avatar, Box, Grid, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
+
+import {Countdown} from '../../components';
 
 const useStyles = makeStyles(theme => ({
   myCardAvatar: {
