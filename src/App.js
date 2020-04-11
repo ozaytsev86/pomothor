@@ -10,8 +10,10 @@ import firebaseConfig from './configs/firebaseConfig';
 
 import {LoadingLinearProgress} from './components/loadings/LoadingLinearProgress';
 import {Navbar} from './components/Navbar';
-import {Teams} from './views/teams';
-import {Home} from './views/home';
+import {Teams} from './views/teams/Teams';
+import Team from './views/team/Team';
+import {Home} from './views/Home';
+import {TeamNotFound} from './views/team/TeamNotFound';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
@@ -32,8 +34,14 @@ export const App = (props) => {
                 <Route exact path="/">
                   <div>Welcome back! <Link to="/teams">Use Pomothor</Link></div>
                 </Route>
-                <Route path="/teams">
+                <Route exact path="/teams">
                   <Teams user={user}/>
+                </Route>
+                <Route exact path="/teams/team-not-found">
+                  <TeamNotFound/>
+                </Route>
+                <Route path="/teams/:id">
+                  <Team user={user}/>
                 </Route>
               </Switch>
             : <Switch>

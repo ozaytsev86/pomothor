@@ -1,47 +1,34 @@
 import React, {useState, useEffect, useRef} from 'react';
-
 import Firebase from 'firebase';
+import {Box, Grid, Typography} from '@material-ui/core';
 
-import {addPomodoro, startPomodoro, setCompleted} from '../services/pomodoro.service';
-import {updateNotification} from '../services/notification.service';
+import {startPomodoro, setCompleted} from '../../services/pomodoro.service';
+import {updateNotification} from '../../services/notification.service';
 
-import {Countdown} from '../components/Countdown';
-import {CountdownCard} from '../components/CountdownCard';
+import {CountdownCard} from '../../components/CountdownCard';
+import {LoadingCircularProgress} from '../../components/loadings/LoadingCircularProgress';
+import {FocusForm} from './FocusForm';
+import {MyPomodoro} from './MyPomodoro';
 
-import {Avatar, Button, Box, Grid, TextField, Typography} from '@material-ui/core';
+import {locale} from '../../locale/en-us';
+import notificationAudioSrc from '../../statics/notification.wav';
 
-import {locale} from '../locale/en-us';
-import {notificationsUrl, pomodorosUrl} from '../constants/urls';
-
-import notificationAudioSrc from '../statics/notification.wav';
-import {makeStyles} from '@material-ui/core/styles';
-import {LoadingCircularProgress} from '../components/loadings/LoadingCircularProgress';
-
-const useStyles = makeStyles(theme => ({
-  myCardAvatar: {
-    width: theme.spacing(12),
-    height: theme.spacing(12),
-  },
-}));
-
-export const Teams = (props) => {
-  const {user} = props;
+export const Pomodoros = (props) => {
+  const {user, team} = props;
   const [pomodorosList, setPomodorosList] = useState([]);
   const [notifications, setNotifications] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef();
-  const classes = useStyles();
 
   useEffect(() => {
-    setIsLoading(true);
-    const pomodorosRef = Firebase.database().ref(pomodorosUrl);
+    const pomodorosRef = Firebase.database().ref(`/teams/${team.id}/pomodoros`);
     pomodorosRef.on('value', snapshot => {
       const list = snapshot.val();
       setPomodorosList(list || {});
       setIsLoading(false);
     });
 
-    const notificationsRef = Firebase.database().ref(notificationsUrl);
+    const notificationsRef = Firebase.database().ref(`/teams/${team.id}/notifications`);
     notificationsRef.on('value', snapshot => {
       const list = snapshot.val();
       setNotifications(list || {});
@@ -54,83 +41,22 @@ export const Teams = (props) => {
       const isUserFree = pomodorosList[notifications[user.uid]] && pomodorosList[notifications[user.uid]].completed;
       if (isUserFree) {
         audioRef && audioRef.current && audioRef.current.play();
-        updateNotification('', user.uid);
+        updateNotification({teamId: team.id, notification: '', userId: user.uid});
       }
     }
   }, [pomodorosList]);
 
-  const MyCard = () => {
-    const pomodoro = pomodorosList[user.uid];
-
-    const onTick = ({counter}) => {
-      if (counter === 0) handleComplete(user.uid);
-    };
-
-    return (
-      <Grid container direction="row" alignItems="center">
-        <Box display="flex" alignItems="center">
-          <Box mr={2}>
-            <Avatar className={classes.myCardAvatar} alt={user.displayName} src={user.photoURL}/>
-          </Box>
-          <Box>
-            <Typography variant="h6" display="block">
-              {user.displayName}
-            </Typography>
-            <Typography variant="h5" display="block" color="textSecondary">
-              {pomodoro && <Countdown time={pomodoro.time} onTick={onTick}/>}
-            </Typography>
-          </Box>
-        </Box>
-      </Grid>
-    )
-  };
-
-  const FocusForm = (props) => {
-    const [minutes, setMinutes] = useState(0);
-
-    const handleStart = (e) => {
-      e.preventDefault();
-      props.onStart(minutes)
-    };
-
-    return <form onSubmit={(e) => handleStart(e)}>
-      <TextField
-        id="time"
-        label={locale.FocusTimeCapitalize}
-        placeholder={locale.MinutesLowercase}
-        onChange={(e) => setMinutes(e.target.value)}
-      />
-      <Button type="submit" variant="contained" color="primary">{locale.Start}</Button>
-      <audio ref={audioRef} src={notificationAudioSrc} />
-    </form>
-  };
-
   const handleStartPomodoro = (minutes) => {
-    const time = Date.now() + (minutes * 60000);
-    if (pomodorosList[user.uid]) {
-      startPomodoro(user.uid, time);
-    } else {
-      const newPomodoro = {
-        userId: user.uid,
-        userName: user.displayName,
-        userPhotoURL: user.photoURL,
-        time,
-        completed: false
-      };
-      addPomodoro(user.uid, newPomodoro);
-    }
+    startPomodoro({teamId: team.id, userId: user.uid, minutes});
   };
-
   const handleAddNotification = (pomodoro) => {
-    updateNotification(pomodoro.userId, user.uid);
+    updateNotification({teamId: team.id, notification: pomodoro.userId, userId: user.uid});
   };
-
   const handleDeleteNotification = () => {
-    updateNotification('', user.uid);
+    updateNotification({teamId: team.id, notification: '', userId: user.uid});
   };
-
   const handleComplete = (userId) => {
-    setCompleted(userId);
+    setCompleted({teamId: team.id, userId});
   };
 
   return (
@@ -143,7 +69,8 @@ export const Teams = (props) => {
                   <Box py={4} px={2}>
                     <Grid container justify="space-between" alignItems="flex-end" spacing={2}>
                       <Grid item>
-                        <MyCard/>
+                        <MyPomodoro user={user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
+                        <audio ref={audioRef} src={notificationAudioSrc} />
                       </Grid>
                       <Grid item>
                         <FocusForm onStart={handleStartPomodoro}/>
