@@ -12,12 +12,18 @@ const NewTeamForm = (props) => {
 
   const handleAddTeam = (e) => {
     e.preventDefault();
+
+    if (name === '') {
+      setError(locale.ErrorTeamNameRequired);
+      return;
+    }
+
     if (isValidTeamName(name) && !isDuplicatedTeamName(name, props.teams)) {
       props.history.push(`/teams/${formatTeamName(name)}`);
     } else {
       //TODO: suggest a name and show link to apply
       // if the name is test, suggest test1
-      setError('The team name already exists, try different one');
+      setError(locale.ErrorTeamNameDuplicated);
     }
   };
 
@@ -26,18 +32,18 @@ const NewTeamForm = (props) => {
     if (isValidTeamName(name)) {
       setName(name);
     } else {
-      setError('Only letters, numbers and spaces are allowed')
+      setError(locale.ErrorOnlyLettersNumbersDashes)
     }
   };
 
   return (
-    <form onSubmit={handleAddTeam} noValidate autoComplete="off">
+    <form onSubmit={handleAddTeam} noValidate autoComplete="off" className="u-display--flex u-flex-direction--column">
       <Box pb={2}>
         <TextField
           autoFocus
           id="name"
-          label="Team name"
-          placeholder="Write team name"
+          label={locale.TeamName}
+          placeholder={locale.WriteSomethingAwesome}
           value={name}
           error={!!error}
           helperText={error}
@@ -49,7 +55,7 @@ const NewTeamForm = (props) => {
               variant="contained"
               color="primary"
               size="large"
-      >{locale.LetsGo}</Button>
+      >{locale.LetsGoExclamation}</Button>
     </form>
   );
 };

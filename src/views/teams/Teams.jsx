@@ -1,7 +1,7 @@
 import './teams.css';
 
 import React from 'react';
-import {Grid, Typography} from '@material-ui/core';
+import {Grid, Link, Typography} from '@material-ui/core';
 
 import NewTeamForm from './NewTeamForm';
 
@@ -10,11 +10,14 @@ import {locale} from '../../locale/en-us';
 export const Teams = (props) => {
   return (
     <Grid container direction="column">
-      <Grid item className="u-full-height--centered e-teams-bg">
+      <Grid item className="e-teams-bg u-height--full u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
         <Typography gutterBottom variant="h4">
           {locale.CreateYourTeamCallToAction}
         </Typography>
         <NewTeamForm teams={props.teams}/>
+        <span className="u-position--absolute u-bottom--0">
+          {locale.PhotoBy} <Link href="https://www.pexels.com/@fauxels" target="_blank" rel="noopener noreferrer">fauxels</Link>
+       </span>
       </Grid>
     </Grid>
   );

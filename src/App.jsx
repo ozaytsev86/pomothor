@@ -25,21 +25,23 @@ const providers = {
 const theme = createMuiTheme({
   palette: {
     primary: blue,
-  },
-  status: {
-    danger: 'orange',
-  },
+  }
 });
 
 export const App = (props) => {
   const {user, signOut, signInWithGoogle} = props;
+
+  const handleSignOut = () => {
+    signOut();
+
+  };
 
   return (
     <MuiThemeProvider theme={theme}>
       <main>
         <BrowserRouter>
           <LoadingLinearProgress isLoading={user === undefined}>
-            <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut}/>
+            <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={handleSignOut}/>
             <Switch>
               <Route exact path="/">
                 <Home/>
@@ -48,7 +50,7 @@ export const App = (props) => {
                 <Route exact path="/teams">
                   <TeamsContainer user={user}/>
                 </Route>
-                <Route exact path="/teams/team-not-found">
+                <Route path="/team-not-found">
                   <TeamNotFound/>
                 </Route>
                 <Route path="/teams/:id">

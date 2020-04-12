@@ -37,7 +37,7 @@ const TeamContainer = (props) => {
       });
     } else {
       //when is invalid team url
-      props.history.push(`/teams/team-not-found`);
+      props.history.push(`/team-not-found`);
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -5,7 +5,7 @@ const isValidTeamUrl = (value) => /^[a-zA-Z0-9-]*$/.test(value);
 const isDuplicatedTeamName = (name, teams) => {
   let isDuplicated = false;
   const formattedName = formatTeamName(name);
-  teams && Object.keys(teams).map(teamKey => {
+  teams && Object.keys(teams).forEach(teamKey => {
     if (teamKey === formattedName) isDuplicated = true;
   });
   return isDuplicated;

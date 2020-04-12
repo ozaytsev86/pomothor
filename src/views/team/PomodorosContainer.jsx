@@ -58,26 +58,28 @@ export const PomodorosContainer = (props) => {
     setCompleted({teamId: props.team.id, userId});
   };
 
+  const pomodorosListWithoutMyPomodoro = Object.keys(pomodorosList).filter(pomodoroKey => pomodoroKey !== props.user.uid);
+
   return (
     <LoadingCircularProgress full isLoading={isLoading}>
-      <Grid container direction="column">
-        {
-          props.user
+      <div className="u-display--flex u-height--full">
+        <Grid container direction="column" wrap="nowrap">
+          <Grid item>
+            <Box py={4} px={2}>
+              <Grid container justify="space-between" alignItems="flex-end" spacing={2}>
+                <Grid item>
+                  <MyPomodoro user={props.user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
+                  <audio ref={audioRef} src={notificationAudioSrc} />
+                </Grid>
+                <Grid item>
+                  <FocusForm onStart={handleStartPomodoro}/>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          {pomodorosListWithoutMyPomodoro.length
             ? <>
                 <Grid item>
-                  <Box py={4} px={2}>
-                    <Grid container justify="space-between" alignItems="flex-end" spacing={2}>
-                      <Grid item>
-                        <MyPomodoro user={props.user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
-                        <audio ref={audioRef} src={notificationAudioSrc} />
-                      </Grid>
-                      <Grid item>
-                        <FocusForm onStart={handleStartPomodoro}/>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
                   <Box py={4} px={2}>
                     <Typography variant="h4" component="h4">{locale.Users}</Typography>
                   </Box>
@@ -103,11 +105,20 @@ export const PomodorosContainer = (props) => {
                   </Box>
                 </Grid>
               </>
-            : <Grid item xs={12}>
-                <Typography variant="h4" component="h4">{locale.PleaseSignInCapitalize}</Typography>
-              </Grid>
-        }
-      </Grid>
+            : <div className="u-height--50 u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
+                <Typography gutterBottom variant="h4">
+                  Just started?
+                </Typography>
+                <Typography gutterBottom variant="h6">
+                  Share the link with your team and start pomothoring
+                </Typography>
+                <Typography variant="body1">
+                  {window.location.href}
+                </Typography>
+              </div>
+          }
+        </Grid>
+      </div>
     </LoadingCircularProgress>
   );
 };

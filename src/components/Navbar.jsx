@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import {AppBar, Toolbar, Button, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core';
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const Navbar = (props) => {
+const Navbar = (props) => {
   const classes = useStyles();
 
   return (
@@ -38,7 +39,7 @@ export const Navbar = (props) => {
           props.user
             ? <>
                 <Link to="/" className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.Home}</Link>
-                <Link to="/teams" className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.CreateTeam}</Link>
+                <Link to="/teams" className={`MuiButtonBase-root MuiButton-root MuiButton-colorInherit ${classes.menuLink}`}>{locale.CreateTeam}</Link>
                 <Button color="inherit" variant="outlined" onClick={props.onSignOut}>{locale.SignOut}</Button>
               </>
             : <Button color="inherit" variant="outlined" onClick={props.onSignIn}>{locale.SignInWithGoogle}</Button>
@@ -47,3 +48,5 @@ export const Navbar = (props) => {
     </AppBar>
   );
 };
+
+export default withRouter(Navbar);

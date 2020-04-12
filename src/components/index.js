@@ -3,7 +3,7 @@ import {LoadingCircularProgress} from './loadings/LoadingCircularProgress';
 import {LoadingLinearProgress} from './loadings/LoadingLinearProgress';
 import {Countdown} from './Countdown';
 import {CountdownCard} from './CountdownCard';
-import {Navbar} from './Navbar';
+import Navbar from './Navbar';
 
 export {
   BadgeAvatar,
