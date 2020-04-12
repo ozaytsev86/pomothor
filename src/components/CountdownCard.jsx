@@ -9,7 +9,6 @@ import {locale} from '../locale/en-us';
 
 export const CountdownCard = ({pomodoro, currentUserId, notifications, onAddNotification, onDeleteNotification, onCounterComplete}) => {
   const [isCompleted, setIsCompleted] = useState(pomodoro.completed);
-
   useEffect(() => {
     setIsCompleted(pomodoro.completed);
   }, [pomodoro.completed]);

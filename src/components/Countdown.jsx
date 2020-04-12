@@ -26,7 +26,8 @@ export const Countdown = ({time, onTick}) => {
 
   useEffect(() => {
     onTick && onTick({counter, hours, minutes, seconds});
-  }, [onTick, counter, hours, minutes, seconds]);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counter]);
 
   useEffect(() => {
     const interval = setInterval(() => {

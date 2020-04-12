@@ -12,7 +12,6 @@ export const locale = {
     MinutesLowercase: 'minutes',
     NotifyMeWhenTheUserIsFree: 'Notify me when the user is free',
     PhotoBy: 'Photo by',
-    PleaseSignIn: 'Please sign in',
     Pomothor: 'Pomothor',
     RemoveNotification: 'Remove notification',
     SignInWithGoogle: 'Sign in with Google',
