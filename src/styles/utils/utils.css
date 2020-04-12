@@ -2,14 +2,34 @@
   --navbar-height: 64px;
 }
 
-.u-full-height {
-  height: calc(100vh - var(--navbar-height));
+.u-position--absolute {
+  position: absolute;
 }
 
-.u-full-height--centered {
-  height: calc(100vh - var(--navbar-height));
-  width: 100%;
-  display: grid;
+.u-bottom--0 {
+  bottom: 0;
+}
+
+.u-display--flex {
+  display: flex;
+}
+
+.u-flex-direction--column {
+  flex-direction: column;
+}
+
+.u-justify-content--center {
   justify-content: center;
-  align-content: center;
+}
+
+.u-align-items--center {
+  align-items: center;
+}
+
+.u-height--50 {
+  height: 50%;
+}
+
+.u-height--full {
+  height: calc(100vh - var(--navbar-height));
 }

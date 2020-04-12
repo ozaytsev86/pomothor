@@ -2,14 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {Card, CardHeader, IconButton, Tooltip} from '@material-ui/core';
 import {Notifications, NotificationsActive} from '@material-ui/icons';
 
-import {BadgeAvatar} from './BadgeAvatar';
+import {BadgeAvatar} from './badgeAvatar/BadgeAvatar';
 import {Counter} from './Counter';
 
 import {locale} from '../locale/en-us';
 
 export const CountdownCard = ({pomodoro, currentUserId, notifications, onAddNotification, onDeleteNotification, onCounterComplete}) => {
   const [isCompleted, setIsCompleted] = useState(pomodoro.completed);
-
   useEffect(() => {
     setIsCompleted(pomodoro.completed);
   }, [pomodoro.completed]);
