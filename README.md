@@ -31,7 +31,8 @@ Your app is ready to be deployed!
 ## Changelog
 
 ### 2.0.0
-* added teams support, from now on you can create a team and share a URL to have "private room"
+* added teams support, from now on you can create a team and share the URL to have your own space
+* updated L&F
 
 ### 1.1.0
 * added router, functionality of pomodoro moved to '/teams' route
@@ -39,7 +40,7 @@ Your app is ready to be deployed!
 * added home page
 
 ### 1.0.1
-* user's card redesign
+* redesign of user's card
 
 ### 1.0.0
 * first stable version
