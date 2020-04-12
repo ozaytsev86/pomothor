@@ -17,7 +17,7 @@ const addTeam = ({user, id}) => {
     })
 };
 
-const addTeamUser = ({user, teamId, users}) => {
+const addTeamUser = ({user, teamId, users = []}) => {
   const ref = Firebase.database().ref(`/teams/${teamId}`);
   ref.once('value')
     .then(() => {

@@ -11,18 +11,20 @@ export const FocusForm = (props) => {
     props.onStart(minutes)
   };
 
-  return <form onSubmit={(e) => handleStart(e)}>
-    <TextField
-      autoFocus
-      id="time"
-      label={locale.FocusTimeCapitalize}
-      placeholder={locale.MinutesLowercase}
-      onChange={(e) => setMinutes(e.target.value)}
-    />
-    <Button type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-    >{locale.Start}</Button>
-  </form>
+  return (
+    <form onSubmit={(e) => handleStart(e)}>
+      <TextField
+        autoFocus
+        id="time"
+        label={locale.FocusTimeCapitalize}
+        placeholder={locale.MinutesLowercase}
+        onChange={(e) => setMinutes(e.target.value)}
+      />
+      <Button type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+      >{locale.Start}</Button>
+    </form>
+  )
 };

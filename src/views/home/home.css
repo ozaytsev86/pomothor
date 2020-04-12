@@ -1,12 +1,12 @@
-.e-team-not-found-bg::after {
+.e-home-bg::after {
     content: "";
-    background: url('../../statics/images/teamNotFoundBg.jpg');
+    background: url('../../statics/images/homeBg.jpg');
     opacity: 0.5;
     top: 55px;
-    left: -5px;
-    bottom: -5px;
-    right: -5px;
-    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
     z-index: -1;
     background-repeat: no-repeat;
     background-position: center;

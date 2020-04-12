@@ -11,7 +11,7 @@ export const Teams = (props) => {
   return (
     <Grid container direction="column">
       <Grid item className="u-full-height--centered e-teams-bg">
-        <Typography gutterBottom variant="h3">
+        <Typography gutterBottom variant="h4">
           {locale.CreateYourTeamCallToAction}
         </Typography>
         <NewTeamForm teams={props.teams}/>

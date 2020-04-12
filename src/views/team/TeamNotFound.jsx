@@ -8,7 +8,7 @@ import {locale} from '../../locale/en-us';
 export const TeamNotFound = () => {
   return (
     <Grid container direction="column">
-      <Grid item className="u-full-height--centered e-team-bg">
+      <Grid item className="u-full-height--centered e-team-not-found-bg">
         <Typography variant="h1">
           404
         </Typography>

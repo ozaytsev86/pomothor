@@ -49,7 +49,7 @@ const NewTeamForm = (props) => {
               variant="contained"
               color="primary"
               size="large"
-      >{locale.CreateTeam}</Button>
+      >{locale.LetsGo}</Button>
     </form>
   );
 };

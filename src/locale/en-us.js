@@ -1,8 +1,9 @@
 export const locale = {
     CreateTeam: 'Create team',
-    CreateYourTeamCallToAction: 'Create your team and squeeze the time',
+    CreateYourTeamCallToAction: 'Create your team and improve its performance',
     FocusTimeCapitalize: 'Focus time',
     Free: 'Free',
+    Home: 'Home',
     MinutesLowercase: 'minutes',
     NotifyMeWhenTheUserIsFree: 'Notify me when the user is free',
     PleaseSignInCapitalize: 'Please sign in',
@@ -11,6 +12,7 @@ export const locale = {
     SignInWithGoogle: 'Sign in with Google',
     SignOut: 'Sign out',
     Start: 'Start',
+    LetsGo: 'Let\'s Go!',
     ErrorTeamNotFound: 'Oops! It seems like the team was not found',
     Users: 'Users',
 };
