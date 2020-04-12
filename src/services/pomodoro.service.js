@@ -1,30 +1,23 @@
 import Firebase from 'firebase';
-import {pomodorosUrl} from '../constants/urls';
 
-const addPomodoro = (userId, pomodoro) => {
-  const ref = Firebase.database().ref(pomodorosUrl);
+const getTime = (minutes) => Date.now() + (minutes * 60000);
+
+const startPomodoro = ({teamId, userId, minutes}) => {
+  const ref = Firebase.database().ref(`/teams/${teamId}/pomodoros`);
   ref.once('value')
     .then(() => {
-      Firebase.database().ref(`${pomodorosUrl}/${userId}`).set(pomodoro);
+      Firebase.database().ref(`/teams/${teamId}/pomodoros/${userId}/time`).set(getTime(minutes));
+      Firebase.database().ref(`/teams/${teamId}/pomodoros/${userId}/completed`).set(false);
     })
 };
 
-const startPomodoro = (userId, time) => {
-  const ref = Firebase.database().ref(pomodorosUrl);
+const setCompleted = ({teamId, userId}) => {
+  const ref = Firebase.database().ref(`/teams/${teamId}/pomodoros`);
   ref.once('value')
     .then(() => {
-      Firebase.database().ref(`${pomodorosUrl}/${userId}/time`).set(time);
-      Firebase.database().ref(`${pomodorosUrl}/${userId}/completed`).set(false);
-    })
-};
-
-const setCompleted = (userId) => {
-  const ref = Firebase.database().ref(pomodorosUrl);
-  ref.once('value')
-    .then(() => {
-      Firebase.database().ref(`${pomodorosUrl}/${userId}/completed`).set(true);
+      Firebase.database().ref(`/teams/${teamId}/pomodoros/${userId}/completed`).set(true);
     })
 };
 
 
-export {addPomodoro, startPomodoro, setCompleted};
+export {startPomodoro, setCompleted};

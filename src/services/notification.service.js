@@ -1,11 +1,10 @@
 import Firebase from 'firebase';
-import {notificationsUrl} from '../constants/urls';
 
-const updateNotification = (notification, userId) => {
-  const ref = Firebase.database().ref(notificationsUrl);
+const updateNotification = ({teamId, notification, userId}) => {
+  const ref = Firebase.database().ref(`/teams/${teamId}/notifications`);
   ref.once('value')
     .then(() => {
-      Firebase.database().ref(`${notificationsUrl}/${userId}`).set(notification);
+      Firebase.database().ref(`/teams/${teamId}/notifications/${userId}`).set(notification);
     })
 };
 

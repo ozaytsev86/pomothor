@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Chip} from '@material-ui/core';
-import {Countdown} from './Countdown';
 import {green, pink} from '@material-ui/core/colors';
 import {Alarm, AlarmOn} from '@material-ui/icons';
+
+import {Countdown} from './Countdown';
 
 export const Counter = (props) => {
   const [counter, setCounter] = useState(0);
