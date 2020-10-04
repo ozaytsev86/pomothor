@@ -1,4 +1,4 @@
-import './badgeAvatar.css';
+import './BadgeAvatar.css';
 
 import React from 'react';
 import {Avatar, Badge} from '@material-ui/core';

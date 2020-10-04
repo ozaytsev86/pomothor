@@ -1,9 +1,7 @@
-import './teamNotFound.css';
-
 import React from 'react';
 import {Grid, Typography, Link} from '@material-ui/core';
 
-import {locale} from '../../locale/en-us';
+import {locale} from '../../../locale/en-us';
 
 export const TeamNotFound = () => {
   return (
@@ -11,7 +9,8 @@ export const TeamNotFound = () => {
       <Grid
         item
         className="
-          e-team-not-found-bg
+          e-bg
+          e-bg-image--team-not-found
           u-height--full
           u-display--flex
           u-flex-direction--column

@@ -1,3 +1,4 @@
+import './styles/elements/background.css';
 import './styles/utils/utils.css';
 
 import React from 'react';
@@ -11,10 +12,13 @@ import {blue} from '@material-ui/core/colors';
 
 
 import {LoadingLinearProgress, Navbar} from './components';
-import {TeamsContainer} from './views/teams/TeamsContainer';
-import TeamContainer from './views/team/TeamContainer';
+import {NewTeamContainer} from './views/teams/new/NewTeamContainer';
+import TeamContainer from './views/teams/team/TeamContainer';
 import {Home} from './views/home/Home';
-import {TeamNotFound} from './views/team/TeamNotFound';
+import {TeamNotFound} from './views/teams/team/TeamNotFound';
+
+import {routes} from './constants/routes';
+import {TeamsContainer} from './views/teams/TeamsContainer';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
@@ -31,30 +35,28 @@ const theme = createMuiTheme({
 export const App = (props) => {
   const {user, signOut, signInWithGoogle} = props;
 
-  const handleSignOut = () => {
-    signOut();
-
-  };
-
   return (
     <MuiThemeProvider theme={theme}>
       <main>
         <BrowserRouter>
           <LoadingLinearProgress isLoading={user === undefined}>
-            <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={handleSignOut}/>
+            <Navbar user={user} onSignIn={signInWithGoogle} onSignOut={signOut}/>
             <Switch>
-              <Route exact path="/">
+              <Route exact path={routes.Home}>
                 <Home/>
               </Route>
               {user && <>
-                <Route exact path="/teams">
+                <Route exact path={routes.Teams}>
                   <TeamsContainer user={user}/>
                 </Route>
-                <Route path="/team-not-found">
+                <Route path={routes.TeamsId}
+                       render={({match}) => match.params.id === 'new'
+                         ? <NewTeamContainer user={user}/>
+                         : <TeamContainer user={user}/>
+                       }
+                />
+                <Route path={routes.TeamNotFound}>
                   <TeamNotFound/>
-                </Route>
-                <Route path="/teams/:id">
-                  <TeamContainer user={user}/>
                 </Route>
               </>}
             </Switch>

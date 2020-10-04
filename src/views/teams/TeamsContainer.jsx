@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Firebase from 'firebase';
 
 import {LoadingCircularProgress} from '../../components';
-import {Teams} from './Teams';
+import {TeamsList} from './TeamsList';
 
 export const TeamsContainer = () => {
   const [teams, setTeams] = useState([]);
@@ -21,7 +21,7 @@ export const TeamsContainer = () => {
 
   return (
     <LoadingCircularProgress full isLoading={isLoading}>
-      <Teams teams={teams}/>
+      <TeamsList teams={teams}/>
     </LoadingCircularProgress>
   );
 };
