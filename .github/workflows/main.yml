@@ -10,16 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Create .env file
-      uses: SpicyPizza/create-envfile@v1
+      uses: ozaytsev86/create-envfile@v1
       with:
-        envkey_REACT_APP_API_KEY: ${{ secrets.APP_API_KEY }}
-        envkey_REACT_APP_AUTH_DOMAIN: ${{ secrets.APP_AUTH_DOMAIN }}
-        envkey_REACT_APP_DATABASE_URL: ${{ secrets.APP_DATABASE_URL }}
-        envkey_REACT_APP_PROJECT_ID: ${{ secrets.APP_PROJECT_ID }}
-        envkey_REACT_APP_STORAGE_BUCKET: ${{ secrets.APP_STORAGE_BUCKET }}
-        envkey_REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.APP_MESSAGING_SENDER_ID }}
-        envkey_REACT_APP_APP_ID: ${{ secrets.APP_APP_ID }}
-        file_name: .env
+        REACT_APP_API_KEY: ${{ secrets.APP_API_KEY }}
+        REACT_APP_AUTH_DOMAIN: ${{ secrets.APP_AUTH_DOMAIN }}
+        REACT_APP_DATABASE_URL: ${{ secrets.APP_DATABASE_URL }}
+        REACT_APP_PROJECT_ID: ${{ secrets.APP_PROJECT_ID }}
+        REACT_APP_STORAGE_BUCKET: ${{ secrets.APP_STORAGE_BUCKET }}
+        REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.APP_MESSAGING_SENDER_ID }}
+        REACT_APP_APP_ID: ${{ secrets.APP_APP_ID }}
   build:
     name: Build
     needs: createEnvFile
