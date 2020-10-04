@@ -2,15 +2,15 @@ import React, {useState, useEffect, useRef} from 'react';
 import Firebase from 'firebase';
 import {Box, Grid, Typography} from '@material-ui/core';
 
-import {startPomodoro, setCompleted} from '../../services/pomodoro.service';
-import {updateNotification} from '../../services/notification.service';
+import {startPomodoro, setCompleted} from '../../../services/pomodoro.service';
+import {updateNotification} from '../../../services/notification.service';
 
-import {CountdownCard, LoadingCircularProgress} from '../../components';
+import {CountdownCard, LoadingCircularProgress} from '../../../components';
 import {FocusForm} from './FocusForm';
 import {MyPomodoro} from './MyPomodoro';
 
-import {locale} from '../../locale/en-us';
-import notificationAudioSrc from '../../statics/notification.wav';
+import {locale} from '../../../locale/en-us';
+import notificationAudioSrc from '../../../statics/notification.wav';
 
 export const PomodorosContainer = (props) => {
   const [pomodorosList, setPomodorosList] = useState([]);
@@ -107,10 +107,10 @@ export const PomodorosContainer = (props) => {
               </>
             : <div className="u-height--50 u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
                 <Typography gutterBottom variant="h4">
-                  Just started?
+                  {locale.JustStarted}
                 </Typography>
                 <Typography gutterBottom variant="h6">
-                  Share the link with your team and start pomothoring
+                  {locale.ShareTheLinkWithYourTeamAndStartPomothoring}
                 </Typography>
                 <Typography variant="body1">
                   {window.location.href}

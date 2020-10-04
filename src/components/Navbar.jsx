@@ -6,6 +6,7 @@ import {makeStyles} from '@material-ui/core';
 
 import {locale} from '../locale/en-us';
 import logo from '../statics/images/logo.png';
+import {routes} from '../constants/routes';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -38,8 +39,9 @@ const Navbar = (props) => {
         {
           props.user
             ? <>
-                <Link to="/" className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.Home}</Link>
-                <Link to="/teams" className={`MuiButtonBase-root MuiButton-root MuiButton-colorInherit ${classes.menuLink}`}>{locale.CreateTeam}</Link>
+                <Link to={routes.Home} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.Home}</Link>
+                <Link to={routes.TeamsNew} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.CreateTeam}</Link>
+                <Link to={routes.Teams} className={`MuiButtonBase-root MuiButton-root MuiButton-colorInherit ${classes.menuLink}`}>{locale.Teams}</Link>
                 <Button color="inherit" variant="outlined" onClick={props.onSignOut}>{locale.SignOut}</Button>
               </>
             : <Button color="inherit" variant="outlined" onClick={props.onSignIn}>{locale.SignInWithGoogle}</Button>

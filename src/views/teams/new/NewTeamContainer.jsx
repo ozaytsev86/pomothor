@@ -1,16 +1,25 @@
-import './teams.css';
-
 import React from 'react';
 import {Grid, Link, Typography} from '@material-ui/core';
 
 import NewTeamForm from './NewTeamForm';
 
-import {locale} from '../../locale/en-us';
+import {locale} from '../../../locale/en-us';
 
-export const Teams = (props) => {
+export const NewTeamContainer = (props) => {
   return (
     <Grid container direction="column">
-      <Grid item className="e-teams-bg u-height--full u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
+      <Grid
+        item
+        className="
+          e-bg
+          e-bg-image--new-team
+          u-height--full
+          u-display--flex
+          u-flex-direction--column
+          u-justify-content--center
+          u-align-items--center
+        "
+      >
         <Typography gutterBottom variant="h4">
           {locale.CreateYourTeamCallToAction}
         </Typography>

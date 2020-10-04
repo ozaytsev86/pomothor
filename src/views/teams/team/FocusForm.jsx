@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, TextField} from '@material-ui/core';
 
-import {locale} from '../../locale/en-us';
+import {locale} from '../../../locale/en-us';
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({

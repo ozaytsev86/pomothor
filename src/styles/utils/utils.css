@@ -1,5 +1,6 @@
 :root {
   --navbar-height: 64px;
+  --border-radius: 5px;
 }
 
 .u-position--absolute {
@@ -33,3 +34,8 @@
 .u-height--full {
   height: calc(100vh - var(--navbar-height));
 }
+
+.u-border-radius {
+  border-radius: var(--border-radius);
+}
+

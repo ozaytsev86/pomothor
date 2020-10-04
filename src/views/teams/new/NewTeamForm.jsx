@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {withRouter} from 'react-router';
 import {Box, Button, TextField} from '@material-ui/core';
 
-import {formatTeamName, isDuplicatedTeamName, isValidTeamName} from './teams.helper';
+import {formatTeamName, isDuplicatedTeamName, isValidTeamName} from '../teams.helper';
 
-import {locale} from '../../locale/en-us';
+import {routes} from '../../../constants/routes';
+import {locale} from '../../../locale/en-us';
 
 const NewTeamForm = (props) => {
   const [name, setName] = useState('');
@@ -19,7 +20,7 @@ const NewTeamForm = (props) => {
     }
 
     if (isValidTeamName(name) && !isDuplicatedTeamName(name, props.teams)) {
-      props.history.push(`/teams/${formatTeamName(name)}`);
+      props.history.push(`${routes.Teams}/${formatTeamName(name)}`);
     } else {
       //TODO: suggest a name and show link to apply
       // if the name is test, suggest test1

@@ -3,11 +3,12 @@ import {useParams} from 'react-router-dom';
 import {withRouter} from 'react-router';
 import Firebase from 'firebase';
 
-import {addTeam, addTeamUser} from '../../services/team.service';
-import {isValidTeamUrl} from '../teams/teams.helper';
+import {addTeam, addTeamUser} from '../../../services/team.service';
+import {isValidTeamUrl} from '../teams.helper';
 
-import {LoadingCircularProgress} from '../../components';
+import {LoadingCircularProgress} from '../../../components';
 import {PomodorosContainer} from './PomodorosContainer';
+import {routes} from '../../../constants/routes';
 
 const TeamContainer = (props) => {
   const {user} = props;
@@ -37,7 +38,7 @@ const TeamContainer = (props) => {
       });
     } else {
       //when is invalid team url
-      props.history.push(`/team-not-found`);
+      props.history.push(routes.TeamNotFound);
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
