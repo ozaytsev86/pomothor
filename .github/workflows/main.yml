@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Create .env file
-      uses: echo Creating .env file
+      uses: SpicyPizza/create-envfile@v1
       with:
         REACT_APP_API_KEY: ${{ secrets.APP_API_KEY }}
         REACT_APP_AUTH_DOMAIN: ${{ secrets.APP_AUTH_DOMAIN }}
