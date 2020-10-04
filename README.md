@@ -1,6 +1,8 @@
 # Pomothor
 Application based on pomodoro technique to improve your team time management.
 
+Try it https://pomothor-f46c3.web.app/
+
 ## Changelog
 
 ### 2.0.0
