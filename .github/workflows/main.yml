@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  createEnvFile:
+  create_env_file:
     runs-on: ubuntu-latest
     steps:
     - name: Create .env file
@@ -19,9 +19,10 @@ jobs:
         REACT_APP_STORAGE_BUCKET: ${{ secrets.APP_STORAGE_BUCKET }}
         REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.APP_MESSAGING_SENDER_ID }}
         REACT_APP_APP_ID: ${{ secrets.APP_APP_ID }}
+        file_name: .env
   build:
     name: Build
-    needs: createEnvFile
+    needs: create_env_file
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
