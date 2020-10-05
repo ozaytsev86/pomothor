@@ -6,33 +6,23 @@ on:
       - master
 
 jobs:
-  create_env_file:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create .env file
-      uses: ozaytsev86/create-envfile@master
-      with:
-        REACT_APP_API_KEY: ${{ secrets.APP_API_KEY }}
-        REACT_APP_AUTH_DOMAIN: ${{ secrets.APP_AUTH_DOMAIN }}
-        REACT_APP_DATABASE_URL: ${{ secrets.APP_DATABASE_URL }}
-        REACT_APP_PROJECT_ID: ${{ secrets.APP_PROJECT_ID }}
-        REACT_APP_STORAGE_BUCKET: ${{ secrets.APP_STORAGE_BUCKET }}
-        REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.APP_MESSAGING_SENDER_ID }}
-        REACT_APP_APP_ID: ${{ secrets.APP_APP_ID }}
-        APP_TEST_KEY: ${{ secrets.APP_TEST_KEY }}
-    - name: Create Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: .
   build:
     name: Build
-    needs: create_env_file
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Download env file
-        uses: actions/download-artifact@v2
+      - name: Create .env file
+        uses: ozaytsev86/create-envfile@master
+        with:
+          REACT_APP_API_KEY: ${{ secrets.APP_API_KEY }}
+          REACT_APP_AUTH_DOMAIN: ${{ secrets.APP_AUTH_DOMAIN }}
+          REACT_APP_DATABASE_URL: ${{ secrets.APP_DATABASE_URL }}
+          REACT_APP_PROJECT_ID: ${{ secrets.APP_PROJECT_ID }}
+          REACT_APP_STORAGE_BUCKET: ${{ secrets.APP_STORAGE_BUCKET }}
+          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.APP_MESSAGING_SENDER_ID }}
+          REACT_APP_APP_ID: ${{ secrets.APP_APP_ID }}
+          APP_TEST_KEY: ${{ secrets.APP_TEST_KEY }}
       - name: Show enfile content
         run: cat .env
       - name: Install Dependencies
