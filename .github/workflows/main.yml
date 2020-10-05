@@ -24,7 +24,9 @@ jobs:
       uses: actions/upload-artifact@master
       with: 
         name: envfile
-        path: .env 
+        path: ./.env 
+    - name: Show enfile content
+      run: cat .env
   build:
     name: Build
     needs: create_env_file
@@ -36,7 +38,7 @@ jobs:
         uses: actions/download-artifact@master
         with: 
           name: envfile
-          path: .env 
+          path: ./.env 
       - name: Show enfile content
         run: cat .env
       - name: Install Dependencies
