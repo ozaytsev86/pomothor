@@ -37,6 +37,8 @@ jobs:
         with: 
           name: envfile
           path: .env 
+      - name: Show enfile content
+        run: cat .env
       - name: Install Dependencies
         run: npm install
       - name: Build
