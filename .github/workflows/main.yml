@@ -23,7 +23,7 @@ jobs:
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: ./.env
+        path: .
   build:
     name: Build
     needs: create_env_file
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Download Artifact
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v2
         with:
           name: build
           path: build
