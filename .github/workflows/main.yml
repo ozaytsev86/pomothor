@@ -20,13 +20,6 @@ jobs:
         REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.APP_MESSAGING_SENDER_ID }}
         REACT_APP_APP_ID: ${{ secrets.APP_APP_ID }}
         APP_TEST_KEY: ${{ secrets.APP_TEST_KEY }}
-    - name: Archive Production Artifact
-      uses: actions/upload-artifact@master
-      with: 
-        name: envfile
-        path: ./.env 
-    - name: Show enfile content
-      run: cat .env
   build:
     name: Build
     needs: create_env_file
@@ -34,11 +27,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Download envfile
-        uses: actions/download-artifact@master
-        with: 
-          name: envfile
-          path: ./.env 
       - name: Show enfile content
         run: cat .env
       - name: Install Dependencies
