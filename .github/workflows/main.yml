@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Create .env file
-        uses: ozaytsev86/create-envfile@master
+        uses: ozaytsev86/create-env-file@main
         with:
           REACT_APP_API_KEY: ${{ secrets.APP_API_KEY }}
           REACT_APP_AUTH_DOMAIN: ${{ secrets.APP_AUTH_DOMAIN }}
