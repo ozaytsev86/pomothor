@@ -1,7 +1,7 @@
 const routes = {
   Home: '/',
   Teams: '/teams',
-  TeamsId: '/teams/:id',
+  TeamsId: '/teams/:teamId',
   TeamsNew: '/teams/new',
   TeamNotFound: '/team-not-found',
 };

@@ -23,7 +23,7 @@ import notificationAudioSrc from '../../../statics/notification.wav';
 
 const TeamContainer = (props) => {
   const {user} = props;
-  const {id} = useParams();
+  const {teamId} = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [currentTeam, setCurrentTeam] = useState(null);
   const [pomodorosList, setPomodorosList] = useState([]);
@@ -32,23 +32,23 @@ const TeamContainer = (props) => {
   const audioRef = useRef();
 
   useEffect(() => {
-    if (isValidTeamUrl(id)) {
-      const currentTeamUrl = `/teams/${id}`;
+    if (isValidTeamUrl(teamId)) {
+      const currentTeamUrl = `/teams/${teamId}`;
       const teamsRef = Firebase.database().ref(currentTeamUrl);
       teamsRef.once('value', snapshot => {
         const currTeam = snapshot.val();
 
         if (!currTeam) {
           // TODO: ask user to create a team instead of directly create it
-          addTeam({user, id});
-          addTeamUser({user, teamId: id})
+          addTeam({user, teamId});
+          addTeamUser({user, teamId})
         } else {
           if (currTeam.users.filter(userKey => userKey === user.uid).length === 0) {
-            addTeamUser({user, teamId: id, users: currTeam.users});
+            addTeamUser({user, teamId, users: currTeam.users});
           }
         }
 
-        setCurrentTeam({id, ...currTeam});
+        setCurrentTeam({id: teamId, ...currTeam});
         setIsLoading(false);
       });
     } else {
