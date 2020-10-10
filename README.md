@@ -14,7 +14,10 @@ Contributions are welcome.
 
 ## Changelog
 
-### 2.1.0
+### 2.1.2
+* show current active menu item
+
+### 2.1.1
 * added copy to clipboard button to copy and share team link
 * fixed navigation from team page to create team
 * updated team L&F
