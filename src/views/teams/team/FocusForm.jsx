@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, TextField} from '@material-ui/core';
+import {Button, FormControl, InputLabel, Input} from '@material-ui/core';
 
 import {locale} from '../../../locale/en-us';
 import {makeStyles} from '@material-ui/core/styles';
@@ -21,15 +21,19 @@ export const FocusForm = (props) => {
 
   return (
     <form onSubmit={(e) => handleStart(e)}>
-      <TextField
-        autoFocus
-        id="time"
-        label={locale.FocusTime}
-        placeholder={locale.MinutesLowercase}
-        className={classes.timeTextField}
-        onChange={(e) => setMinutes(e.target.value)}
-      />
-      <Button type="submit"
+      <FormControl>
+        <InputLabel htmlFor="time">{locale.FocusTime}</InputLabel>
+        <Input
+          autoFocus
+          required
+          id="time"
+          placeholder={locale.MinutesLowercase}
+          className={classes.timeTextField}
+          onChange={(e) => setMinutes(e.target.value)}
+        />
+      </FormControl>
+      <Button focused
+              type="submit"
               variant="contained"
               color="primary"
               size="large"

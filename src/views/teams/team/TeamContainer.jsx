@@ -10,9 +10,11 @@ import {updateNotification} from '../../../services/notification.service';
 import {setCompleted, startPomodoro} from '../../../services/pomodoro.service';
 import {isValidTeamUrl} from '../teams.helper';
 
-import {CopyToClipboard, CountdownCard, LoadingCircularProgress} from '../../../components';
-import {MyPomodoro} from './MyPomodoro';
+import {CopyToClipboard, LoadingCircularProgress} from '../../../components';
+import {Me} from './Me';
 import {FocusForm} from './FocusForm';
+import {NoTeams} from './NoTeams';
+import {Users} from './Users';
 
 import {routes} from '../../../constants/routes';
 import {locale} from '../../../locale/en-us';
@@ -98,17 +100,17 @@ const TeamContainer = (props) => {
   };
 
   const pomodorosListWithoutMyPomodoro = Object.keys(pomodorosList).filter(pomodoroKey => pomodoroKey !== user.uid);
-  const teamName = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+  const teamName = window.location.href.substring(window.location.href.lastIndexOf('/') + 1).replaceAll('-', ' ');
 
   return (
     <LoadingCircularProgress full isLoading={isLoading}>
-      <Grid container direction="column" wrap="nowrap">
+      <Grid container direction="column" alignContent="center">
         <Grid item>
           <Box px={2}>
             <Typography variant="h2">{teamName}</Typography>
             {pomodorosListWithoutMyPomodoro.length !== 0
               && <Typography variant="body1">
-                   <strong>{locale.TeamLink}:</strong>
+                   <strong>{locale.TeamLink}: </strong>
                    {window.location.href}
                    <CopyToClipboard text={window.location.href}/>
                  </Typography>
@@ -124,7 +126,7 @@ const TeamContainer = (props) => {
                 <Box p={2}>
                   <Grid container justifyContent="space-between">
                     <Grid item>
-                      <MyPomodoro user={user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
+                      <Me user={user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
                       <audio ref={audioRef} src={notificationAudioSrc} />
                     </Grid>
                     <Divider orientation="vertical" flexItem />
@@ -136,46 +138,15 @@ const TeamContainer = (props) => {
               </Paper>
             </Grid>
             {pomodorosListWithoutMyPomodoro.length
-              ? <>
-                  <Box py={2}>
-                    <Grid item>
-                      <Box py={2}>
-                        <Typography variant="h4" component="h4">{locale.Users}</Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid container spacing={2}>
-                        {Object.keys(pomodorosList).map(pomodoroKey => (
-                          pomodoroKey !== user.uid
-                            && <Grid item xs={12} sm={6} md={4} lg={3}>
-                                 <CountdownCard
-                                   pomodoro={pomodorosList[pomodoroKey]}
-                                   currentUserId={user.uid}
-                                   notifications={notifications}
-                                   onCounterComplete={handleComplete}
-                                   onAddNotification={handleAddNotification}
-                                   onDeleteNotification={handleDeleteNotification}
-                                 />
-                               </Grid>
-                        ))}
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </>
-              : <Box py={4} px={2}>
-                  <div className="u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
-                    <Typography gutterBottom variant="h4">
-                      {locale.JustStarted}
-                    </Typography>
-                    <Typography gutterBottom variant="h6">
-                      {locale.ShareTheLinkWithYourTeamAndStartPomothoring}
-                    </Typography>
-                    <Typography variant="body1">
-                      {window.location.href}
-                      <CopyToClipboard text={window.location.href}/>
-                    </Typography>
-                  </div>
-                </Box>
+              ? <Users
+                  pomodorosList={pomodorosList}
+                  user={user}
+                  notifications={notifications}
+                  onComplete={handleComplete}
+                  onAddNotification={handleAddNotification}
+                  onDeleteNotification={handleDeleteNotification}
+                />
+              : <NoTeams />
             }
           </Grid>
         </Box>

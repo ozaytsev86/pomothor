@@ -20,7 +20,7 @@ export const CopyToClipboard = ({text}) => {
   return (
     <Tooltip title={isCopied ? locale.Copied : locale.ClickToCopy} placement="top">
       <IconButton
-          variant="outlined"
+          color="secondary"
           onMouseEnter={() => setIsCopied(false)}
           onClick={handleOnCopy}
         >

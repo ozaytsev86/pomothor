@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const MyPomodoro = (props) => {
+export const Me = (props) => {
   const pomodoro = props.pomodorosList[props.user.uid];
   const classes = useStyles();
 
