@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 export const Navbar = (props) => {
   const classes = useStyles();
 
-  const isTeamActive = (match, location) => !location.pathname.includes(routes.TeamsNew);
+  const isTeamActive = (match, location) => location.pathname.includes(routes.Teams) && !location.pathname.includes(routes.TeamsNew);
 
   return (
     <AppBar position="static" className={classes.appBar}>
