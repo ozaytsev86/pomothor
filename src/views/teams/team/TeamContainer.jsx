@@ -52,6 +52,7 @@ const TeamContainer = (props) => {
     } else {
       props.history.push(routes.TeamNotFound);
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -80,6 +81,7 @@ const TeamContainer = (props) => {
         updateNotification({teamId: currentTeam.id, notification: '', userId: user.uid});
       }
     }
+    // eslint-disable-next-line
   }, [pomodorosList]);
 
   const handleStartPomodoro = (minutes) => {
