@@ -1,6 +1,5 @@
 import React from 'react';
-import {withRouter} from 'react-router';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {AppBar, Toolbar, Button, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core';
 
@@ -23,11 +22,16 @@ const useStyles = makeStyles(theme => ({
   },
   menuLink: {
     marginRight: theme.spacing(2)
+  },
+  menuLinkActive: {
+    backgroundColor: 'rgba(0, 0, 0, 0.04)',
   }
 }));
 
-export const Navbar = withRouter((props) => {
+export const Navbar = (props) => {
   const classes = useStyles();
+
+  const isTeamActive = (match, location) => !location.pathname.includes(routes.TeamsNew);
 
   return (
     <AppBar position="static" className={classes.appBar}>
@@ -39,9 +43,9 @@ export const Navbar = withRouter((props) => {
         {
           props.user
             ? <>
-                <Link to={routes.Home} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.Home}</Link>
-                <Link to={routes.TeamsNew} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.CreateTeam}</Link>
-                <Link to={routes.Teams} className={`MuiButtonBase-root MuiButton-root MuiButton-colorInherit ${classes.menuLink}`}>{locale.Teams}</Link>
+                <NavLink exact to={routes.Home} activeClassName={classes.menuLinkActive} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.Home}</NavLink>
+                <NavLink exact to={routes.TeamsNew} activeClassName={classes.menuLinkActive} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.CreateTeam}</NavLink>
+                <NavLink to={routes.Teams} isActive={isTeamActive} activeClassName={classes.menuLinkActive} className={`MuiButtonBase-root MuiButton-root MuiButton-colorInherit ${classes.menuLink}`}>{locale.Teams}</NavLink>
                 <Button color="inherit" variant="outlined" onClick={props.onSignOut}>{locale.SignOut}</Button>
               </>
             : <Button color="inherit" variant="outlined" onClick={props.onSignIn}>{locale.SignInWithGoogle}</Button>
@@ -49,4 +53,6 @@ export const Navbar = withRouter((props) => {
       </Toolbar>
     </AppBar>
   );
-});
+};
+
+// export const Navbar = withRouter(NavbarComponent);
