@@ -14,6 +14,9 @@ Contributions are welcome.
 
 ## Changelog
 
+### 2.1.3
+* fix active menu item when home selected
+
 ### 2.1.2
 * show current active menu item
 
