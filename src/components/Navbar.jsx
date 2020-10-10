@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Navbar = (props) => {
+export const Navbar = withRouter((props) => {
   const classes = useStyles();
 
   return (
@@ -49,6 +49,4 @@ const Navbar = (props) => {
       </Toolbar>
     </AppBar>
   );
-};
-
-export default withRouter(Navbar);
+});

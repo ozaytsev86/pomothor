@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useRef} from 'react';
 import Firebase from 'firebase';
-import {Box, Grid, Typography} from '@material-ui/core';
+import {Box, Grid, Typography, Paper, Divider} from '@material-ui/core';
 
 import {startPomodoro, setCompleted} from '../../../services/pomodoro.service';
 import {updateNotification} from '../../../services/notification.service';
 
-import {CountdownCard, LoadingCircularProgress} from '../../../components';
+import {CountdownCard, LoadingCircularProgress, CopyToClipboard} from '../../../components';
 import {FocusForm} from './FocusForm';
 import {MyPomodoro} from './MyPomodoro';
 
@@ -42,7 +42,6 @@ export const PomodorosContainer = (props) => {
         updateNotification({teamId: props.team.id, notification: '', userId: props.user.uid});
       }
     }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pomodorosList]);
 
   const handleStartPomodoro = (minutes) => {
@@ -62,30 +61,33 @@ export const PomodorosContainer = (props) => {
 
   return (
     <LoadingCircularProgress full isLoading={isLoading}>
-      <div className="u-display--flex u-height--full">
+      <Box p={2}>
         <Grid container direction="column" wrap="nowrap">
           <Grid item>
-            <Box py={4} px={2}>
-              <Grid container justify="space-between" alignItems="flex-end" spacing={2}>
-                <Grid item>
-                  <MyPomodoro user={props.user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
-                  <audio ref={audioRef} src={notificationAudioSrc} />
+            <Paper>
+              <Box p={2}>
+                <Grid container justifyContent="space-between">
+                  <Grid item>
+                    <MyPomodoro user={props.user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
+                    <audio ref={audioRef} src={notificationAudioSrc} />
+                  </Grid>
+                  <Divider orientation="vertical" flexItem />
+                  <Grid item>
+                    <FocusForm onStart={handleStartPomodoro}/>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <FocusForm onStart={handleStartPomodoro}/>
-                </Grid>
-              </Grid>
-            </Box>
+              </Box>
+            </Paper>
           </Grid>
           {pomodorosListWithoutMyPomodoro.length
             ? <>
-                <Grid item>
-                  <Box py={4} px={2}>
-                    <Typography variant="h4" component="h4">{locale.Users}</Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box px={2}>
+                <Box py={2}>
+                  <Grid item>
+                    <Box py={2}>
+                      <Typography variant="h4" component="h4">{locale.Users}</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
                     <Grid container spacing={2}>
                       {Object.keys(pomodorosList).map(pomodoroKey => (
                         pomodoroKey !== props.user.uid
@@ -101,24 +103,27 @@ export const PomodorosContainer = (props) => {
                             </Grid>
                           : null
                       ))}
-                    </Grid>
-                  </Box>
-                </Grid>
+                      </Grid>
+                  </Grid>
+                </Box>
               </>
-            : <div className="u-height--50 u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
-                <Typography gutterBottom variant="h4">
-                  {locale.JustStarted}
-                </Typography>
-                <Typography gutterBottom variant="h6">
-                  {locale.ShareTheLinkWithYourTeamAndStartPomothoring}
-                </Typography>
-                <Typography variant="body1">
-                  {window.location.href}
-                </Typography>
-              </div>
+            : <Box py={4} px={2}>
+                <div className="u-display--flex u-flex-direction--column u-justify-content--center u-align-items--center">
+                  <Typography gutterBottom variant="h4">
+                    {locale.JustStarted}
+                  </Typography>
+                  <Typography gutterBottom variant="h6">
+                    {locale.ShareTheLinkWithYourTeamAndStartPomothoring}
+                  </Typography>
+                  <Typography variant="body1">
+                    {window.location.href}
+                    <CopyToClipboard text={window.location.href}/>
+                  </Typography>
+                </div>
+              </Box>
           }
         </Grid>
-      </div>
+      </Box>
     </LoadingCircularProgress>
   );
 };
