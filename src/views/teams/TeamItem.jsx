@@ -15,7 +15,7 @@ const TeamItem = (props) => {
       onMouseLeave={() => setIsVisibleJoinButton(false)}
     >
       <CardHeader
-        title={props.name}
+        title={props.name.replaceAll('-', ' ')}
         subheader={`${locale.Users}: ${props.users}`}
         action={
           isVisibleJoinButton && <Button

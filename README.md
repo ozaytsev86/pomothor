@@ -15,6 +15,11 @@ Contributions are welcome.
 ## Changelog
 
 ### 2.1.0
+* added copy to clipboard button to copy and share team link
+* fixed navigation from team page to create team
+* updated team L&F
+
+### 2.1.0
 * added teams list view where you can see the list of all the teams to join
 * updated L&F in some pages
 

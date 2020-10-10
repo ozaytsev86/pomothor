@@ -1,4 +1,6 @@
 export const locale = {
+    ClickToCopy: 'Click to copy',
+    Copied: 'Copied!',
     CreateTeam: 'Create team',
     CreateYourTeamCallToAction: 'Create your team and improve its performance',
     ErrorOnlyLettersNumbersDashes: 'Only letters, numbers and spaces are allowed',
@@ -20,6 +22,7 @@ export const locale = {
     SignInWithGoogle: 'Sign in with Google',
     SignOut: 'Sign out',
     Start: 'Start',
+    TeamLink: 'Team link',
     TeamName: 'Team name',
     Teams: 'Teams',
     ThereAreNoTeamsCreatedYet: 'There are no teams created yet',
