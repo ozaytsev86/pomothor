@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Button, FormControl, InputLabel, Input} from '@material-ui/core';
+import {Button, TextField} from '@material-ui/core';
 
-import {locale} from '../../../locale/en-us';
+import {locale} from '../../../locale/EnUs';
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -21,18 +21,16 @@ export const FocusForm = (props) => {
 
   return (
     <form onSubmit={(e) => handleStart(e)}>
-      <FormControl>
-        <InputLabel htmlFor="time">{locale.FocusTime}</InputLabel>
-        <Input
-          autoFocus
-          required
-          id="time"
-          placeholder={locale.MinutesLowercase}
-          className={classes.timeTextField}
-          onChange={(e) => setMinutes(e.target.value)}
-        />
-      </FormControl>
-      <Button focused
+      <TextField
+        autoFocus
+        required
+        id="time"
+        label={locale.FocusTime}
+        placeholder={locale.MinutesLowercase}
+        className={classes.timeTextField}
+        onChange={(e) => setMinutes(e.target.value)}
+      />
+      <Button disableElevation
               type="submit"
               variant="contained"
               color="primary"

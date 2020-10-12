@@ -5,19 +5,20 @@ import Firebase from 'firebase';
 
 import {Box, Divider, Grid, Paper, Typography} from '@material-ui/core';
 
-import {addTeam, addTeamUser} from '../../../services/team.service';
-import {updateNotification} from '../../../services/notification.service';
-import {setCompleted, startPomodoro} from '../../../services/pomodoro.service';
-import {isValidTeamUrl} from '../teams.helper';
+import {addTeam, addTeamUser} from '../../../services/Team.service';
+import {updateNotification} from '../../../services/Notification.service';
+import {setCompleted, startPomodoro} from '../../../services/Pomodoro.service';
+import {isValidTeamUrl} from '../Teams.helper';
 
 import {CopyToClipboard, LoadingCircularProgress} from '../../../components';
 import {Me} from './Me';
 import {FocusForm} from './FocusForm';
 import {NoTeams} from './NoTeams';
 import {Users} from './Users';
+import {CreateTeamModal} from './CreateTeamModal';
 
-import {routes} from '../../../constants/routes';
-import {locale} from '../../../locale/en-us';
+import {routes} from '../../../constants/Routes';
+import {locale} from '../../../locale/EnUs';
 
 import notificationAudioSrc from '../../../statics/notification.wav';
 
@@ -30,27 +31,24 @@ const TeamContainer = (props) => {
   const [notifications, setNotifications] = useState(null);
   const [isLoadingPomodoros, setIsLoadingPomodoros] = useState(true);
   const audioRef = useRef();
+  const [isOpenedCreateTeamModal, setIsOpenedCreateTeamModal] = useState(false);
 
   useEffect(() => {
     if (isValidTeamUrl(teamId)) {
-      const currentTeamUrl = `/teams/${teamId}`;
-      const teamsRef = Firebase.database().ref(currentTeamUrl);
-      teamsRef.once('value', snapshot => {
+      Firebase.database().ref(`/teams/${teamId}`).on('value', snapshot => {
         const currTeam = snapshot.val();
 
         if (!currTeam) {
-          // TODO: ask user to create a team instead of directly create it
-          addTeam({user, teamId});
-          addTeamUser({user, teamId})
+          setIsOpenedCreateTeamModal(true);
         } else {
+          setIsOpenedCreateTeamModal(false);
           if (currTeam.users.filter(userKey => userKey === user.uid).length === 0) {
             addTeamUser({user, teamId, users: currTeam.users});
           }
+          setCurrentTeam({id: teamId, ...currTeam});
         }
-
-        setCurrentTeam({id: teamId, ...currTeam});
-        setIsLoading(false);
       });
+      setIsLoading(false);
     } else {
       props.history.push(routes.TeamNotFound);
     }
@@ -99,58 +97,76 @@ const TeamContainer = (props) => {
     setCompleted({teamId: currentTeam.id, userId});
   };
 
+  const handleConfirmCreateTeamModal = () => {
+    addTeam({user, teamId});
+    addTeamUser({user, teamId});
+    setCurrentTeam({id: teamId})
+    props.history.push(`${routes.Teams}/${teamId}`);
+  }
+
+  const handleCloseCreateTeamModal = () => {
+    props.history.push(routes.Home);
+  }
+
   const pomodorosListWithoutMyPomodoro = Object.keys(pomodorosList).filter(pomodoroKey => pomodoroKey !== user.uid);
-  const teamName = window.location.href.substring(window.location.href.lastIndexOf('/') + 1).replaceAll('-', ' ');
 
   return (
     <LoadingCircularProgress full isLoading={isLoading}>
-      <Grid container direction="column" alignContent="center">
-        <Grid item>
-          <Box px={2}>
-            <Typography variant="h2">{teamName}</Typography>
-            {pomodorosListWithoutMyPomodoro.length !== 0
-              && <Typography variant="body1">
-                   <strong>{locale.TeamLink}: </strong>
-                   {window.location.href}
-                   <CopyToClipboard text={window.location.href}/>
-                 </Typography>
-            }
-          </Box>
-        </Grid>
-      </Grid>
-      <LoadingCircularProgress full isLoading={isLoadingPomodoros}>
-        <Box p={2}>
-          <Grid container direction="column" wrap="nowrap">
-            <Grid item>
-              <Paper>
-                <Box p={2}>
-                  <Grid container justifyContent="space-between">
-                    <Grid item>
-                      <Me user={user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
-                      <audio ref={audioRef} src={notificationAudioSrc} />
-                    </Grid>
-                    <Divider orientation="vertical" flexItem />
-                    <Grid item>
-                      <FocusForm onStart={handleStartPomodoro}/>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Paper>
-            </Grid>
-            {pomodorosListWithoutMyPomodoro.length
-              ? <Users
-                  pomodorosList={pomodorosList}
-                  user={user}
-                  notifications={notifications}
-                  onComplete={handleComplete}
-                  onAddNotification={handleAddNotification}
-                  onDeleteNotification={handleDeleteNotification}
-                />
-              : <NoTeams />
-            }
+      {!isOpenedCreateTeamModal && currentTeam && <>
+        <Grid container direction="column" alignContent="center">
+          <Grid item>
+            <Box px={2}>
+              <Typography variant="h2">{currentTeam.id.replaceAll('-', ' ')}</Typography>
+              {pomodorosListWithoutMyPomodoro.length !== 0
+                && <Typography variant="body1">
+                     <strong>{locale.TeamLink}: </strong>
+                     {window.location.href}
+                     <CopyToClipboard text={window.location.href}/>
+                   </Typography>
+              }
+            </Box>
           </Grid>
-        </Box>
-      </LoadingCircularProgress>
+        </Grid>
+        <LoadingCircularProgress full isLoading={isLoadingPomodoros}>
+          <Box p={2}>
+            <Grid container direction="column" wrap="nowrap">
+              <Grid item>
+                <Paper>
+                  <Box p={2}>
+                    <Grid container justifyContent="space-between">
+                      <Grid item>
+                        <Me user={user} pomodorosList={pomodorosList} onComplete={handleComplete}/>
+                        <audio ref={audioRef} src={notificationAudioSrc} />
+                      </Grid>
+                      <Divider orientation="vertical" flexItem />
+                      <Grid item>
+                        <FocusForm onStart={handleStartPomodoro}/>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </Grid>
+              {pomodorosListWithoutMyPomodoro.length
+                ? <Users
+                    pomodorosList={pomodorosList}
+                    user={user}
+                    notifications={notifications}
+                    onComplete={handleComplete}
+                    onAddNotification={handleAddNotification}
+                    onDeleteNotification={handleDeleteNotification}
+                  />
+                : <NoTeams />
+              }
+            </Grid>
+          </Box>
+        </LoadingCircularProgress>
+      </>}
+      <CreateTeamModal
+        isOpened={isOpenedCreateTeamModal}
+        teamName={teamId.replaceAll('-', ' ')}
+        onConfirm={handleConfirmCreateTeamModal}
+        onClose={handleCloseCreateTeamModal}
+      />
     </LoadingCircularProgress>
   );
 };

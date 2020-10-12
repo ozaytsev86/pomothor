@@ -1,12 +1,12 @@
-import './styles/elements/background.css';
-import './styles/utils/utils.css';
+import './styles/elements/Background.css';
+import './styles/utils/Utils.css';
 
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import withFirebaseAuth from 'react-with-firebase-auth'
 import Firebase from 'firebase';
 import 'firebase/auth';
-import firebaseConfig from './configs/firebaseConfig';
+import firebaseConfig from './configs/FirebaseConfig';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import {blue} from '@material-ui/core/colors';
 
@@ -17,7 +17,7 @@ import TeamContainer from './views/teams/team/TeamContainer';
 import {Home} from './views/home/Home';
 import {TeamNotFound} from './views/teams/team/TeamNotFound';
 
-import {routes} from './constants/routes';
+import {routes} from './constants/Routes';
 import {TeamsContainer} from './views/teams/TeamsContainer';
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
@@ -49,15 +49,19 @@ export const App = (props) => {
                 <Route exact path={routes.Teams}>
                   <TeamsContainer user={user}/>
                 </Route>
-                <Route path={routes.TeamsId}
-                       render={({match}) => match.params.id === 'new'
-                         ? <NewTeamContainer user={user}/>
-                         : <TeamContainer user={user}/>
-                       }
+                <Route
+                  path={routes.TeamsId}
+                  render={({match}) => {
+                    switch(match.params.teamId) {
+                      case 'new':
+                        return <NewTeamContainer user={user}/>;
+                      case 'team-not-found':
+                        return <TeamNotFound/>;
+                      default:
+                        return <TeamContainer user={user}/>;
+                    }
+                  }}
                 />
-                <Route path={routes.TeamNotFound}>
-                  <TeamNotFound/>
-                </Route>
               </>}
             </Switch>
           </LoadingLinearProgress>

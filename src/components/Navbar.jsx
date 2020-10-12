@@ -3,9 +3,9 @@ import {NavLink} from 'react-router-dom';
 import {AppBar, Toolbar, Button, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core';
 
-import {locale} from '../locale/en-us';
+import {locale} from '../locale/EnUs';
 import logo from '../statics/images/logo.png';
-import {routes} from '../constants/routes';
+import {routes} from '../constants/Routes';
 
 const useStyles = makeStyles(theme => ({
   appBar: {

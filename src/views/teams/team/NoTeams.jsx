@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, Typography} from '@material-ui/core';
 import {CopyToClipboard} from '../../../components';
 
-import {locale} from '../../../locale/en-us';
+import {locale} from '../../../locale/EnUs';
 
 export const NoTeams = () => {
   return (

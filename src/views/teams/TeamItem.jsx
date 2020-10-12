@@ -3,8 +3,8 @@ import {withRouter} from 'react-router';
 import {Button, Card, CardHeader} from '@material-ui/core';
 import {People} from '@material-ui/icons';
 
-import {routes} from '../../constants/routes';
-import {locale} from '../../locale/en-us';
+import {routes} from '../../constants/Routes';
+import {locale} from '../../locale/EnUs';
 
 const TeamItem = (props) => {
   const [isVisibleJoinButton, setIsVisibleJoinButton] = useState(false);

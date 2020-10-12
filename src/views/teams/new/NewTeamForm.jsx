@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import {withRouter} from 'react-router';
 import {Box, Button, TextField} from '@material-ui/core';
+import {Link} from 'react-router-dom';
 
-import {formatTeamName, isDuplicatedTeamName, isValidTeamName} from '../teams.helper';
+import {formatTeamNameToId, isDuplicatedTeamName, isValidTeamName} from '../Teams.helper';
+import {replaceParamsInString} from '../../../utils/ReplaceParamsInString';
 
-import {routes} from '../../../constants/routes';
-import {locale} from '../../../locale/en-us';
+import {routes} from '../../../constants/Routes';
+import {locale} from '../../../locale/EnUs';
+import {addTeam} from '../../../services/Team.service';
 
 const NewTeamForm = (props) => {
   const [name, setName] = useState('');
@@ -19,12 +22,12 @@ const NewTeamForm = (props) => {
       return;
     }
 
+    const teamId = formatTeamNameToId(name);
     if (isValidTeamName(name) && !isDuplicatedTeamName(name, props.teams)) {
-      props.history.push(`${routes.Teams}/${formatTeamName(name)}`);
+      addTeam({user: props.user, teamId})
+      props.history.push(`${routes.Teams}/${teamId}`);
     } else {
-      //TODO: suggest a name and show link to apply
-      // if the name is test, suggest test1
-      setError(locale.ErrorTeamNameDuplicated);
+      setError(replaceParamsInString(locale.ErrorTeamNameDuplicatedJoinXXOrTryDifferent, <Link to={`${routes.Teams}/${formatTeamNameToId(teamId)}`}>{locale.JoinTheTeamLC}</Link>));
     }
   };
 
@@ -39,9 +42,10 @@ const NewTeamForm = (props) => {
 
   return (
     <form onSubmit={handleAddTeam} noValidate autoComplete="off" className="u-display--flex u-flex-direction--column">
-      <Box pb={2}>
+      <Box pb={2} minWidth={300}>
         <TextField
           autoFocus
+          fullWidth
           id="name"
           label={locale.TeamName}
           placeholder={locale.WriteSomethingAwesome}

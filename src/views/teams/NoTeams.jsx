@@ -2,8 +2,8 @@ import React from 'react';
 import {withRouter} from 'react-router';
 import {Button, Grid, Link, Typography} from '@material-ui/core';
 
-import {locale} from '../../locale/en-us';
-import {routes} from '../../constants/routes';
+import {locale} from '../../locale/EnUs';
+import {routes} from '../../constants/Routes';
 
 const NoTeams = (props) => {
   return (
