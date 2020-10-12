@@ -3,7 +3,7 @@ const routes = {
   Teams: '/teams',
   TeamsId: '/teams/:teamId',
   TeamsNew: '/teams/new',
-  TeamNotFound: '/team-not-found',
+  TeamNotFound: '/teams/team-not-found',
 };
 
 export {
