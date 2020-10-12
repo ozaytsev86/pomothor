@@ -16,6 +16,7 @@ Contributions are welcome.
 
 ### 2.1.4
 * added the possibility to decide if create a team or not when accessing directly by url
+* added the possibility to join the team when the team name is duplicated
 
 ### 2.1.3
 * fix active menu item when home selected
