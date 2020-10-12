@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Typography, Link} from '@material-ui/core';
 
-import {locale} from '../../locale/en-us';
+import {locale} from '../../locale/EnUs';
 
 export const Home = () => {
  return (

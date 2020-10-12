@@ -6,13 +6,17 @@ Try it https://pomothor-f46c3.web.app/
 **This project is in development**  
 So take into consideration some things:  
 
-1. Once you Sign up with your Google account some of your information will be publicly visible (profile picture, first name and last name).
+1. Once you Sign up with your Google's account some of your information will be publicly visible (profile picture, first name and last name).
 2. At the moment created teams are not private, any user can join any team.
 3. The data will be cleaned from time to time without any communication, if you want to keep your data, please let me know.
 
 Contributions are welcome.
 
 ## Changelog
+
+### 2.1.4
+* added the possibility to decide if create a team or not when accessing directly by url
+* added the possibility to join the team when the team name is duplicated
 
 ### 2.1.3
 * fix active menu item when home selected

@@ -1,0 +1,41 @@
+:root {
+  --navbar-height: 64px;
+  --border-radius: 5px;
+}
+
+.u-position--absolute {
+  position: absolute;
+}
+
+.u-bottom--0 {
+  bottom: 0;
+}
+
+.u-display--flex {
+  display: flex;
+}
+
+.u-flex-direction--column {
+  flex-direction: column;
+}
+
+.u-justify-content--center {
+  justify-content: center;
+}
+
+.u-align-items--center {
+  align-items: center;
+}
+
+.u-height--50 {
+  height: 50%;
+}
+
+.u-height--full {
+  height: calc(100vh - var(--navbar-height));
+}
+
+.u-border-radius {
+  border-radius: var(--border-radius);
+}
+

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {IconButton, Tooltip} from '@material-ui/core';
 import {ContentCopy} from '@material-ui/icons';
 
-import {locale} from '../locale/en-us';
+import {locale} from '../locale/EnUs';
 
 const propTypes = {
   text: PropTypes.string.isRequired

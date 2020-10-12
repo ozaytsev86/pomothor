@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 
-import {formatToTwoNumbers} from '../utils/number';
+import {formatToTwoNumbers} from '../utils/Number';
 
-import {locale} from '../locale/en-us';
+import {locale} from '../locale/EnUs';
 
 const calculateTime = (t) => {
   const startTimeStamp = new Date(t).getTime();
