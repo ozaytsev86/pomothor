@@ -1,6 +1,6 @@
 ## Welcome to Pomothor
 
-It is an Open Source application which applies the usage of pomodoro technique for teams or individial purposes. To start using it, just enter with your Gmail account, create a team and share a link with your mates. 
+It is an Open Source application which applies the usage of pomodoro technique for teams or individual purposes. To start using it, just enter with your Gmail account, create a team and share a link with your mates. 
 
 At the moment all the teams are public and the data is cleaned from time to time without any notification, so if you want to keep your team and members alive, please let me know.
 
