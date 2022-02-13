@@ -9,9 +9,12 @@
 /coverage
 
 # production
+/dist
 /build
 .firebase
 .env
+
+/src_old
 
 # misc
 .DS_Store

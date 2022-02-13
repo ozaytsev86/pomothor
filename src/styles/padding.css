@@ -1,0 +1,11 @@
+.u-p-1 {
+  padding: var(--unit-1);
+}
+
+.u-p-2 {
+  padding: var(--unit-2);
+}
+
+.u-p-3 {
+  padding: var(--unit-3);
+}

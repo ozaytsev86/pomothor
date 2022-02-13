@@ -1,11 +1,3 @@
-const routes = {
-  Home: '/',
-  Teams: '/teams',
-  TeamsId: '/teams/:teamId',
-  TeamsNew: '/teams/new',
-  TeamNotFound: '/teams/team-not-found',
-};
-
-export {
-  routes
-};
+export const HOME = '/';
+export const TEAMS = '/teams';
+export const TEAMS_NOT_FOUND = '/teams/not-found';
