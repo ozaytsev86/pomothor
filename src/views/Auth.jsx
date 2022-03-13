@@ -2,11 +2,12 @@ import React from 'react';
 import {locale} from '../locale/EnUs';
 import {Alert, Button, Heading, Pane, Text, TextInputField} from 'evergreen-ui';
 import {supabase} from '../services/api';
+import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../configs/StyleVariables';
 
 export const Auth = () => {
-  const [helperText, setHelperText] = React.useState({error: null, text: null});
-  const emailRef = React.useRef();
-  const passwordRef = React.useRef();
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(null);
+  const [form, setForm] = React.useState({email: '', password: ''});
 
   const handleOAuthLogin = async (provider) => {
     // You need to enable the third party auth you want in Authentication > Settings
@@ -18,8 +19,7 @@ export const Auth = () => {
   };
 
   const handleLogin = async (type) => {
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
+    const {email, password} = form;
 
     const {user, error} =
       type === 'LOGIN'
@@ -27,12 +27,10 @@ export const Auth = () => {
         : await supabase.auth.signUp({email, password});
 
     if (error) {
-      setHelperText({error: true, text: error.message});
+      setError(error.message);
     } else if (user && !error) {
-      setHelperText({
-        error: false,
-        text: 'An email has been sent to you for verification!'
-      });
+      setError(null);
+      setSuccess('An email has been sent to you for verification!');
     }
   };
 
@@ -42,7 +40,7 @@ export const Auth = () => {
     const email = prompt('Please enter your email:');
 
     if (email === null || email === '') {
-      setHelperText({error: true, text: 'You must enter your email.'});
+      setError('You must enter your email.');
     } else {
       let {error} = await supabase.auth.api.resetPasswordForEmail(
         email
@@ -50,10 +48,7 @@ export const Auth = () => {
       if (error) {
         console.error('Error: ', error.message);
       } else {
-        setHelperText({
-          error: false,
-          text: 'Password recovery email has been sent.'
-        });
+        setError('Password recovery email has been sent.');
       }
     }
   };
@@ -64,70 +59,65 @@ export const Auth = () => {
       justifyContent="center"
       alignItems="center"
       height="100vh"
+      className="e-bg e-bg-image-login"
     >
       <Pane
         display="flex"
         flexDirection="column"
         justifyContent="center"
-        background="blue25"
-        borderRadius={10}
-        padding={32}
+        borderRadius={BORDER_RADIUS_XL}
+        padding={UNIT_4}
         width={300}
+        backgroundColor="white"
+        className="u-box-shadow-1"
       >
-        <Heading size={900} paddingBottom={32}>{locale.Login}</Heading>
-
+        <Heading size={900} paddingBottom={UNIT_4}>{locale.Login}</Heading>
         <TextInputField
           required
           type="email"
-          marginBottom={8}
-          ref={emailRef}
+          marginBottom={UNIT_2}
           label="Email"
+          value={form.email}
+          onChange={e => setForm({...form, email: e.target.value})}
         />
         <TextInputField
           required
           type="password"
           marginBottom={0}
-          ref={passwordRef}
           label="Password"
+          value={form.password}
+          onChange={e => setForm({...form, password: e.target.value})}
         />
-        <Pane display="flex" justifyContent="flex-end" marginBottom={8}>
+        <Pane display="flex" justifyContent="flex-end" marginBottom={UNIT_3}>
           <Button appearance="minimal" onClick={forgotPassword}>Forgot Password?</Button>
         </Pane>
-        {!!helperText.text && !helperText.error && (
-          <Alert intent="success" marginBottom={16}>
-            {helperText.text}
+        {success && (
+          <Alert intent="success" marginBottom={UNIT_3}>
+            {success}
           </Alert>
-        )}
-        {helperText.error && (
-          <Alert intent="danger" marginBottom={16}>
-            {helperText.text}
-          </Alert>
-        )}
-        <Pane display="flex" width="100%" justifyContent="space-between" marginBottom={16}>
+        )}{error && (
+        <Alert intent="danger" marginBottom={UNIT_3}>
+          {error}
+        </Alert>
+      )}
+        <Pane display="flex" justifyContent="space-between" marginBottom={UNIT_3}>
           <Button width="48%" type="submit" onClick={() => handleLogin('REGISTER')}>Sign Up</Button>
           <Button width="48%" type="submit" appearance="primary" onClick={() => handleLogin('LOGIN')}>Sign In</Button>
         </Pane>
 
-        <Text color="muted" textAlign="center" padding={16}>Or continue with</Text>
+        <Text color="muted" textAlign="center" padding={UNIT_3}>Or continue with</Text>
         <Pane display="flex" flexDirection="column" alignItems="center">
-          <Button
-            width="60%"
-            appearance="primary"
-            margin={8}
-            onClick={() => handleOAuthLogin('github')}
-          >
+          <Button width="60%" appearance="primary" margin={UNIT_2} onClick={() => handleOAuthLogin('github')}>
             GitHub
           </Button>
-          <Button
-            width="60%"
-            appearance="primary"
-            margin={8}
-            onClick={() => handleOAuthLogin('google')}
-          >
+          <Button width="60%" appearance="primary" margin={UNIT_2} onClick={() => handleOAuthLogin('google')}>
             Google
           </Button>
         </Pane>
       </Pane>
+      <Heading size={100} position="absolute" bottom={0}>
+        Photo by <a href="https://www.pexels.com/@fauxels" target="_blank" rel="noopener noreferrer">fauxels</a>
+      </Heading>
     </Pane>
   );
 };

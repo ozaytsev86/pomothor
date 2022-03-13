@@ -1,9 +1,13 @@
-@import "./styles/variables.css";
+@import './styles/variables.css';
+@import './styles/base.css';
 
-@import "./styles/align-items.css";
-@import "./styles/box-shadow.css";
-@import "./styles/cursor.css";
-@import "./styles/display.css";
-@import "./styles/justify-content.css";
-@import "./styles/margin.css";
-@import "./styles/padding.css";
+@import './styles/elements/background.css';
+
+@import './styles/utils/align-items.css';
+@import './styles/utils/background.css';
+@import './styles/utils/box-shadow.css';
+@import './styles/utils/cursor.css';
+@import './styles/utils/height.css';
+@import './styles/utils/display.css';
+@import './styles/utils/margin.css';
+@import './styles/utils/text-decoration.css';
