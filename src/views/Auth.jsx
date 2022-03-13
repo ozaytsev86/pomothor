@@ -1,8 +1,8 @@
 import React from 'react';
 import {locale} from '../locale/EnUs';
 import {Alert, Button, Heading, Pane, Text, TextInputField} from 'evergreen-ui';
-import {supabase} from '../services/api';
-import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../configs/StyleVariables';
+import {supabase} from '../services/Api';
+import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../constants/StyleVariables';
 
 export const Auth = () => {
   const [error, setError] = React.useState(null);

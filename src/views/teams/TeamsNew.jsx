@@ -1,11 +1,21 @@
-import {Button, Checkbox, Heading, Pane, Position, TextInputField, Tooltip} from 'evergreen-ui';
-import {BORDER_RADIUS_XL, UNIT_2, UNIT_4} from '../../configs/StyleVariables';
+import {Button, Checkbox, Heading, Pane, Position, Spinner, TextInputField, Tooltip} from 'evergreen-ui';
+import {BORDER_RADIUS_XL, UNIT_2, UNIT_4} from '../../constants/StyleVariables';
 import React from 'react';
 import {BiInfoCircle} from 'react-icons/bi';
+import {useCreateTeam} from '../../services/Teams.query';
 
 export const TeamsNew = () => {
   const [form, setForm] = React.useState({name: '', isPrivate: true});
   const [error, setError] = React.useState(null);
+
+  const {
+    isLoading,
+    mutateAsync: createTeam
+  } = useCreateTeam({
+    onSuccess: () => {
+      setForm({name: '', isPrivate: true});
+    }
+  });
 
   const handleOnClickCreateTeam = () => {
     let valid = true;
@@ -23,7 +33,7 @@ export const TeamsNew = () => {
 
     if (valid) {
       setError(null);
-      console.log(form);
+      createTeam(form);
     }
   };
 
@@ -45,6 +55,7 @@ export const TeamsNew = () => {
         padding={UNIT_4}
         className="u-box-shadow-1"
       >
+        {isLoading && <Spinner marginX="auto"/>}
         <TextInputField
           required
           autoFocus

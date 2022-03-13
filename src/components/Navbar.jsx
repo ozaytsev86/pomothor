@@ -1,18 +1,21 @@
-import {supabase} from '../services/api';
+import {supabase} from '../services/Api';
 import {Avatar, Button, Heading, Menu, Pane, Popover, Position} from 'evergreen-ui';
 import {BiGroup, BiHome, BiLogOut, BiPlus} from 'react-icons/bi';
 import Logo from '../statics/images/logo.png';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {HOME, TEAMS, TEAMS_NEW} from '../constants/Routes';
-import {UNIT_2, UNIT_3, UNIT_4} from '../configs/StyleVariables';
+import {UNIT_2, UNIT_3, UNIT_4} from '../constants/StyleVariables';
+import {useAppStore} from '../hooks/UseAppStore';
 
-export const Navbar = ({user}) => {
+export const Navbar = () => {
+  const {userInfo} = useAppStore();
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     supabase.auth.signOut().catch(console.error);
   };
 
-  if (!user) {
+  if (!userInfo) {
     return null;
   }
 
@@ -58,7 +61,7 @@ export const Navbar = ({user}) => {
             </Menu>
           }
         >
-          <Avatar size={UNIT_4} src={user.user_metadata.avatar_url} className="u-cursor-pointer"/>
+          <Avatar size={UNIT_4} src={userInfo.user_metadata.avatar_url} className="u-cursor-pointer"/>
         </Popover>
       </Pane>
     </Pane>
