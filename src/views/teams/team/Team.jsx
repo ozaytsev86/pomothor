@@ -1,7 +1,7 @@
 import {UNIT_1, UNIT_2, UNIT_3, UNIT_4} from '../../../constants/StyleVariables';
 import {Button, ClipboardIcon, Heading, IconButton, Link, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
 import {useNavigate, useParams} from 'react-router-dom';
-import {useFetchTeam} from '../../../services/Teams.query';
+import {useFetchTeam, useInviteUserToTeam} from '../../../services/Teams.query';
 import {Loading} from '../../../components/Loading';
 import {TEAMS_NOT_FOUND} from '../../../constants/Routes';
 import {useAppStore} from '../../../hooks/UseAppStore';
@@ -18,24 +18,31 @@ export const Team = () => {
   const [invitedUserEmail, setInvitedUserEmail] = useState('');
 
   const {
-    isLoading,
+    isLoading: isLoadingTeam,
     data: team = {},
     error
   } = useFetchTeam(params.id);
 
+  const {
+    isLoading,
+    mutateAsync: inviteUser
+  } = useInviteUserToTeam();
+
   if (error) {
     navigate(TEAMS_NOT_FOUND);
+  }
+
+  const handleOnClickInviteUser = () => {
+    inviteUser({teamId: params.id, email: invitedUserEmail, creatorId: userInfo.id})
   }
 
   const isAdmin = userInfo.id === team.creatorId;
 
   return (
     <>
-      <Loading loading={isLoading}/>
-      {!isLoading && (
-        <Pane
-          padding={UNIT_4}
-        >
+      <Loading loading={isLoadingTeam}/>
+      {!isLoadingTeam && (
+        <Pane padding={UNIT_4}>
           <Pane
             width="100%"
             textAlign="center"
@@ -48,7 +55,6 @@ export const Team = () => {
               <IconButton icon={ClipboardIcon}/>
             </Tooltip>
           </Pane>
-
           <Pane display="flex">
             <Pane display="flex" flexDirection="column" flexGrow={1}>
               <MeCard/>
@@ -90,6 +96,7 @@ export const Team = () => {
                     appearance="primary"
                     display="flex"
                     alignSelf="flex-end"
+                    onClick={handleOnClickInviteUser}
                   >Invite</Button>
                 </Card>
                 <Pane marginBottom={UNIT_3}>

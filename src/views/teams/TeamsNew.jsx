@@ -41,7 +41,7 @@ export const TeamsNew = () => {
 
     if (valid) {
       setError(null);
-      createTeam({...form, creatorId: userInfo.id});
+      createTeam({...form, creatorId: userInfo.id, creatorEmail: userInfo.email});
     }
   };
 

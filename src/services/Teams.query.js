@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createTeam, fetchTeam, fetchTeams, joinTeam} from './Teams';
+import {createTeam, fetchTeam, fetchTeams, inviteUserToTeam, joinTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
 import {useQuery, useQueryClient} from 'react-query';
@@ -38,6 +38,19 @@ export const useJoinTeam = ({onSuccess}) => {
     joinTeam,
     {
       onSuccess
+    }
+  );
+};
+
+export const useInviteUserToTeam = () => {
+  const queryClient = useQueryClient();
+
+  return useMutationWithError(
+    inviteUserToTeam,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(Queries.Teams);
+      }
     }
   );
 };

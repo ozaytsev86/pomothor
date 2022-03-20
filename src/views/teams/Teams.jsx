@@ -31,7 +31,7 @@ export const Teams = () => {
 
   const handleOnClickJoin = (teamId) => {
     joinedTeamIdRef.current = teamId;
-    joinTeam({teamId, userId: userInfo.id});
+    joinTeam({teamId, userId: userInfo.id, userEmail: userInfo.email});
   };
 
   return (
@@ -60,7 +60,7 @@ export const Teams = () => {
                 small
                 loading={id === joinedTeamIdRef.current && isLoadingJoinTeam}
               />
-              <Tooltip content="Join" position={Position.TOP}>
+              <Tooltip content="Join" position={Position.LEFT}>
                 <IconButton
                   icon={BiLogInCircle}
                   appearance="primary"
