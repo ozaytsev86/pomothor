@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {createTeam, fetchTeams, joinTeam} from './Teams';
+import {createTeam, fetchTeam, fetchTeams, joinTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
-import {useQueryClient} from 'react-query';
+import {useQuery, useQueryClient} from 'react-query';
 
 export const useCreateTeam = ({onSuccess}) => {
   const queryClient = useQueryClient();
@@ -23,6 +23,13 @@ export const useFetchTeams = () => {
   return useQueryWithError(
     [Queries.Teams],
     fetchTeams
+  );
+};
+
+export const useFetchTeam = (id) => {
+  return useQuery(
+    [Queries.Team],
+    () => fetchTeam(id)
   );
 };
 

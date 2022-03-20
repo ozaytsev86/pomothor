@@ -15,6 +15,19 @@ export const fetchTeams = () => {
     .then(({data}) => data);
 };
 
+export const fetchTeam = (id) => {
+  return supabase
+    .from('teams')
+    .select()
+    .eq('id', Number(id))
+    .then(({data}) => {
+      if (data.length === 0) {
+        return Promise.reject('Team not found');
+      }
+      return Promise.resolve(data[0]);
+    });
+};
+
 export const joinTeam = async (requestData) => {
   const {data} = await supabase
     .from('teams_users')

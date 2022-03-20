@@ -10,6 +10,7 @@ import {Navbar} from './components/Navbar';
 import {TeamsNew} from './views/teams/TeamsNew';
 import {useAppStore} from './hooks/UseAppStore';
 import {Teams} from './views/teams/Teams';
+import {Team} from './views/teams/team/Team';
 import {AlertContainer} from './components/alert/AlertContainer';
 
 export const App = () => {
@@ -42,7 +43,7 @@ export const App = () => {
             <Route path={HOME} element={<Home/>}/>
             <Route exact path={TEAMS} element={<Teams/>}/>
             <Route path={TEAMS_NEW} element={<TeamsNew/>}/>
-            <Route path={TEAMS_ID} element={<div>Teams ID</div>}/>
+            <Route path={TEAMS_ID} element={<Team/>}/>
             <Route path={TEAMS_NOT_FOUND} element={<div>Team not found</div>}/>
           </Routes>
         )
