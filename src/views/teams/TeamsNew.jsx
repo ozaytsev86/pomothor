@@ -1,7 +1,7 @@
 import {Button, Checkbox, Heading, Pane, Position, TextInputField, Tooltip} from 'evergreen-ui';
-import {BORDER_RADIUS_XL, UNIT_2, UNIT_4} from '../../constants/StyleVariables';
+import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
 import React from 'react';
-import {BiInfoCircle} from 'react-icons/bi';
+import {BiInfoCircle, BiRocket} from 'react-icons/bi';
 import {useCreateTeam} from '../../services/Teams.query';
 import {useNavigate} from 'react-router-dom';
 import {TEAMS_ID} from '../../constants/Routes';
@@ -97,6 +97,7 @@ export const TeamsNew = () => {
           </Tooltip>
         </Pane>
         <Button appearance="primary" type="submit" onClick={handleOnClickCreateTeam}>
+          <BiRocket fontSize={UNIT_3} className="u-mr-1"/>
           Let's Go!
         </Button>
       </Pane>

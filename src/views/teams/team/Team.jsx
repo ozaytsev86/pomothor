@@ -1,7 +1,7 @@
 import {UNIT_1, UNIT_2, UNIT_3, UNIT_4} from '../../../constants/StyleVariables';
-import {Button, ClipboardIcon, Heading, IconButton, Link, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
+import {Button, ClipboardIcon, Heading, IconButton, Link, Pane, Position, Text, TextInput, Tooltip} from 'evergreen-ui';
 import {useNavigate, useParams} from 'react-router-dom';
-import {useFetchTeam, useInviteUserToTeam} from '../../../services/Teams.query';
+import {useFetchTeam, useFetchTeamUsers, useInviteUserToTeam} from '../../../services/Teams.query';
 import {Loading} from '../../../components/Loading';
 import {TEAMS_NOT_FOUND} from '../../../constants/Routes';
 import {useAppStore} from '../../../hooks/UseAppStore';
@@ -10,6 +10,7 @@ import {Badge} from '../../../components/Badge';
 import {MeCard} from './MeCard';
 import {UserCard} from './UserCard';
 import {Card} from '../../../components/card/Card';
+import {BiSend} from 'react-icons/bi';
 
 export const Team = () => {
   const params = useParams();
@@ -23,18 +24,26 @@ export const Team = () => {
     error
   } = useFetchTeam(params.id);
 
-  const {
-    isLoading,
-    mutateAsync: inviteUser
-  } = useInviteUserToTeam();
-
   if (error) {
     navigate(TEAMS_NOT_FOUND);
   }
 
+  const {
+    isLoading: isLoadingInviteUser,
+    mutateAsync: inviteUser
+  } = useInviteUserToTeam({
+    onSuccess: () => {
+      setInvitedUserEmail('');
+    }
+  });
+
+  const {
+    data: teamUsers = []
+  } = useFetchTeamUsers(params.id);
+
   const handleOnClickInviteUser = () => {
-    inviteUser({teamId: params.id, email: invitedUserEmail, creatorId: userInfo.id})
-  }
+    inviteUser({teamId: params.id, email: invitedUserEmail, creatorId: userInfo.id});
+  };
 
   const isAdmin = userInfo.id === team.creatorId;
 
@@ -61,15 +70,21 @@ export const Team = () => {
               <Pane marginBottom={UNIT_3}>
                 <Heading size={100} paddingBottom={UNIT_2}>Online</Heading>
                 <Pane display="flex">
-                  <UserCard active busy/>
-                  <UserCard/>
+                  {teamUsers.filter(u => u.online).map(u => <UserCard active={u.online} avatarUrl={u.avatarUrl}/>)}
                 </Pane>
               </Pane>
               <Pane marginBottom={UNIT_3}>
                 <Heading size={100} paddingBottom={UNIT_2}>Offline</Heading>
                 <Pane display="flex">
-                  <UserCard active={false}/>
-                  <UserCard active={false}/>
+                  {teamUsers.filter(u => !u.online && u.userId).length > 0
+                    ? teamUsers.filter(u => !u.online && u.userId).map(u => <UserCard active={u.online} avatarUrl={u.avatarUrl}/>)
+                    : (
+                      <Pane display="flex" alignItems="center">
+                        <Heading size={200}>Everybody is online!</Heading>
+                        <Heading size={700} marginLeft={UNIT_1}>🎉</Heading>
+                      </Pane>
+                    )
+                  }
                 </Pane>
               </Pane>
             </Pane>
@@ -80,9 +95,10 @@ export const Team = () => {
                 marginLeft={UNIT_4}
                 width="30%"
               >
-                <Card marginBottom={UNIT_3} display="flex" flexDirection="column">
+                <Card marginBottom={UNIT_3} display="flex" flexDirection="column" position="relative">
+                  <Loading overlay loading={isLoadingInviteUser}/>
                   <Heading size={100}>Invite</Heading>
-                  <TextInputField
+                  <TextInput
                     marginTop={0}
                     paddingTop={0}
                     marginBottom={UNIT_2}
@@ -97,18 +113,21 @@ export const Team = () => {
                     display="flex"
                     alignSelf="flex-end"
                     onClick={handleOnClickInviteUser}
-                  >Invite</Button>
+                  ><BiSend fontSize={UNIT_3} className="u-mr-1"/>Invite</Button>
                 </Card>
                 <Pane marginBottom={UNIT_3}>
                   <Heading size={100} paddingBottom={UNIT_2}>Invited</Heading>
-                  <Badge onClickRemove={() => {}}>juan@email.com</Badge>
+                  <Pane display="flex" flexWrap="wrap">
+                    {teamUsers.filter(({userId}) => !userId).length > 0
+                      ? teamUsers.filter(({userId}) => !userId).map(u => <Badge key={u.id} marginRight={UNIT_1} marginBottom={UNIT_1}>{u.email}</Badge>)
+                      : <Heading size={200}>There are no pending invitations</Heading>
+                    }
+                  </Pane>
                 </Pane>
                 <Pane marginBottom={UNIT_3}>
                   <Heading size={100} paddingBottom={UNIT_2}>Accepted</Heading>
                   <Pane display="flex" flexWrap="wrap">
-                    <Badge color="teal" marginRight={UNIT_1} marginBottom={UNIT_1} onClickRemove={() => {}}>olek@email.com</Badge>
-                    <Badge color="teal" marginRight={UNIT_1} marginBottom={UNIT_1} onClickRemove={() => {}}>pepe@email.com</Badge>
-                    <Badge color="teal" marginRight={UNIT_1} marginBottom={UNIT_1} onClickRemove={() => {}}>felipe@email.com</Badge>
+                    {teamUsers.filter(({userId}) => userId).map(u => <Badge color="teal" marginRight={UNIT_1} marginBottom={UNIT_1}>{u.email}</Badge>)}
                   </Pane>
                 </Pane>
               </Pane>

@@ -3,7 +3,8 @@ import {Badge} from '../../../components/Badge';
 import {Avatar, Heading, Pane, Text} from 'evergreen-ui';
 import {Card} from '../../../components/card/Card';
 
-export const UserCard = ({active = true, busy}) => {
+export const UserCard = ({active = true, busy, avatarUrl}) => {
+  console.log(avatarUrl);
   return (
     <Card
       active={active}
@@ -15,7 +16,7 @@ export const UserCard = ({active = true, busy}) => {
       <Pane textAlign="center">
         <Avatar
           size={UNIT_5}
-          src={'https://i.pravatar.cc/300'}
+          src={avatarUrl}
           className={!active ? 'u-filter-grayscale-1' : ''}
         />
       </Pane>

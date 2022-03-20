@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {createTeam, fetchTeam, fetchTeams, inviteUserToTeam, joinTeam} from './Teams';
+import {createTeam, fetchTeam, fetchTeams, fetchTeamUsers, inviteUserToTeam, joinTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
-import {useQuery, useQueryClient} from 'react-query';
+import {useQueryClient} from 'react-query';
 
 export const useCreateTeam = ({onSuccess}) => {
   const queryClient = useQueryClient();
@@ -27,9 +27,16 @@ export const useFetchTeams = () => {
 };
 
 export const useFetchTeam = (id) => {
-  return useQuery(
+  return useQueryWithError(
     [Queries.Team],
     () => fetchTeam(id)
+  );
+};
+
+export const useFetchTeamUsers = (id) => {
+  return useQueryWithError(
+    [Queries.TeamUsers],
+    () => fetchTeamUsers(id)
   );
 };
 
@@ -42,14 +49,16 @@ export const useJoinTeam = ({onSuccess}) => {
   );
 };
 
-export const useInviteUserToTeam = () => {
+export const useInviteUserToTeam = ({onSuccess}) => {
   const queryClient = useQueryClient();
 
   return useMutationWithError(
     inviteUserToTeam,
     {
+      successMessage: 'The user was successfully invited to the team',
       onSuccess: () => {
-        queryClient.invalidateQueries(Queries.Teams);
+        queryClient.invalidateQueries(Queries.TeamUsers);
+        onSuccess();
       }
     }
   );

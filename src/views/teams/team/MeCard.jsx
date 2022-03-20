@@ -1,8 +1,9 @@
-import {UNIT_2, UNIT_4, UNIT_5} from '../../../constants/StyleVariables';
-import {Avatar, Button, Heading, Pane, Text, TextInputField} from 'evergreen-ui';
+import {UNIT_2, UNIT_3, UNIT_4, UNIT_5} from '../../../constants/StyleVariables';
+import {Avatar, Button, Heading, Pane, Text, TextInput} from 'evergreen-ui';
 import {Card} from '../../../components/card/Card';
 import {useAppStore} from '../../../hooks/UseAppStore';
 import {useState} from 'react';
+import {BiTimer} from 'react-icons/bi';
 
 export const MeCard = () => {
   const {userInfo} = useAppStore();
@@ -25,7 +26,7 @@ export const MeCard = () => {
       </Pane>
       <Pane display="flex" flexDirection="column">
         <Heading size={100}>Focus Time</Heading>
-        <TextInputField
+        <TextInput
           marginBottom={UNIT_2}
           type="number"
           value={focusTime}
@@ -36,7 +37,7 @@ export const MeCard = () => {
           display="flex"
           alignSelf="flex-end"
           appearance="primary"
-        >Start</Button>
+        ><BiTimer fontSize={UNIT_3} className="u-mr-1"/>Start</Button>
       </Pane>
     </Card>
   );

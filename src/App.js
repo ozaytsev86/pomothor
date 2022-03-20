@@ -16,6 +16,24 @@ import {AlertContainer} from './components/alert/AlertContainer';
 export const App = () => {
   const {userInfo, setUserInfo} = useAppStore();
 
+  const addUserOnline = async (userInfo) => {
+    if (userInfo.id) {
+      const {data} = await supabase
+        .from('teams_users')
+        .select()
+        .eq('userId', userInfo.id);
+
+      // this is a temporary solution, until realtime will be implemented
+      // create a users table to store metadata
+      if (data.length !== 0) {
+        await supabase
+          .from('teams_users')
+          .update({avatarUrl: userInfo.user_metadata.avatar_url, online: true})
+          .match({userId: userInfo.id});
+      }
+    }
+  };
+
   useEffect(() => {
     const session = supabase.auth.session();
     setUserInfo(session?.user ?? null);
@@ -26,6 +44,10 @@ export const App = () => {
         setUserInfo(currentUser ?? null);
       }
     );
+
+    if (session?.user) {
+      addUserOnline(session?.user);
+    }
 
     return () => {
       authListener?.unsubscribe();

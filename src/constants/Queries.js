@@ -1,4 +1,5 @@
 export const Queries = {
   Team: 'Team',
-  Teams: 'Teams'
+  Teams: 'Teams',
+  UsersOnlineByTeam: 'UsersOnlineByTeam'
 };

@@ -44,12 +44,12 @@ export const joinTeam = async (requestData) => {
     .select()
     .eq('teamId', requestData.teamId)
     .eq('userId', requestData.userId)
-    .eq('email', requestData.userEmail);
+    .eq('email', requestData.email);
 
   if (data.length === 0) {
     return supabase
       .from('teams_users')
-      .insert([{...requestData, isActive: true}])
+      .insert([{...requestData}])
       .then((data) => {
         if (data.error) {
           return Promise.reject(data.error.message);
@@ -66,13 +66,13 @@ export const inviteUserToTeam = async ({teamId, email, creatorId}) => {
   const {data} = await supabase
     .from('teams')
     .select()
-    .eq('teamId', Number(teamId))
+    .eq('id', Number(teamId))
     .eq('creatorId', creatorId);
 
-  if (data.length === 0) { // team exists
+  if (data.length === 1) { // team exists
     return supabase
       .from('teams_users')
-      .insert([{teamId, email, isActive: false}])
+      .insert([{teamId, email}])
       .then(({data}) => {
         if (data.length === 0) {
           return Promise.reject('Team not found');
@@ -80,4 +80,14 @@ export const inviteUserToTeam = async ({teamId, email, creatorId}) => {
         return Promise.resolve(data[0]);
       });
   }
+
+  return Promise.reject('The team was not found, please refresh the page and try again');
+};
+
+export const fetchTeamUsers = (teamId) => {
+  return supabase
+    .from('teams_users')
+    .select()
+    .eq('teamId', Number(teamId))
+    .then(({data}) => data);
 };
