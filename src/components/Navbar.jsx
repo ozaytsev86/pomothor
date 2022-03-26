@@ -12,12 +12,6 @@ export const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    // this is a temporary solution, until realtime will be implemented
-    await supabase
-      .from('teams_users')
-      .update({online: false})
-      .match({userId: userInfo.id});
-
     supabase.auth.signOut().catch(console.error);
   };
 

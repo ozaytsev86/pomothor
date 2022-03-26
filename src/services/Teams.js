@@ -84,10 +84,21 @@ export const inviteUserToTeam = async ({teamId, email, creatorId}) => {
   return Promise.reject('The team was not found, please refresh the page and try again');
 };
 
-export const fetchTeamUsers = (teamId) => {
-  return supabase
+export const fetchTeamUsers = async (teamId) => {
+  const teamUsers = await supabase
     .from('teams_users')
     .select()
     .eq('teamId', Number(teamId))
     .then(({data}) => data);
+
+  const usersIds = teamUsers.map(u => `"${u.userId}"`).join();
+
+  return supabase
+    .from('users')
+    .select()
+    .filter('id', 'in', `(${usersIds})`)
+    .then(({data}) => {
+      // TODO: join teamUsers and users
+      return data;
+    });
 };

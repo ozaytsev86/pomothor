@@ -12,45 +12,26 @@ import {useAppStore} from './hooks/UseAppStore';
 import {Teams} from './views/teams/Teams';
 import {Team} from './views/teams/team/Team';
 import {AlertContainer} from './components/alert/AlertContainer';
+import {Provider} from 'react-supabase';
+import {createClient} from '@supabase/supabase-js';
+
+const client = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_KEY);
 
 export const App = () => {
   const {userInfo, setUserInfo} = useAppStore();
 
-  const addUserOnline = async (userInfo) => {
-    if (userInfo.id) {
-      const {data} = await supabase
-        .from('teams_users')
-        .select()
-        .eq('userId', userInfo.id);
-
-      // this is a temporary solution, until realtime will be implemented
-      // create a users table to store metadata
-      if (data.length !== 0) {
-        await supabase
-          .from('teams_users')
-          .update({avatarUrl: userInfo.user_metadata.avatar_url, online: true})
-          .match({userId: userInfo.id});
-      }
-    }
-  };
-
   useEffect(() => {
-    const session = supabase.auth.session();
-    setUserInfo(session?.user ?? null);
-
-    const {data: authListener} = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+    const authSubscription = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
         const currentUser = session?.user;
         setUserInfo(currentUser ?? null);
+      } else if (event === 'SIGNED_OUT') {
+        setUserInfo(null);
       }
-    );
-
-    if (session?.user) {
-      addUserOnline(session?.user);
-    }
+    });
 
     return () => {
-      authListener?.unsubscribe();
+      supabase.removeSubscription(authSubscription);
     };
   }, [userInfo]);
 
@@ -61,13 +42,15 @@ export const App = () => {
       {!userInfo
         ? <Auth/>
         : (
-          <Routes>
-            <Route path={HOME} element={<Home/>}/>
-            <Route exact path={TEAMS} element={<Teams/>}/>
-            <Route path={TEAMS_NEW} element={<TeamsNew/>}/>
-            <Route path={TEAMS_ID} element={<Team/>}/>
-            <Route path={TEAMS_NOT_FOUND} element={<div>Team not found</div>}/>
-          </Routes>
+          <Provider value={client}>
+            <Routes>
+              <Route path={HOME} element={<Home/>}/>
+              <Route exact path={TEAMS} element={<Teams/>}/>
+              <Route path={TEAMS_NEW} element={<TeamsNew/>}/>
+              <Route path={TEAMS_ID} element={<Team/>}/>
+              <Route path={TEAMS_NOT_FOUND} element={<div>Team not found</div>}/>
+            </Routes>
+          </Provider>
         )
       }
     </>

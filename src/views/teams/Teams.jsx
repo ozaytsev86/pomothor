@@ -34,9 +34,7 @@ export const Teams = () => {
     joinTeam({
       teamId,
       userId: userInfo.id,
-      email: userInfo.email,
-      avatarUrl: userInfo.user_metadata.avatar_url || null,
-      online: true
+      email: userInfo.email
     });
   };
 

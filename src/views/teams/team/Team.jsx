@@ -11,12 +11,18 @@ import {MeCard} from './MeCard';
 import {UserCard} from './UserCard';
 import {Card} from '../../../components/card/Card';
 import {BiSend} from 'react-icons/bi';
+import {useTeamUsersSubscribeUnsubscribe, useUpdateTeamUserStatus} from './useTeam';
 
 export const Team = () => {
+  useTeamUsersSubscribeUnsubscribe();
+  useUpdateTeamUserStatus();
   const params = useParams();
   const navigate = useNavigate();
   const {userInfo} = useAppStore();
   const [invitedUserEmail, setInvitedUserEmail] = useState('');
+
+  // TODO: check responsive
+  // TODO: clean database and try all again
 
   const {
     isLoading: isLoadingTeam,
@@ -70,14 +76,14 @@ export const Team = () => {
               <Pane marginBottom={UNIT_3}>
                 <Heading size={100} paddingBottom={UNIT_2}>Online</Heading>
                 <Pane display="flex">
-                  {teamUsers.filter(u => u.online).map(u => <UserCard active={u.online} avatarUrl={u.avatarUrl}/>)}
+                  {teamUsers.length > 0 && teamUsers.filter(u => u.online).map(u => <UserCard user={u}/>)}
                 </Pane>
               </Pane>
               <Pane marginBottom={UNIT_3}>
                 <Heading size={100} paddingBottom={UNIT_2}>Offline</Heading>
                 <Pane display="flex">
                   {teamUsers.filter(u => !u.online && u.userId).length > 0
-                    ? teamUsers.filter(u => !u.online && u.userId).map(u => <UserCard active={u.online} avatarUrl={u.avatarUrl}/>)
+                    ? teamUsers.filter(u => !u.online && u.userId).map(u => <UserCard user={u}/>)
                     : (
                       <Pane display="flex" alignItems="center">
                         <Heading size={200}>Everybody is online!</Heading>
@@ -127,7 +133,7 @@ export const Team = () => {
                 <Pane marginBottom={UNIT_3}>
                   <Heading size={100} paddingBottom={UNIT_2}>Accepted</Heading>
                   <Pane display="flex" flexWrap="wrap">
-                    {teamUsers.filter(({userId}) => userId).map(u => <Badge color="teal" marginRight={UNIT_1} marginBottom={UNIT_1}>{u.email}</Badge>)}
+                    {teamUsers.length > 0 && teamUsers.filter(({userId}) => userId).map(u => <Badge color="teal" marginRight={UNIT_1} marginBottom={UNIT_1}>{u.email}</Badge>)}
                   </Pane>
                 </Pane>
               </Pane>

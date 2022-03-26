@@ -4,7 +4,6 @@ import {Avatar, Heading, Pane, Text} from 'evergreen-ui';
 import {Card} from '../../../components/card/Card';
 
 export const UserCard = ({active = true, busy, avatarUrl}) => {
-  console.log(avatarUrl);
   return (
     <Card
       active={active}
