@@ -19,10 +19,10 @@ export const useCreateTeam = ({onSuccess}) => {
   );
 };
 
-export const useFetchTeams = () => {
+export const useFetchTeams = (userEmail) => {
   return useQueryWithError(
     [Queries.Teams],
-    fetchTeams
+    () => fetchTeams(userEmail)
   );
 };
 

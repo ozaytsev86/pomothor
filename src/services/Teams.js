@@ -1,5 +1,6 @@
 import {supabase} from './Api';
 import {TeamUserStatuses} from '../enums/TeamUserStatuses';
+import {sortBy} from '../utils/Sort';
 
 export const createTeam = async ({name, creatorId, creatorEmail, isPrivate}) => {
   const {data: team} = await supabase
@@ -18,12 +19,38 @@ export const createTeam = async ({name, creatorId, creatorEmail, isPrivate}) => 
     });
 };
 
-export const fetchTeams = () => {
-  return supabase
+export const fetchTeams = async (userEmail) => {
+  const teamsIds = await supabase
+    .from('teams_users')
+    .select('teamId')
+    .eq('email', userEmail)
+    .then(({data}) => data);
+
+  const teamIdsFilter = teamsIds.map(t => `id.eq.${t.teamId}`).join();
+  console.log(teamIdsFilter);
+  const publicTeams = await supabase
     .from('teams')
     .select()
-    .eq('isPrivate', false)
+    .match({isPrivate: false})
     .then(({data}) => data);
+
+  const userAssignedTeams = await supabase
+    .from('teams')
+    .select()
+    .or(teamIdsFilter)
+    .then(({data}) => data);
+
+  const allTeams = publicTeams;
+
+  if (userAssignedTeams.length > 0) {
+    userAssignedTeams.forEach(team => {
+      if (allTeams.filter(t => t.id === team.id).length === 0) {
+        allTeams.push(team);
+      }
+    });
+  }
+
+  return allTeams.sort(sortBy('id'));
 };
 
 export const fetchTeam = (id) => {
