@@ -31,11 +31,7 @@ export const Teams = () => {
 
   const handleOnClickJoin = (teamId) => {
     joinedTeamIdRef.current = teamId;
-    joinTeam({
-      teamId,
-      userId: userInfo.id,
-      email: userInfo.email
-    });
+    joinTeam({teamId, email: userInfo.email});
   };
 
   return (

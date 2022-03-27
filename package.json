@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.3",
-    "@supabase/supabase-js": "^1.31.1",
+    "@supabase/supabase-js": "^1.32.2",
     "evergreen-ui": "^6.8.2",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",

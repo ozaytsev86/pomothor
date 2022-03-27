@@ -1,4 +1,5 @@
 import {supabase} from './Api';
+import {TeamUserStatuses} from '../enums/TeamUserStatuses';
 
 export const createTeam = async ({name, creatorId, creatorEmail, isPrivate}) => {
   const {data: team} = await supabase
@@ -7,7 +8,7 @@ export const createTeam = async ({name, creatorId, creatorEmail, isPrivate}) => 
 
   return supabase
     .from('teams_users')
-    .insert([{teamId: team[0].id, email: creatorEmail, userId: creatorId}])
+    .insert([{teamId: team[0].id, email: creatorEmail, status: TeamUserStatuses.accepted, online: true}])
     .then((data) => {
       if (data.error) {
         return Promise.reject(data.error.message);
@@ -38,18 +39,34 @@ export const fetchTeam = (id) => {
     });
 };
 
-export const joinTeam = async (requestData) => {
-  const {data} = await supabase
+export const joinTeam = async ({teamId, email}) => {
+  const teamUser = await supabase
     .from('teams_users')
     .select()
-    .eq('teamId', requestData.teamId)
-    .eq('userId', requestData.userId)
-    .eq('email', requestData.email);
+    .limit(1)
+    .single()
+    .eq('teamId', teamId)
+    .eq('email', email.toLowerCase())
+    .then(({data}) => data);
 
-  if (data.length === 0) {
+  if (Boolean(teamUser) === false) {
+    // new uninvited user
     return supabase
       .from('teams_users')
-      .insert([{...requestData}])
+      .insert([{teamId, email: email.toLowerCase(), status: TeamUserStatuses.invited, online: true}])
+      .then((data) => {
+        if (data.error) {
+          return Promise.reject(data.error.message);
+        } else {
+          return Promise.resolve(data);
+        }
+      });
+  } else if (teamUser.status === TeamUserStatuses.invited) {
+    // invited user
+    return supabase
+      .from('teams_users')
+      .update([{teamId, email: email.toLowerCase(), status: TeamUserStatuses.accepted, online: true}])
+      .match({email: teamUser.email})
       .then((data) => {
         if (data.error) {
           return Promise.reject(data.error.message);
@@ -58,8 +75,6 @@ export const joinTeam = async (requestData) => {
         }
       });
   }
-
-  return Promise.resolve(data);
 };
 
 export const inviteUserToTeam = async ({teamId, email, creatorId}) => {
@@ -72,7 +87,7 @@ export const inviteUserToTeam = async ({teamId, email, creatorId}) => {
   if (data.length === 1) { // team exists
     return supabase
       .from('teams_users')
-      .insert([{teamId, email}])
+      .insert([{teamId: Number(teamId), email, status: TeamUserStatuses.invited}])
       .then(({data}) => {
         if (data.length === 0) {
           return Promise.reject('Team not found');
@@ -91,14 +106,32 @@ export const fetchTeamUsers = async (teamId) => {
     .eq('teamId', Number(teamId))
     .then(({data}) => data);
 
-  const usersIds = teamUsers.map(u => `"${u.userId}"`).join();
+  const acceptedUsersEmails = teamUsers.filter(u => u.status === TeamUserStatuses.accepted).map(fu => `"${fu.email}"`).join();
+  const invitedUsers = teamUsers.filter(u => u.status === TeamUserStatuses.invited);
 
-  return supabase
+  const acceptedUsers = await supabase
     .from('users')
     .select()
-    .filter('id', 'in', `(${usersIds})`)
+    .filter('email', 'in', `(${acceptedUsersEmails})`)
     .then(({data}) => {
-      // TODO: join teamUsers and users
-      return data;
+      const joinedUsers = teamUsers.filter(u => u.status === TeamUserStatuses.accepted).map(teamUser => {
+        const user = data.find(user => user.email === teamUser.email);
+
+        return {
+          userId: user.id,
+          name: user.name,
+          avatarUrl: user.avatar_url,
+          email: teamUser.email,
+          teamId: teamUser.teamId,
+          online: teamUser.online
+        };
+      });
+
+      return joinedUsers;
     });
+
+  return {
+    invitedUsers,
+    acceptedUsers
+  };
 };

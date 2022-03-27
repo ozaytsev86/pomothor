@@ -29,13 +29,13 @@ export const useUpdateTeamUserStatus = () => {
     const {data} = await supabase
       .from('teams_users')
       .select()
-      .eq('userId', userInfo.id);
+      .eq('email', userInfo.email);
 
     if (data.length !== 0) {
       await supabase
         .from('teams_users')
         .update({online: true})
-        .match({userId: userInfo.id});
+        .match({email: userInfo.email});
     }
   };
 
@@ -43,7 +43,7 @@ export const useUpdateTeamUserStatus = () => {
     await supabase
       .from('teams_users')
       .update({online: false})
-      .match({userId: userInfo.id});
+      .match({email: userInfo.email});
   };
 
   useEffect(() => {

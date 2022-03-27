@@ -3,7 +3,7 @@ import {Badge} from '../../../components/Badge';
 import {Avatar, Heading, Pane, Text} from 'evergreen-ui';
 import {Card} from '../../../components/card/Card';
 
-export const UserCard = ({active = true, busy, avatarUrl}) => {
+export const UserCard = ({active = true, busy, avatarUrl, name}) => {
   return (
     <Card
       active={active}
@@ -20,9 +20,12 @@ export const UserCard = ({active = true, busy, avatarUrl}) => {
         />
       </Pane>
       <Heading size={100}>Name</Heading>
-      <Text>Chuck Norris</Text>
-      <Heading size={100} paddingTop={UNIT_2}>Time</Heading>
-      <Text>00:29:12</Text>
+      <Text>{name}</Text>
+      {active && <>
+        <Heading size={100} paddingTop={UNIT_2}>Time</Heading>
+        <Text>00:29:12</Text>
+      </>
+      }
     </Card>
   );
 };
