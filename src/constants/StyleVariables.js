@@ -3,6 +3,7 @@ export const UNIT_2 = 8;
 export const UNIT_3 = 16;
 export const UNIT_4 = 32;
 export const UNIT_5 = 64;
+export const UNIT_6 = 128;
 
 export const BORDER_RADIUS_M = 4;
 export const BORDER_RADIUS_XL = 16;

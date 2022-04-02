@@ -4,10 +4,34 @@ import {Card} from '../../../components/card/Card';
 import {useAppStore} from '../../../hooks/UseAppStore';
 import {useState} from 'react';
 import {BiTimer} from 'react-icons/bi';
+import {useCreatePomodoro, useRemovePomodoro} from '../../../services/Pomodoro.query';
+import {useParams} from 'react-router-dom';
+
+const getTime = (minutes) => Date.now() + (Number(minutes) * 60000);
 
 export const MeCard = () => {
   const {userInfo} = useAppStore();
-  const [focusTime, setFocusTime] = useState(null);
+  const params = useParams();
+  const [time, setTime] = useState('');
+
+  const {
+    isLoading: isCreatingPomodoro,
+    mutateAsync: createPomodoro
+  } = useCreatePomodoro();
+
+  const {
+    isLoading: isRemovingPomodoro,
+    mutateAsync: removePomodoro
+  } = useRemovePomodoro();
+
+  const handleOnClickStart = () => {
+    createPomodoro({teamId: params.id, email: userInfo.email, time: getTime(time)});
+    setTime('');
+  };
+
+  const handleOnClickRemove = () => {
+    removePomodoro({teamId: params.id, email: userInfo.email});
+  };
 
   return (
     <Card
@@ -21,23 +45,32 @@ export const MeCard = () => {
       <Pane flexGrow={1} justifyContent="space-between">
         <Heading size={100}>Name</Heading>
         <Text>{userInfo.user_metadata.name}</Text>
-        <Heading size={100} paddingTop={UNIT_2}>Time</Heading>
-        <Text>00:29:12</Text>
       </Pane>
       <Pane display="flex" flexDirection="column">
         <Heading size={100}>Focus Time</Heading>
         <TextInput
+          textAlign="right"
           marginBottom={UNIT_2}
-          type="number"
-          value={focusTime}
-          onChange={(e) => setFocusTime(e.target.value)}
+          value={time}
+          maxLength="2"
+          onChange={(e) => setTime(e.target.value)}
         />
-        <Button
-          disabled={!Boolean(focusTime)}
-          display="flex"
-          alignSelf="flex-end"
-          appearance="primary"
-        ><BiTimer fontSize={UNIT_3} className="u-mr-1"/>Start</Button>
+        <Pane display="flex" justifyContent="flex-end">
+          <Button
+            intent="danger"
+            marginRight={UNIT_2}
+            onClick={handleOnClickRemove}
+          >
+            Stop
+          </Button>
+          <Button
+            disabled={!Boolean(time)}
+            appearance="primary"
+            onClick={handleOnClickStart}
+          >
+            <BiTimer fontSize={UNIT_3} className="u-mr-1"/>Start
+          </Button>
+        </Pane>
       </Pane>
     </Card>
   );

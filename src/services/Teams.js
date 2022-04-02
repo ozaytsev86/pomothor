@@ -27,7 +27,7 @@ export const fetchTeams = async (userEmail) => {
     .then(({data}) => data);
 
   const teamIdsFilter = teamsIds.map(t => `id.eq.${t.teamId}`).join();
-  console.log(teamIdsFilter);
+
   const publicTeams = await supabase
     .from('teams')
     .select()
@@ -150,7 +150,8 @@ export const fetchTeamUsers = async (teamId) => {
           avatarUrl: user.avatar_url,
           email: teamUser.email,
           teamId: teamUser.teamId,
-          online: teamUser.online
+          online: teamUser.online,
+          time: teamUser.time
         };
       });
 
@@ -161,4 +162,13 @@ export const fetchTeamUsers = async (teamId) => {
     invitedUsers,
     acceptedUsers
   };
+};
+
+export const fetchTeamUser = async ({teamId, email}) => {
+  return supabase
+    .from('teams_users')
+    .select()
+    .eq('teamId', teamId)
+    .eq('email', email)
+    .then(({data}) => data);
 };

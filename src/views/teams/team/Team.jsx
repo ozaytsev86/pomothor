@@ -9,8 +9,10 @@ import {MeCard} from './MeCard';
 import {UserCard} from './UserCard';
 import {useTeamUsersSubscribeUnsubscribe, useUpdateTeamUserStatus} from './useTeam';
 import {TeamAdmin} from './TeamAdmin';
+import {useAlertStore} from '../../../hooks/UseAlertStore';
 
 export const Team = () => {
+  const {createSuccessAlert} = useAlertStore();
   useTeamUsersSubscribeUnsubscribe();
   useUpdateTeamUserStatus();
   const params = useParams();
@@ -45,6 +47,11 @@ export const Team = () => {
     navigate(TEAMS_NOT_ACCEPTED);
   }
 
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    createSuccessAlert('Copied!');
+  };
+
   const isAdmin = userInfo.id === team.creatorId;
 
   return (
@@ -58,8 +65,8 @@ export const Team = () => {
           <Heading size={900} textAlign="center">{team.name}</Heading>
           <Text paddingRight={UNIT_2}>Team link:</Text>
           <Link paddingRight={UNIT_2}>{window.location.href}</Link>
-          <Tooltip content="Copy to clipboard" position={Position.TOP}>
-            <IconButton icon={ClipboardIcon}/>
+          <Tooltip content="Click to copy" position={Position.TOP}>
+            <IconButton icon={ClipboardIcon} onClick={handleCopyToClipboard}/>
           </Tooltip>
         </Pane>
         <Pane display="flex">
@@ -75,7 +82,7 @@ export const Team = () => {
               <Heading size={100} paddingBottom={UNIT_2}>Offline</Heading>
               <Pane display="flex">
                 {teamUsers.acceptedUsers.filter(u => !u.online).length > 0
-                  ? teamUsers.acceptedUsers.filter(u => !u.online).map(user => <UserCard key={user.email} active={false} {...user}/>)
+                  ? teamUsers.acceptedUsers.filter(u => !u.online).map(user => <UserCard key={user.email} {...user}/>)
                   : (
                     <Pane display="flex" alignItems="center">
                       <Heading size={200}>Everybody is online!</Heading>

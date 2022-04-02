@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createTeam, fetchTeam, fetchTeams, fetchTeamUsers, inviteUserToTeam, joinTeam} from './Teams';
+import {createTeam, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
 import {useQueryClient} from 'react-query';
@@ -37,6 +37,13 @@ export const useFetchTeamUsers = (id) => {
   return useQueryWithError(
     [Queries.TeamUsers],
     () => fetchTeamUsers(id)
+  );
+};
+
+export const useFetchTeamUser = ({teamId, email}) => {
+  return useQueryWithError(
+    [Queries.TeamUser],
+    () => fetchTeamUser({teamId, email})
   );
 };
 
