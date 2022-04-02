@@ -1,13 +1,13 @@
 import {useEffect, useState} from 'react';
 
-import {calculateTime, getMinutes, getSeconds} from './Countdown.helper';
+import {calculateTime, formatToTwoNumbers, getMinutes, getSeconds} from './Countdown.helper';
 import {Strong} from 'evergreen-ui';
 
 export const Countdown = ({time = null, onTick, onComplete}) => {
   const [counter, setCounter] = useState(calculateTime(time));
 
-  const minutes = getMinutes(counter);
-  const seconds = getSeconds(counter);
+  const minutes = formatToTwoNumbers(getMinutes(counter));
+  const seconds = formatToTwoNumbers(getSeconds(counter));
 
   useEffect(() => {
     if (counter !== null) {

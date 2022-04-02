@@ -1,3 +1,5 @@
+export const formatToTwoNumbers = (number) => number.toString().length === 1 ? `0${number}` : number;
+
 export const getHours = (time) => Math.floor((time / 3600) % 24);
 export const getMinutes = (time) => Math.floor((time / 60) % 60);
 export const getSeconds = (time) => Math.floor(time % 60);
