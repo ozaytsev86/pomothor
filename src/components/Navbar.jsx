@@ -1,9 +1,9 @@
 import {supabase} from '../services/Api';
 import {Avatar, Button, Heading, Menu, Pane, Popover, Position} from 'evergreen-ui';
-import {BiGroup, BiHome, BiLogOut, BiPlus} from 'react-icons/bi';
+import {BiCog, BiGroup, BiHome, BiLogOut, BiPlus} from 'react-icons/bi';
 import Logo from '../statics/images/logo.png';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {HOME, TEAMS, TEAMS_NEW} from '../constants/Routes';
+import {HOME, SETTINGS, TEAMS, TEAMS_NEW} from '../constants/Routes';
 import {UNIT_2, UNIT_3, UNIT_4} from '../constants/StyleVariables';
 import {useAppStore} from '../hooks/UseAppStore';
 
@@ -52,10 +52,15 @@ export const Navbar = () => {
           content={
             <Menu>
               <Menu.Group>
+                <Menu.Item onClick={() => navigate(SETTINGS)}>
+                  <Pane display="flex" alignItems="center">
+                    <BiCog className="u-mr-1"/>Settings
+                  </Pane>
+                </Menu.Item>
                 <Menu.Item onClick={handleLogout}>
-                  <div className="u-display-flex u-align-items-center">
+                  <Pane display="flex" alignItems="center">
                     <BiLogOut className="u-mr-1"/>Logout
-                  </div>
+                  </Pane>
                 </Menu.Item>
               </Menu.Group>
             </Menu>

@@ -34,7 +34,13 @@ export const TeamAdmin = ({teamUsers}) => {
       marginLeft={UNIT_4}
       width="30%"
     >
-      <Card marginBottom={UNIT_3} display="flex" flexDirection="column" position="relative">
+      <Card
+        padding={UNIT_3}
+        marginBottom={UNIT_3}
+        display="flex"
+        flexDirection="column"
+        position="relative"
+      >
         <Loading overlay loading={isLoadingInviteUser}/>
         <Heading size={100}>Invite</Heading>
         <TextInput

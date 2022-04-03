@@ -25,6 +25,11 @@ export const TeamsNew = () => {
     }
   });
 
+  const handleOnChangeForm = (e) => {
+    setError(null);
+    setForm({...form, name: e.target.value});
+  };
+
   const handleOnClickCreateTeam = () => {
     let valid = true;
 
