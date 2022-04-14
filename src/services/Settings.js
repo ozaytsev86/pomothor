@@ -21,13 +21,9 @@ export const removeTiming = (id) => {
 };
 
 export const fetchTimings = (userId) => {
-  console.log('caca');
   return supabase
     .from('users_settings_timings')
     .select()
     .eq('userId', userId)
-    .then(({data}) => {
-      console.log('data', data);
-      return data;
-    });
+    .then(({data}) => data);
 };

@@ -22,6 +22,9 @@ export const useTeamUsersSubscribeUnsubscribe = () => {
   }, []);
 };
 
+/*
+* Update user status online/offline
+*/
 export const useUpdateTeamUserStatus = () => {
   const {userInfo} = useAppStore();
 

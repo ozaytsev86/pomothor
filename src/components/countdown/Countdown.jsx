@@ -1,33 +1,53 @@
-import {useEffect, useState} from 'react';
-
-import {calculateTime, formatToTwoNumbers, getMinutes, getSeconds} from './Countdown.helper';
+import {useEffect, useRef, useState} from 'react';
 import {Strong} from 'evergreen-ui';
+import {formatToTwoNumbers} from './Countdown.helper';
 
-export const Countdown = ({time = null, onTick, onComplete}) => {
-  const [counter, setCounter] = useState(calculateTime(time));
-
-  const minutes = formatToTwoNumbers(getMinutes(counter));
-  const seconds = formatToTwoNumbers(getSeconds(counter));
+export const Countdown = ({time = null, color = 'gray900', onTick, onComplete}) => {
+  const [currentMinutes, setCurrentMinutes] = useState();
+  const [currentSeconds, setCurrentSeconds] = useState();
+  const minutesRef = useRef(time ? time.minutes : null);
+  const secondsRef = useRef(time ? time.seconds : null);
 
   useEffect(() => {
-    if (counter !== null) {
-      const completed = counter === 0;
-      // document.title = !completed ? `${minutes}:${seconds}` : 'Pomothor';
-      onTick && onTick(completed);
+    const completed = currentMinutes === 0 && currentSeconds === 0;
 
-      onComplete && completed && onComplete();
+    onTick && onTick(completed);
+
+    if (completed) {
+      onComplete && onComplete();
+
+      secondsRef.current = null;
+      minutesRef.current = null;
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [counter]);
+  }, [currentSeconds]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCounter(calculateTime(time));
+      if (secondsRef.current !== null) {
+
+        if (secondsRef.current === 0) {
+          secondsRef.current = 59;
+          minutesRef.current = minutesRef - 1;
+        } else {
+          secondsRef.current = secondsRef.current - 1;
+        }
+
+        setCurrentMinutes(minutesRef.current);
+        setCurrentSeconds(secondsRef.current);
+      }
     }, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    minutesRef.current = time ? time.minutes : null;
+    secondsRef.current = time ? time.seconds : null;
   }, [time]);
 
   return (
-    <Strong color={counter !== null ? 'red500' : ''}>{counter !== null ? `${minutes}:${seconds}` : '-'}</Strong>
+    <Strong color={color}>
+      {`${formatToTwoNumbers(minutesRef.current)}:${formatToTwoNumbers(secondsRef.current)}`}
+    </Strong>
   );
 };

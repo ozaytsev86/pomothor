@@ -4,16 +4,23 @@ import {Card} from '../../../components/card/Card';
 import {useAppStore} from '../../../hooks/UseAppStore';
 import React, {useState} from 'react';
 import {BiTimer} from 'react-icons/bi';
-import {useCreatePomodoro, useRemovePomodoro} from '../../../services/Pomodoro.query';
-import {useParams} from 'react-router-dom';
+import {useCreatePomodoro, useFetchPomodoro, useRemovePomodoro, useUpdatePomodoro} from '../../../services/Pomodoro.query';
 import {useFetchTimings} from '../../../services/Settings.query';
+import {Countdown} from '../../../components/countdown/Countdown';
+import {Badge} from '../../../components/Badge';
 
-const getTime = (minutes) => Date.now() + (Number(minutes) * 60000);
+const initialForm = {
+  workTime: '',
+  breakTime: '',
+  pomodoros: '',
+  longBreakTime: '',
+  status: '',
+  startedAt: null
+};
 
 export const MeCard = () => {
   const {userInfo} = useAppStore();
-  const params = useParams();
-  const [form, setForm] = useState('');
+  const [form, setForm] = useState(initialForm);
 
   const {
     isLoading: isLoadingTimings,
@@ -21,9 +28,19 @@ export const MeCard = () => {
   } = useFetchTimings(userInfo.id);
 
   const {
+    isLoading: isLoadingPomodoro,
+    data: pomodoro = {}
+  } = useFetchPomodoro({userId: userInfo.id, enabled: true});
+
+  const {
     isLoading: isCreatingPomodoro,
     mutateAsync: createPomodoro
   } = useCreatePomodoro();
+
+  const {
+    isLoading: isUpdatingPomodoro,
+    mutateAsync: updatePomodoro
+  } = useUpdatePomodoro();
 
   const {
     isLoading: isRemovingPomodoro,
@@ -47,14 +64,41 @@ export const MeCard = () => {
   };
 
   const handleOnClickStart = () => {
-    // TODO: create current pomodoro table and add an entry there
-    // createPomodoro({teamId: params.id, email: userInfo.email, time: getTime(time)});
-    setForm('');
+    createPomodoro({
+      userId: userInfo.id,
+      workTime: form.workTime,
+      breakTime: form.breakTime,
+      pomodoros: form.pomodoros,
+      longBreakTime: form.longBreakTime,
+      status: form.status,
+      startedAt: new Date()
+    });
+    setForm(initialForm);
   };
 
   const handleOnClickRemove = () => {
-    // TODO: create current pomodoro table and remove an entry from there
-    removePomodoro({teamId: params.id, email: userInfo.email});
+    removePomodoro({userId: userInfo.id});
+  };
+
+  const handleRemovePomodoro = () => {
+    if (pomodoro.isOnWork) {
+      updatePomodoro({
+        userId: userInfo.id,
+        startedAt: new Date(),
+        isOnWork: false
+      });
+    } else {
+      if (pomodoro.pomodoros > 0) {
+        updatePomodoro({
+          userId: userInfo.id,
+          pomodoros: pomodoro.pomodoros - 1,
+          startedAt: new Date(),
+          isOnWork: true
+        });
+      } else {
+        removePomodoro({userId: userInfo.id});
+      }
+    }
   };
 
   return (
@@ -68,7 +112,15 @@ export const MeCard = () => {
       <Pane display="flex" flexDirection="column">
         <Avatar size={UNIT_5} marginLeft={UNIT_2} marginRight={UNIT_4} src={userInfo.user_metadata.avatar_url}/>
         <Heading size={100}>Name</Heading>
-        <Text>{userInfo.user_metadata.name}</Text>
+        <Text marginBottom={UNIT_3}>{userInfo.user_metadata.name}</Text>
+        {pomodoro.isOnWork && <Badge color="red" marginBottom={UNIT_2}>working</Badge>}
+        {!pomodoro.isOnWork && <Badge color="green" marginBottom={UNIT_2}>on break</Badge>}
+        {pomodoro.time && (
+          <Countdown
+            time={pomodoro.time}
+            color={pomodoro.isOnWork ? 'red500' : 'green500'}
+            onComplete={handleRemovePomodoro}/>
+        )}
       </Pane>
       <Pane display="grid">
         <Pane display="grid" gridTemplateColumns="1fr 1fr 1fr 1fr" gridGap={UNIT_2}>
@@ -137,7 +189,7 @@ export const MeCard = () => {
                     paddingX={UNIT_2}
                     marginBottom={UNIT_2}
                     marginRight={UNIT_1}
-                    onClick={() => setForm({workTime, breakTime, pomodoros, longBreakTime})}
+                    onClick={() => setForm({workTime, breakTime, pomodoros, longBreakTime, status: form.status})}
                   >{name}</Button>
                 </span>
               </Tooltip>
@@ -150,6 +202,8 @@ export const MeCard = () => {
             placeholder="Let your teammates know what are you focused on"
             marginBottom={UNIT_2}
             width="100%"
+            value={form.status}
+            onChange={(e) => setForm({...form, status: e.target.value})}
           />
         </Pane>
         <Pane display="flex" justifyContent="flex-end">

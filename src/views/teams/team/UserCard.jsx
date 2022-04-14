@@ -1,20 +1,27 @@
 import {UNIT_2, UNIT_3, UNIT_5} from '../../../constants/StyleVariables';
 import {Badge} from '../../../components/Badge';
-import {Avatar, Heading, Pane} from 'evergreen-ui';
+import {Avatar, Heading, Pane, Pill, Position, Tooltip} from 'evergreen-ui';
 import {Card} from '../../../components/card/Card';
 import {Countdown} from '../../../components/countdown/Countdown';
-import {useRemovePomodoro} from '../../../services/Pomodoro.query';
+import {useFetchPomodoro} from '../../../services/Pomodoro.query';
 import {Loading} from '../../../components/Loading';
+import {useTeamUserPomodoroSubscribeUnsubscribe} from './UsePomodoro';
+import {useEffect} from 'react';
 
-export const UserCard = ({online, avatarUrl, name, time, teamId, email}) => {
+export const UserCard = ({online, avatarUrl, name, userId}) => {
+  useTeamUserPomodoroSubscribeUnsubscribe(userId);
+
   const {
-    isLoading: isRemovingPomodoro,
-    mutateAsync: removePomodoro
-  } = useRemovePomodoro();
+    isLoading: isLoadingPomodoro,
+    data: pomodoro = {},
+    refetch
+  } = useFetchPomodoro({userId, enabled: online});
 
-  const handleRemovePomodoro = () => {
-    removePomodoro({teamId, email});
-  };
+  useEffect(() => {
+    if (online) {
+      refetch({userId, enabled: online});
+    }
+  }, [userId]);
 
   return (
     <Card
@@ -24,9 +31,19 @@ export const UserCard = ({online, avatarUrl, name, time, teamId, email}) => {
       marginX={UNIT_2}
       padding={UNIT_3}
     >
-      <Loading overlay loading={isRemovingPomodoro}/>
-      {time && online && <Badge color="red" marginBottom={UNIT_3}>busy</Badge>}
-      {!time && online && <Badge color="green" marginBottom={UNIT_3}>free</Badge>}
+      <Loading overlay loading={isLoadingPomodoro}/>
+      <Pane display="flex" justifyContent="space-between" alignItems="center">
+        {pomodoro.isOnWork && online && <Badge color="red" marginBottom={UNIT_3} marginRight={UNIT_2}>working</Badge>}
+        {!pomodoro.isOnWork && online && <Badge color="green" marginBottom={UNIT_3} marginRight={UNIT_2}>on break</Badge>}
+        {online && pomodoro.pomodoros > 0
+          ? (
+            <Tooltip content={pomodoro.pomodoros === 1 ? 'Last pomodoro' : 'Pomodoros'} position={Position.TOP}>
+              <Pill marginBottom={UNIT_3}>{pomodoro.pomodoros}</Pill>
+            </Tooltip>
+          )
+          : null
+        }
+      </Pane>
       <Pane textAlign="center">
         <Avatar
           size={UNIT_5}
@@ -35,7 +52,8 @@ export const UserCard = ({online, avatarUrl, name, time, teamId, email}) => {
           marginBottom={UNIT_3}
         />
         <Heading size={500} textAlign="center" marginBottom={UNIT_2}>{name}</Heading>
-        {online && <Countdown time={time} onComplete={handleRemovePomodoro}/>}
+        <Heading size={100} textAlign="center" marginBottom={UNIT_2}>{pomodoro.status}</Heading>
+        {online && <Countdown time={pomodoro.time} color={pomodoro.isOnWork ? 'red500' : 'green500'}/>}
       </Pane>
     </Card>
   );

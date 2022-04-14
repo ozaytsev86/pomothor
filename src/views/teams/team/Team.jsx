@@ -6,10 +6,10 @@ import {Loading} from '../../../components/Loading';
 import {TEAMS_NOT_ACCEPTED, TEAMS_NOT_FOUND, TEAMS_NOT_INVITED} from '../../../constants/Routes';
 import {useAppStore} from '../../../hooks/UseAppStore';
 import {MeCard} from './MeCard';
-import {UserCard} from './UserCard';
-import {useTeamUsersSubscribeUnsubscribe, useUpdateTeamUserStatus} from './useTeam';
+import {useTeamUsersSubscribeUnsubscribe, useUpdateTeamUserStatus} from './UseTeam';
 import {TeamAdmin} from './TeamAdmin';
 import {useAlertStore} from '../../../hooks/UseAlertStore';
+import {UserCard} from './UserCard';
 
 export const Team = () => {
   const {createSuccessAlert} = useAlertStore();
