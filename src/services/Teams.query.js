@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createTeam, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam, removeUserFromTheTeam} from './Teams';
+import {createTeam, fetchMyTeams, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam, leaveTeam, removeTeam, removeUserFromTheTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
 import {useQueryClient} from 'react-query';
@@ -23,6 +23,13 @@ export const useFetchTeams = (userEmail) => {
   return useQueryWithError(
     [Queries.Teams],
     () => fetchTeams(userEmail)
+  );
+};
+
+export const useFetchMyTeams = ({userId, userEmail}) => {
+  return useQueryWithError(
+    [Queries.MyTeams],
+    () => fetchMyTeams({userId, userEmail})
   );
 };
 
@@ -55,6 +62,34 @@ export const useJoinTeam = ({onSuccess}) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(Queries.TeamUsers);
+        onSuccess();
+      }
+    }
+  );
+};
+
+export const useRemoveTeam = ({onSuccess}) => {
+  const queryClient = useQueryClient();
+
+  return useMutationWithError(
+    removeTeam,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(Queries.MyTeams);
+        onSuccess();
+      }
+    }
+  );
+};
+
+export const useLeaveTeam = ({onSuccess}) => {
+  const queryClient = useQueryClient();
+
+  return useMutationWithError(
+    leaveTeam,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(Queries.MyTeams);
         onSuccess();
       }
     }

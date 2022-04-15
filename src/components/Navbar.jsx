@@ -3,7 +3,7 @@ import {Avatar, Button, Heading, Menu, Pane, Popover, Position} from 'evergreen-
 import {BiCog, BiGroup, BiHome, BiLogOut, BiPlus} from 'react-icons/bi';
 import Logo from '../statics/images/logo.png';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {HOME, SETTINGS, TEAMS, TEAMS_NEW} from '../constants/Routes';
+import {HOME, SETTINGS, TEAMS, TEAMS_MY, TEAMS_NEW} from '../constants/Routes';
 import {UNIT_2, UNIT_3, UNIT_4} from '../constants/StyleVariables';
 import {useAppStore} from '../hooks/UseAppStore';
 
@@ -55,6 +55,11 @@ export const Navbar = () => {
                 <Menu.Item onClick={() => navigate(SETTINGS)}>
                   <Pane display="flex" alignItems="center">
                     <BiCog className="u-mr-1"/>Settings
+                  </Pane>
+                </Menu.Item>
+                <Menu.Item onClick={() => navigate(TEAMS_MY)}>
+                  <Pane display="flex" alignItems="center">
+                    <BiGroup className="u-mr-1"/>My Teams
                   </Pane>
                 </Menu.Item>
                 <Menu.Item onClick={handleLogout}>

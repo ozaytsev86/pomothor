@@ -1,10 +1,10 @@
-import {Button, ClipboardIcon, Heading, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
+import {Button, Heading, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
 import {useFetchTeams, useJoinTeam} from '../../services/Teams.query';
 import {useAppStore} from '../../hooks/UseAppStore';
-import {BORDER_RADIUS_M, UNIT_2, UNIT_4} from '../../constants/StyleVariables';
+import {BORDER_RADIUS_M, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
 import {Card} from '../../components/card/Card';
 import React from 'react';
-import {BiLogInCircle} from 'react-icons/bi';
+import {BiLogInCircle, BiTask} from 'react-icons/bi';
 import {Loading} from '../../components/Loading';
 import {useNavigate} from 'react-router-dom';
 import {buildUrl} from '../../utils/Builders';
@@ -48,6 +48,7 @@ export const Teams = () => {
 
   return (
     <Pane padding={UNIT_4}>
+      {teams.length === 0 && <Pane gridColumn="span 6" textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
       {teams.map(({name, id, isPrivate}) => (
         <Card
           key={id}
@@ -71,10 +72,8 @@ export const Teams = () => {
               {isPrivate && <Badge color="yellow" marginRight={UNIT_2}>private</Badge>}
               <Heading marginRight={UNIT_2}>{name}</Heading>
               <Tooltip content="Copy team link" position={Position.TOP}>
-                <IconButton height={24} icon={ClipboardIcon} onClick={() => handleCopyToClipboard(id)}/>
+                <IconButton appearance="minimal" icon={BiTask} onClick={() => handleCopyToClipboard(id)}/>
               </Tooltip>
-            </Pane>
-            <Pane>
             </Pane>
             <Pane position="relative">
               <Loading
@@ -83,7 +82,7 @@ export const Teams = () => {
                 loading={id === joinedTeamIdRef.current && isLoadingJoinTeam}
               />
               <Button appearance="primary" onClick={() => handleOnClickJoin(id)}>
-                <BiLogInCircle className="u-mr-1"/>
+                <BiLogInCircle fontSize={UNIT_3} className="u-mr-1"/>
                 Join
               </Button>
             </Pane>

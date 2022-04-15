@@ -1,6 +1,7 @@
-import {Badge as EUIBadge, Button, CrossIcon, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
-import {UNIT_1} from '../constants/StyleVariables';
+import {Badge as EUIBadge, Button, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
+import {UNIT_1, UNIT_3} from '../constants/StyleVariables';
 import {useState} from 'react';
+import {BiX} from 'react-icons/bi';
 
 export const Badge = ({children, color = 'neutral', onClickRemove = null, ...rest}) => {
   const [isVisibleConfirmation, setIsVisibleConfirmation] = useState(false);
@@ -24,7 +25,8 @@ export const Badge = ({children, color = 'neutral', onClickRemove = null, ...res
       {!isVisibleConfirmation && onClickRemove && (
         <IconButton
           height={16}
-          icon={CrossIcon}
+          iconSize={UNIT_3}
+          icon={BiX}
           appearance="minimal"
           marginLeft={UNIT_1}
           onClick={() => setIsVisibleConfirmation(true)}

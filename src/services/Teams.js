@@ -53,6 +53,42 @@ export const fetchTeams = async (userEmail) => {
   return allTeams.sort(sortBy('id'));
 };
 
+export const fetchMyTeams = async ({userId, userEmail}) => {
+  const teamsIds = await supabase
+    .from('teams_users')
+    .select('teamId')
+    .eq('email', userEmail)
+    .then(({data}) => data);
+
+  const teamIdsFilter = teamsIds.map(t => `id.eq.${t.teamId}`).join();
+
+  const createdTeams = await supabase
+    .from('teams')
+    .select()
+    .match({creatorId: userId})
+    .then(({data}) => data);
+
+  const userAssignedTeamsAll = await supabase
+    .from('teams')
+    .select()
+    .or(teamIdsFilter)
+    .then(({data}) => data);
+
+  const assignedTeams = [];
+
+  if (userAssignedTeamsAll.length > 0) {
+    userAssignedTeamsAll.forEach(team => {
+      if (createdTeams.filter(t => t.id === team.id).length === 0) {
+        assignedTeams.push(team);
+      }
+    });
+  }
+  return {
+    createdTeams,
+    assignedTeams: assignedTeams.sort(sortBy('id'))
+  };
+};
+
 export const fetchTeam = (id) => {
   return supabase
     .from('teams')
@@ -102,6 +138,16 @@ export const joinTeam = async ({teamId, email}) => {
         }
       });
   }
+};
+
+export const removeTeam = async ({teamId, creatorId}) => {
+  // get the team
+  // remove teams_users where teamId
+  // remove teams where teamId
+};
+
+export const leaveTeam = async ({teamId, email}) => {
+  // remove tams_users where teamId and email
 };
 
 export const inviteUserToTeam = async ({teamId, email, creatorId}) => {

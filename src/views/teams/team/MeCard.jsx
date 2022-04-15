@@ -169,9 +169,10 @@ export const MeCard = () => {
           </Pane>
         </Pane>
         <Pane display="flex" justifyContent="flex-end">
-          {timings.map(({name, workTime, breakTime, pomodoros, longBreakTime}) => {
+          {timings.map(({id, name, workTime, breakTime, pomodoros, longBreakTime}) => {
             return (
               <Tooltip
+                key={id}
                 position={Position.TOP}
                 content={
                   <Pane display="flex" flexDirection="column">
@@ -207,7 +208,7 @@ export const MeCard = () => {
         </Pane>
         <Pane display="flex" justifyContent="flex-end">
           <Button
-            intent="danger"
+            appearance="minimal"
             marginRight={UNIT_2}
             onClick={handleOnClickRemove}
           >

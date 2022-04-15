@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Button, CrossIcon, Heading, IconButton, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
+import {Button, Heading, IconButton, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
 import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
-import {BiAlarmAdd} from 'react-icons/bi';
+import {BiAlarmAdd, BiX} from 'react-icons/bi';
 import {useCreateTiming, useFetchTimings, useRemoveTiming} from '../../services/Settings.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {Loading} from '../../components/Loading';
@@ -69,7 +69,7 @@ export const TimeSettings = () => {
       <Loading overlay loading={isCreatingTiming}/>
       <Pane
         borderRadius={BORDER_RADIUS_XL}
-        background="white"
+        backgroundColor="white"
         padding={UNIT_4}
         position="relative"
         className="u-box-shadow-1"
@@ -167,9 +167,10 @@ export const TimeSettings = () => {
                   <Pane display="flex" justifyContent="flex-end">
                     <Tooltip content="Remove" position={Position.TOP}>
                       <IconButton
-                        height={24}
+                        iconSize={UNIT_3}
+                        appearance="minimal"
                         intent="danger"
-                        icon={CrossIcon}
+                        icon={BiX}
                         onClick={() => handleOnClickRemove(id)}
                       />
                     </Tooltip>
