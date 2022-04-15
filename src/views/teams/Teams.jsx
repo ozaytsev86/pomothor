@@ -37,8 +37,8 @@ export const Teams = () => {
     joinTeam({teamId, email: userInfo.email});
   };
 
-  const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
+  const handleCopyToClipboard = (teamId) => {
+    navigator.clipboard.writeText(`${window.location.href}/${teamId}`);
     createSuccessAlert('Copied!');
   };
 
@@ -71,7 +71,7 @@ export const Teams = () => {
               {isPrivate && <Badge color="yellow" marginRight={UNIT_2}>private</Badge>}
               <Heading marginRight={UNIT_2}>{name}</Heading>
               <Tooltip content="Copy team link" position={Position.TOP}>
-                <IconButton height={24} icon={ClipboardIcon} onClick={handleCopyToClipboard}/>
+                <IconButton height={24} icon={ClipboardIcon} onClick={() => handleCopyToClipboard(id)}/>
               </Tooltip>
             </Pane>
             <Pane>
