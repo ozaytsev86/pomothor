@@ -1,7 +1,7 @@
 import {Button, Heading, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
 import {useFetchMyTeams, useLeaveTeam, useRemoveTeam} from '../../services/Teams.query';
 import {useAppStore} from '../../hooks/UseAppStore';
-import {BORDER_RADIUS_M, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
+import {UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
 import React from 'react';
 import {Loading} from '../../components/Loading';
 import {BiLogOutCircle, BiPencil, BiTask, BiX} from 'react-icons/bi';
@@ -61,14 +61,7 @@ export const TeamsMy = () => {
     <Pane padding={UNIT_4}>
       <Heading size={100} paddingBottom={UNIT_2}>Created Teams</Heading>
       {teams.createdTeams.map(({id, name, isPrivate}) => (
-        <Card
-          key={id}
-          hoverable
-          borderRadius={BORDER_RADIUS_M}
-          marginBottom={UNIT_2}
-          padding={UNIT_2}
-          className="u-box-shadow-1"
-        >
+        <Card hoverable key={id}>
           <Pane
             display="flex"
             alignItems="center"
@@ -115,14 +108,7 @@ export const TeamsMy = () => {
 
       <Heading size={100} paddingTop={UNIT_4} paddingBottom={UNIT_2}>Assigned Teams</Heading>
       {teams.assignedTeams.map(({id, name, isPrivate}) => (
-        <Card
-          key={id}
-          hoverable
-          borderRadius={BORDER_RADIUS_M}
-          marginBottom={UNIT_2}
-          padding={UNIT_2}
-          className="u-box-shadow-1"
-        >
+        <Card hoverable key={id}>
           <Pane
             display="flex"
             alignItems="center"

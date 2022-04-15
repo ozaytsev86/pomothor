@@ -1,7 +1,7 @@
 import {Button, Heading, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
 import {useFetchTeams, useJoinTeam} from '../../services/Teams.query';
 import {useAppStore} from '../../hooks/UseAppStore';
-import {BORDER_RADIUS_M, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
+import {UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
 import {Card} from '../../components/card/Card';
 import React from 'react';
 import {BiLogInCircle, BiTask} from 'react-icons/bi';
@@ -50,14 +50,7 @@ export const Teams = () => {
     <Pane padding={UNIT_4}>
       {teams.length === 0 && <Pane gridColumn="span 6" textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
       {teams.map(({name, id, isPrivate}) => (
-        <Card
-          key={id}
-          hoverable
-          borderRadius={BORDER_RADIUS_M}
-          marginBottom={UNIT_2}
-          padding={UNIT_2}
-          className="u-box-shadow-1"
-        >
+        <Card hoverable key={id}>
           <Pane
             display="flex"
             alignItems="center"

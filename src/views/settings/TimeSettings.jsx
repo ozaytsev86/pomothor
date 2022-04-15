@@ -14,6 +14,7 @@ const initialForm = {name: '', workTime: '', breakTime: '', pomodoros: '', longB
 export const TimeSettings = () => {
   const {userInfo} = useAppStore();
   const [form, setForm] = useState(initialForm);
+  const removedTimingIdRef = React.useRef(null);
 
   const {
     isLoading: isLoadingTimings,
@@ -24,7 +25,11 @@ export const TimeSettings = () => {
   const {
     isLoading: isRemovingTiming,
     mutateAsync: removeTiming
-  } = useRemoveTiming();
+  } = useRemoveTiming({
+    onSuccess: () => {
+      removedTimingIdRef.current = null;
+    }
+  });
 
   const {
     isLoading: isCreatingTiming,
@@ -56,6 +61,7 @@ export const TimeSettings = () => {
   };
 
   const handleOnClickRemove = (timingId) => {
+    removedTimingIdRef.current = timingId;
     removeTiming(timingId);
   };
 
@@ -67,89 +73,89 @@ export const TimeSettings = () => {
       flexDirection="column"
       padding={UNIT_4}
     >
-      <Loading overlay loading={isCreatingTiming}/>
       <Pane
         borderRadius={BORDER_RADIUS_XL}
         backgroundColor="white"
-        padding={UNIT_4}
-        position="relative"
         className="u-box-shadow-1"
         width={600}
         marginBottom={UNIT_4}
+        position="relative"
       >
-        <Heading size={900} paddingBottom={UNIT_2}>Timing</Heading>
-        <Heading size={200} marginBottom={UNIT_3}>Everyone has their different best Pomodoro timing. In this section you can create as many as you want to find the best fit for you.</Heading>
-        <TextInputField
-          required
-          autoFocus
-          label="Name"
-          value={form.name}
-          maxLength="30"
-          width="100%"
-          marginBottom={UNIT_3}
-          description="Used to show in the interface. Max. length 30"
-          onChange={(e) => setForm({...form, name: e.target.value})}
-        />
-        <Pane
-          display="grid"
-          gridTemplateColumns="1fr 1fr 1fr 1fr"
-          gridGap={UNIT_2}
-          marginBottom={UNIT_2}
-        >
+        <Loading overlay loading={isCreatingTiming}/>
+        <Pane padding={UNIT_4}>
+          <Heading size={900} paddingBottom={UNIT_2}>Timing</Heading>
+          <Heading size={200} marginBottom={UNIT_3}>Everyone has their different best Pomodoro timing. In this section you can create as many as you want to find the best fit for you.</Heading>
           <TextInputField
             required
-            label="Work Time"
-            marginBottom={UNIT_2}
-            value={form.workTime}
-            maxLength="2"
-            width={120}
-            description="Minutes"
-            onChange={(e) => setForm({...form, workTime: e.target.value})}
+            autoFocus
+            label="Name"
+            value={form.name}
+            maxLength="30"
+            width="100%"
+            marginBottom={UNIT_3}
+            description="Used to show in the interface. Max. length 30"
+            onChange={(e) => setForm({...form, name: e.target.value})}
           />
-          <TextInputField
-            required
-            label="Break Time"
+          <Pane
+            display="grid"
+            gridTemplateColumns="1fr 1fr 1fr 1fr"
+            gridGap={UNIT_2}
             marginBottom={UNIT_2}
-            value={form.breakTime}
-            maxLength="2"
-            width={120}
-            description="Minutes"
-            onChange={(e) => setForm({...form, breakTime: e.target.value})}
-          />
-          <TextInputField
-            required
-            label="Pomodoros"
-            marginBottom={UNIT_2}
-            value={form.pomodoros}
-            maxLength="1"
-            width={120}
-            description="Quantity"
-            onChange={(e) => setForm({...form, pomodoros: e.target.value})}
-          />
-          <TextInputField
-            required
-            label="Long Break Time"
-            marginBottom={UNIT_2}
-            value={form.longBreakTime}
-            maxLength="2"
-            width={130}
-            description="Minutes"
-            onChange={(e) => setForm({...form, longBreakTime: e.target.value})}
-          />
-        </Pane>
-        <Pane
-          display="flex"
-          justifyContent="flex-end"
-        >
-          <Button
-            disabled={!isFormValid()}
-            appearance="primary"
-            onClick={handleOnClickAdd}
-          ><BiAlarmAdd fontSize={UNIT_3} className="u-mr-1"/>Add</Button>
+          >
+            <TextInputField
+              required
+              label="Work Time"
+              marginBottom={UNIT_2}
+              value={form.workTime}
+              maxLength="2"
+              width={120}
+              description="Minutes"
+              onChange={(e) => setForm({...form, workTime: e.target.value})}
+            />
+            <TextInputField
+              required
+              label="Break Time"
+              marginBottom={UNIT_2}
+              value={form.breakTime}
+              maxLength="2"
+              width={120}
+              description="Minutes"
+              onChange={(e) => setForm({...form, breakTime: e.target.value})}
+            />
+            <TextInputField
+              required
+              label="Pomodoros"
+              marginBottom={UNIT_2}
+              value={form.pomodoros}
+              maxLength="1"
+              width={120}
+              description="Quantity"
+              onChange={(e) => setForm({...form, pomodoros: e.target.value})}
+            />
+            <TextInputField
+              required
+              label="Long Break Time"
+              marginBottom={UNIT_2}
+              value={form.longBreakTime}
+              maxLength="2"
+              width={130}
+              description="Minutes"
+              onChange={(e) => setForm({...form, longBreakTime: e.target.value})}
+            />
+          </Pane>
+          <Pane
+            display="flex"
+            justifyContent="flex-end"
+          >
+            <Button
+              disabled={!isFormValid()}
+              appearance="primary"
+              onClick={handleOnClickAdd}
+            ><BiAlarmAdd fontSize={UNIT_3} className="u-mr-1"/>Add</Button>
+          </Pane>
         </Pane>
       </Pane>
       <Pane width="600px">
-        <Loading overlay loading={isLoadingTimings || isFetchingTimings || isRemovingTiming}/>
         <Pane display="grid" gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr" gridGap={UNIT_2} paddingBottom={UNIT_2}>
           <Heading size={100}>Name</Heading>
           <Heading size={100} display="flex" justifyContent="center">Work Time</Heading>
@@ -158,35 +164,42 @@ export const TimeSettings = () => {
           <Heading size={100} display="flex" justifyContent="center">Long Break Time</Heading>
           <span/>
         </Pane>
-        {timings.length === 0 && <Pane textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
-        {timings.map(({id, name, workTime, breakTime, pomodoros, longBreakTime}) => (
-          <Card
-            key={id}
-            hoverable
-            borderRadius={BORDER_RADIUS_M}
-            padding={UNIT_2}
-            className="u-box-shadow-1"
-            width="100%"
-            display="grid" gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr" gridGap={UNIT_2}
-          >
-            <Text display="flex" alignSelf="center">{name}</Text>
-            <Text display="flex" alignSelf="center" justifyContent="center">{workTime}</Text>
-            <Text display="flex" alignSelf="center" justifyContent="center">{breakTime}</Text>
-            <Text display="flex" alignSelf="center" justifyContent="center">{pomodoros}</Text>
-            <Text display="flex" alignSelf="center" justifyContent="center">{longBreakTime}</Text>
-            <Pane display="flex" justifyContent="flex-end">
-              <Tooltip content="Remove" position={Position.TOP}>
-                <IconButton
-                  iconSize={UNIT_3}
-                  appearance="minimal"
-                  intent="danger"
-                  icon={BiX}
-                  onClick={() => handleOnClickRemove(id)}
+        <Pane position="relative" borderRadius={BORDER_RADIUS_M}>
+          <Loading loading={isLoadingTimings}/>
+          {!isLoadingTimings && timings.length === 0 && <Pane textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
+          {timings.map(({id, name, workTime, breakTime, pomodoros, longBreakTime}) => (
+            <Card
+              hoverable
+              key={id}
+              width="100%"
+              display="grid"
+              gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr"
+              gridGap={UNIT_2}
+            >
+              <Text display="flex" alignSelf="center">{name}</Text>
+              <Text display="flex" alignSelf="center" justifyContent="center">{workTime}</Text>
+              <Text display="flex" alignSelf="center" justifyContent="center">{breakTime}</Text>
+              <Text display="flex" alignSelf="center" justifyContent="center">{pomodoros}</Text>
+              <Text display="flex" alignSelf="center" justifyContent="center">{longBreakTime}</Text>
+              <Pane display="flex" justifyContent="flex-end" position="relative">
+                <Loading
+                  overlay
+                  small
+                  loading={id === removedTimingIdRef.current && isRemovingTiming}
                 />
-              </Tooltip>
-            </Pane>
-          </Card>
-        ))}
+                <Tooltip content="Remove" position={Position.TOP}>
+                  <IconButton
+                    iconSize={UNIT_3}
+                    appearance="minimal"
+                    intent="danger"
+                    icon={BiX}
+                    onClick={() => handleOnClickRemove(id)}
+                  />
+                </Tooltip>
+              </Pane>
+            </Card>
+          ))}
+        </Pane>
       </Pane>
     </Pane>
   );
