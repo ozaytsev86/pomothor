@@ -35,9 +35,9 @@ export const UserCard = ({online, avatarUrl, name, userId}) => {
       <Pane display="flex" justifyContent="space-between" alignItems="center">
         {pomodoro.isOnWork && online && <Badge color="red" marginBottom={UNIT_3} marginRight={UNIT_2}>working</Badge>}
         {!pomodoro.isOnWork && online && <Badge color="green" marginBottom={UNIT_3} marginRight={UNIT_2}>on break</Badge>}
-        {online && pomodoro.pomodoros > 0
+        {online && pomodoro.pomodoros !== undefined
           ? (
-            <Tooltip content={pomodoro.pomodoros === 1 ? 'Last pomodoro' : 'Pomodoros'} position={Position.TOP}>
+            <Tooltip content={pomodoro.pomodoros === 0 ? 'Last pomodoro' : 'Pomodoros'} position={Position.TOP}>
               <Pill marginBottom={UNIT_3}>{pomodoro.pomodoros}</Pill>
             </Tooltip>
           )

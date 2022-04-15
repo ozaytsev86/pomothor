@@ -88,15 +88,19 @@ export const fetchPomodoro = ({userId}) => {
       if (data.length > 0) {
         const {minutes, seconds} = getTime(userId, data[0]);
 
-        return {
-          pomodoros: data[0].pomodoros,
-          status: data[0].status,
-          isOnWork: data[0].isOnWork,
-          time: {
-            minutes,
-            seconds
-          }
-        };
+        if (minutes >= 0) {
+          return {
+            pomodoros: data[0].pomodoros,
+            status: data[0].status,
+            isOnWork: data[0].isOnWork,
+            time: {
+              minutes,
+              seconds
+            }
+          };
+        }
+
+        return {};
       }
       return {};
     });

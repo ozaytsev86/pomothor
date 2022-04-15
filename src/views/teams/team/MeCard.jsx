@@ -68,7 +68,7 @@ export const MeCard = () => {
       userId: userInfo.id,
       workTime: form.workTime,
       breakTime: form.breakTime,
-      pomodoros: form.pomodoros,
+      pomodoros: form.pomodoros ? Number(form.pomodoros) - 1 : 0,
       longBreakTime: form.longBreakTime,
       status: form.status,
       startedAt: new Date()
@@ -84,6 +84,7 @@ export const MeCard = () => {
     if (pomodoro.isOnWork) {
       updatePomodoro({
         userId: userInfo.id,
+        pomodoros: pomodoro.pomodoros > 0 ? pomodoro.pomodoros - 1 : 0,
         startedAt: new Date(),
         isOnWork: false
       });
@@ -91,7 +92,6 @@ export const MeCard = () => {
       if (pomodoro.pomodoros > 0) {
         updatePomodoro({
           userId: userInfo.id,
-          pomodoros: pomodoro.pomodoros - 1,
           startedAt: new Date(),
           isOnWork: true
         });
@@ -115,13 +115,11 @@ export const MeCard = () => {
         <Text marginBottom={UNIT_3}>{userInfo.user_metadata.name}</Text>
         {pomodoro.isOnWork && <Badge color="red" marginBottom={UNIT_2}>working</Badge>}
         {!pomodoro.isOnWork && <Badge color="green" marginBottom={UNIT_2}>on break</Badge>}
-        {pomodoro.time && (
-          <Countdown
-            isOnWork={pomodoro.isOnWork}
-            time={pomodoro.time}
-            color={pomodoro.isOnWork ? 'red500' : 'green500'}
-            onComplete={handleRemovePomodoro}/>
-        )}
+        <Countdown
+          isOnWork={pomodoro.isOnWork}
+          time={pomodoro.time}
+          color={pomodoro.isOnWork ? 'red500' : 'green500'}
+          onComplete={handleRemovePomodoro}/>
       </Pane>
       <Pane display="grid">
         <Pane display="grid" gridTemplateColumns="1fr 1fr 1fr 1fr" gridGap={UNIT_2}>
@@ -177,10 +175,10 @@ export const MeCard = () => {
                 position={Position.TOP}
                 content={
                   <Pane display="flex" flexDirection="column">
-                    <Heading size={100} color="white">Work Time: {workTime}</Heading>
-                    <Heading size={100} color="white">Break Time: {breakTime}</Heading>
+                    <Heading size={100} color="white">Work Time: {workTime} <Pane textTransform="lowercase" display="inline">min</Pane></Heading>
+                    <Heading size={100} color="white">Break Time: {breakTime} <Pane textTransform="lowercase" display="inline">min</Pane></Heading>
                     <Heading size={100} color="white">Pomodoros: {pomodoros}</Heading>
-                    <Heading size={100} color="white">Long Break Time: {longBreakTime}</Heading>
+                    <Heading size={100} color="white">Long Break Time: {longBreakTime} <Pane textTransform="lowercase" display="inline">min</Pane></Heading>
                   </Pane>
                 }
               >

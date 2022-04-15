@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Button, Heading, IconButton, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
+import {Button, CrossIcon, Heading, IconButton, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
 import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
-import {BiAlarmAdd, BiTrash} from 'react-icons/bi';
+import {BiAlarmAdd} from 'react-icons/bi';
 import {useCreateTiming, useFetchTimings, useRemoveTiming} from '../../services/Settings.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {Loading} from '../../components/Loading';
@@ -169,7 +169,7 @@ export const TimeSettings = () => {
                       <IconButton
                         height={24}
                         intent="danger"
-                        icon={<BiTrash/>}
+                        icon={CrossIcon}
                         onClick={() => handleOnClickRemove(id)}
                       />
                     </Tooltip>

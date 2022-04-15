@@ -1,4 +1,4 @@
-import {Button, Heading, Pane} from 'evergreen-ui';
+import {Button, ClipboardIcon, Heading, IconButton, Pane, Position, Tooltip} from 'evergreen-ui';
 import {useFetchTeams, useJoinTeam} from '../../services/Teams.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {BORDER_RADIUS_M, UNIT_2, UNIT_4} from '../../constants/StyleVariables';
@@ -10,8 +10,10 @@ import {useNavigate} from 'react-router-dom';
 import {buildUrl} from '../../utils/Builders';
 import {TEAMS_ID} from '../../constants/Routes';
 import {Badge} from '../../components/Badge';
+import {useAlertStore} from '../../hooks/UseAlertStore';
 
 export const Teams = () => {
+  const {createSuccessAlert} = useAlertStore();
   const {userInfo} = useAppStore();
   const navigate = useNavigate();
   const joinedTeamIdRef = React.useRef(null);
@@ -33,6 +35,11 @@ export const Teams = () => {
   const handleOnClickJoin = (teamId) => {
     joinedTeamIdRef.current = teamId;
     joinTeam({teamId, email: userInfo.email});
+  };
+
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    createSuccessAlert('Copied!');
   };
 
   if (isLoadingTeams) {
@@ -62,7 +69,12 @@ export const Teams = () => {
             >
               {!isPrivate && <Badge color="green" marginRight={UNIT_2}>public</Badge>}
               {isPrivate && <Badge color="yellow" marginRight={UNIT_2}>private</Badge>}
-              <Heading>{name}</Heading>
+              <Heading marginRight={UNIT_2}>{name}</Heading>
+              <Tooltip content="Copy team link" position={Position.TOP}>
+                <IconButton height={24} icon={ClipboardIcon} onClick={handleCopyToClipboard}/>
+              </Tooltip>
+            </Pane>
+            <Pane>
             </Pane>
             <Pane position="relative">
               <Loading

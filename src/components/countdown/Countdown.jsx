@@ -24,11 +24,10 @@ export const Countdown = ({isOnWork = false, time = null, color = 'gray900', onT
 
   useEffect(() => {
     const interval = setInterval(() => {
-
       if (secondsRef.current !== null) {
         if (secondsRef.current === 0) {
           secondsRef.current = 59;
-          minutesRef.current = minutesRef - 1;
+          minutesRef.current = minutesRef.current > 0 ? minutesRef.current - 1 : 0;
         } else {
           secondsRef.current = secondsRef.current - 1;
         }
