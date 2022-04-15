@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Heading, IconButton, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
-import {BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
+import {BORDER_RADIUS_M, BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
 import {BiAlarmAdd, BiX} from 'react-icons/bi';
 import {useCreateTiming, useFetchTimings, useRemoveTiming} from '../../services/Settings.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {Loading} from '../../components/Loading';
+import {Card} from '../../components/card/Card';
 
 // TODO: add form validations
 
@@ -74,6 +75,7 @@ export const TimeSettings = () => {
         position="relative"
         className="u-box-shadow-1"
         width={600}
+        marginBottom={UNIT_4}
       >
         <Heading size={900} paddingBottom={UNIT_2}>Timing</Heading>
         <Heading size={200} marginBottom={UNIT_3}>Everyone has their different best Pomodoro timing. In this section you can create as many as you want to find the best fit for you.</Heading>
@@ -138,7 +140,6 @@ export const TimeSettings = () => {
         <Pane
           display="flex"
           justifyContent="flex-end"
-          paddingBottom={UNIT_4}
         >
           <Button
             disabled={!isFormValid()}
@@ -146,40 +147,46 @@ export const TimeSettings = () => {
             onClick={handleOnClickAdd}
           ><BiAlarmAdd fontSize={UNIT_3} className="u-mr-1"/>Add</Button>
         </Pane>
-        <Pane display="flex" position="relative">
-          <Loading overlay loading={isLoadingTimings || isFetchingTimings || isRemovingTiming}/>
-          <Pane display="grid" gridTemplateColumns="1fr 1fr 1fr 1fr 1fr 0.4fr" gridGap={UNIT_2}>
-            <Heading size={100}>Name</Heading>
-            <Heading size={100}>Work Time</Heading>
-            <Heading size={100}>Break Time</Heading>
-            <Heading size={100}>Pomodoros</Heading>
-            <Heading size={100}>Long Break Time</Heading>
-            <span/>
-            {timings.length === 0 && <Pane gridColumn="span 6" textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
-            {timings.map(({id, name, workTime, breakTime, pomodoros, longBreakTime}) => {
-              return (
-                <>
-                  <Text display="flex" alignSelf="center">{name}</Text>
-                  <Text display="flex" alignSelf="center">{workTime}</Text>
-                  <Text display="flex" alignSelf="center">{breakTime}</Text>
-                  <Text display="flex" alignSelf="center">{pomodoros}</Text>
-                  <Text display="flex" alignSelf="center">{longBreakTime}</Text>
-                  <Pane display="flex" justifyContent="flex-end">
-                    <Tooltip content="Remove" position={Position.TOP}>
-                      <IconButton
-                        iconSize={UNIT_3}
-                        appearance="minimal"
-                        intent="danger"
-                        icon={BiX}
-                        onClick={() => handleOnClickRemove(id)}
-                      />
-                    </Tooltip>
-                  </Pane>
-                </>
-              );
-            })}
-          </Pane>
+      </Pane>
+      <Pane width="600px">
+        <Loading overlay loading={isLoadingTimings || isFetchingTimings || isRemovingTiming}/>
+        <Pane display="grid" gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr" gridGap={UNIT_2} paddingBottom={UNIT_2}>
+          <Heading size={100}>Name</Heading>
+          <Heading size={100} display="flex" justifyContent="center">Work Time</Heading>
+          <Heading size={100} display="flex" justifyContent="center">Break Time</Heading>
+          <Heading size={100} display="flex" justifyContent="center">Pomodoros</Heading>
+          <Heading size={100} display="flex" justifyContent="center">Long Break Time</Heading>
+          <span/>
         </Pane>
+        {timings.length === 0 && <Pane textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
+        {timings.map(({id, name, workTime, breakTime, pomodoros, longBreakTime}) => (
+          <Card
+            key={id}
+            hoverable
+            borderRadius={BORDER_RADIUS_M}
+            padding={UNIT_2}
+            className="u-box-shadow-1"
+            width="100%"
+            display="grid" gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr" gridGap={UNIT_2}
+          >
+            <Text display="flex" alignSelf="center">{name}</Text>
+            <Text display="flex" alignSelf="center" justifyContent="center">{workTime}</Text>
+            <Text display="flex" alignSelf="center" justifyContent="center">{breakTime}</Text>
+            <Text display="flex" alignSelf="center" justifyContent="center">{pomodoros}</Text>
+            <Text display="flex" alignSelf="center" justifyContent="center">{longBreakTime}</Text>
+            <Pane display="flex" justifyContent="flex-end">
+              <Tooltip content="Remove" position={Position.TOP}>
+                <IconButton
+                  iconSize={UNIT_3}
+                  appearance="minimal"
+                  intent="danger"
+                  icon={BiX}
+                  onClick={() => handleOnClickRemove(id)}
+                />
+              </Tooltip>
+            </Pane>
+          </Card>
+        ))}
       </Pane>
     </Pane>
   );
