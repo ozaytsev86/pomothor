@@ -2,8 +2,8 @@ import React, {useEffect} from 'react';
 import {supabase} from './services/Api';
 import {Auth} from './views/Auth';
 import {Home} from './views/Home';
-import {HOME, SETTINGS, TEAMS, TEAMS_ID, TEAMS_NEW, TEAMS_NOT_ACCEPTED, TEAMS_NOT_FOUND, TEAMS_NOT_INVITED} from './constants/Routes';
-import {Route, Routes} from 'react-router-dom';
+import {HOME, SETTINGS, TEAMS, TEAMS_ID, TEAMS_NEW, TEAMS_NOT_ACCEPTED, TEAMS_NOT_FOUND, TEAMS_NOT_INVITED, TEAMS_NOT_JOINED} from './constants/Routes';
+import {Link, Route, Routes} from 'react-router-dom';
 import 'normalize.css';
 import './index.css';
 import {Navbar} from './components/Navbar';
@@ -52,6 +52,7 @@ export const App = () => {
               <Route path={TEAMS_NOT_FOUND} element={<div>Team not found</div>}/>
               <Route path={TEAMS_NOT_INVITED} element={<div>It looks like you're not a team member, please ask the admin for an invite</div>}/>
               <Route path={TEAMS_NOT_ACCEPTED} element={<div>You haven't accepted the invitation yet</div>}/>
+              <Route path={TEAMS_NOT_JOINED} element={<div>You haven't join this team yet, you can do it from the <Link to={TEAMS}>teams</Link> page</div>}/>
               <Route path={SETTINGS} element={<Settings/>}/>
             </Routes>
           </Provider>

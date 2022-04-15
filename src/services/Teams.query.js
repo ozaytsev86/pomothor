@@ -48,10 +48,15 @@ export const useFetchTeamUser = ({teamId, email}) => {
 };
 
 export const useJoinTeam = ({onSuccess}) => {
+  const queryClient = useQueryClient();
+
   return useMutationWithError(
     joinTeam,
     {
-      onSuccess
+      onSuccess: () => {
+        queryClient.invalidateQueries(Queries.TeamUsers);
+        onSuccess();
+      }
     }
   );
 };

@@ -3,13 +3,14 @@ import {ClipboardIcon, Heading, IconButton, Link, Pane, Position, Text, Tooltip}
 import {useNavigate, useParams} from 'react-router-dom';
 import {useFetchTeam, useFetchTeamUsers} from '../../../services/Teams.query';
 import {Loading} from '../../../components/Loading';
-import {TEAMS_NOT_ACCEPTED, TEAMS_NOT_FOUND, TEAMS_NOT_INVITED} from '../../../constants/Routes';
+import {TEAMS_NOT_ACCEPTED, TEAMS_NOT_FOUND, TEAMS_NOT_INVITED, TEAMS_NOT_JOINED} from '../../../constants/Routes';
 import {useAppStore} from '../../../hooks/UseAppStore';
 import {MeCard} from './MeCard';
 import {useTeamUsersSubscribeUnsubscribe, useUpdateTeamUserStatus} from './UseTeam';
 import {TeamAdmin} from './TeamAdmin';
 import {useAlertStore} from '../../../hooks/UseAlertStore';
 import {UserCard} from './UserCard';
+import {useEffect} from 'react';
 
 export const Team = () => {
   const {createSuccessAlert} = useAlertStore();
@@ -37,14 +38,20 @@ export const Team = () => {
   const isUserInvited = (userEmail) => teamUsers.invitedUsers.find(u => u.email === userEmail);
   const isUserAccepted = (userEmail) => teamUsers.acceptedUsers.find(u => u.email === userEmail);
 
+  useEffect(() => {
+    if (!isLoadingTeamUsers) {
+      if (team.isPrivate && !isUserInvited(userInfo.email) && !isUserAccepted(userInfo.email)) {
+        navigate(TEAMS_NOT_INVITED);
+      } else if (team.isPrivate && isUserInvited(userInfo.email) && !isUserAccepted(userInfo.email)) {
+        navigate(TEAMS_NOT_ACCEPTED);
+      } else if (!isUserInvited(userInfo.email) && !isUserAccepted(userInfo.email)) {
+        navigate(TEAMS_NOT_JOINED);
+      }
+    }
+  }, [isLoadingTeamUsers]);
+
   if (isLoadingTeam || isLoadingTeamUsers) {
     return <Loading loading/>;
-  }
-
-  if (team.isPrivate && !isUserInvited(userInfo.email) && !isUserAccepted(userInfo.email)) {
-    navigate(TEAMS_NOT_INVITED);
-  } else if (team.isPrivate && isUserInvited(userInfo.email) && !isUserAccepted(userInfo.email)) {
-    navigate(TEAMS_NOT_ACCEPTED);
   }
 
   const handleCopyToClipboard = () => {

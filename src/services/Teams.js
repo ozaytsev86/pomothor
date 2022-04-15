@@ -80,12 +80,12 @@ export const joinTeam = async ({teamId, email}) => {
     // new uninvited user
     return supabase
       .from('teams_users')
-      .insert([{teamId, email: email.toLowerCase(), status: TeamUserStatuses.invited, online: true}])
+      .insert([{teamId, email: email.toLowerCase(), status: TeamUserStatuses.accepted, online: true}])
       .then((data) => {
         if (data.error) {
           return Promise.reject(data.error.message);
         } else {
-          return Promise.resolve(data);
+          return Promise.resolve(data[0]);
         }
       });
   } else if (teamUser.status === TeamUserStatuses.invited) {
@@ -98,7 +98,7 @@ export const joinTeam = async ({teamId, email}) => {
         if (data.error) {
           return Promise.reject(data.error.message);
         } else {
-          return Promise.resolve(data);
+          return Promise.resolve(data[0]);
         }
       });
   }

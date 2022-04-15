@@ -5,4 +5,5 @@ export const TEAMS_ID = '/teams/:id';
 export const TEAMS_NOT_FOUND = '/teams/not-found';
 export const TEAMS_NOT_INVITED = '/teams/not-invited';
 export const TEAMS_NOT_ACCEPTED = '/teams/not-accepted';
+export const TEAMS_NOT_JOINED = '/teams/not-joined';
 export const SETTINGS = '/settings';
