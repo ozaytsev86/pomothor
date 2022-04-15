@@ -4,7 +4,7 @@ import {Loading} from '../../../components/Loading';
 import {Button, Heading, Pane, TextInput} from 'evergreen-ui';
 import {BiSend} from 'react-icons/bi';
 import {Badge} from '../../../components/Badge';
-import {useInviteUserToTeam} from '../../../services/Teams.query';
+import {useInviteUserToTeam, useRemoveUserFromTheTeam} from '../../../services/Teams.query';
 import {useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useAppStore} from '../../../hooks/UseAppStore';
@@ -23,8 +23,17 @@ export const TeamAdmin = ({teamUsers}) => {
     }
   });
 
+  const {
+    isLoading: isLoadingRemoveUser,
+    mutateAsync: removeUser
+  } = useRemoveUserFromTheTeam();
+
   const handleOnClickInviteUser = () => {
     inviteUser({teamId: params.id, email: invitedUserEmail, creatorId: userInfo.id});
+  };
+
+  const handleOnClickRemoveUser = ({teamUserId}) => {
+    removeUser({teamUserId});
   };
 
   return (
@@ -65,7 +74,14 @@ export const TeamAdmin = ({teamUsers}) => {
         <Heading size={100} paddingBottom={UNIT_2}>Invited</Heading>
         <Pane display="flex" flexWrap="wrap">
           {teamUsers.invitedUsers.length > 0
-            ? teamUsers.invitedUsers.map(u => <Badge key={u.email} marginRight={UNIT_1} marginBottom={UNIT_1}>{u.email}</Badge>)
+            ? teamUsers.invitedUsers.map(u => (
+              <Badge
+                key={u.email}
+                marginRight={UNIT_1}
+                marginBottom={UNIT_1}
+                onClickRemove={() => handleOnClickRemoveUser({teamUserId: u.id})}
+              >{u.email}</Badge>
+            ))
             : <Heading size={200}>There are no pending invitations</Heading>
           }
         </Pane>
@@ -73,7 +89,15 @@ export const TeamAdmin = ({teamUsers}) => {
       <Pane marginBottom={UNIT_3}>
         <Heading size={100} paddingBottom={UNIT_2}>Accepted</Heading>
         <Pane display="flex" flexWrap="wrap">
-          {teamUsers.acceptedUsers.map(u => <Badge key={u.email} color="teal" marginRight={UNIT_1} marginBottom={UNIT_1}>{u.email}</Badge>)}
+          {teamUsers.acceptedUsers.map(u => (
+            <Badge
+              key={u.email}
+              color="teal"
+              marginRight={UNIT_1}
+              marginBottom={UNIT_1}
+              onClickRemove={() => handleOnClickRemoveUser({teamUserId: u.id})}
+            >{u.email}</Badge>
+          ))}
         </Pane>
       </Pane>
     </Pane>

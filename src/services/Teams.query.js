@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createTeam, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam} from './Teams';
+import {createTeam, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam, removeUserFromTheTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
 import {useQueryClient} from 'react-query';
@@ -66,6 +66,20 @@ export const useInviteUserToTeam = ({onSuccess}) => {
       onSuccess: () => {
         queryClient.invalidateQueries(Queries.TeamUsers);
         onSuccess();
+      }
+    }
+  );
+};
+
+export const useRemoveUserFromTheTeam = () => {
+  const queryClient = useQueryClient();
+
+  return useMutationWithError(
+    removeUserFromTheTeam,
+    {
+      successMessage: 'The user was successfully removed from the team',
+      onSuccess: () => {
+        queryClient.invalidateQueries(Queries.TeamUsers);
       }
     }
   );

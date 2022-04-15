@@ -117,13 +117,26 @@ export const inviteUserToTeam = async ({teamId, email, creatorId}) => {
       .insert([{teamId: Number(teamId), email, status: TeamUserStatuses.invited}])
       .then(({data}) => {
         if (data.length === 0) {
-          return Promise.reject('Team not found');
+          return Promise.reject('The team was not found');
         }
         return Promise.resolve(data[0]);
       });
   }
 
   return Promise.reject('The team was not found, please refresh the page and try again');
+};
+
+export const removeUserFromTheTeam = async ({teamUserId}) => {
+  return supabase
+    .from('teams_users')
+    .delete()
+    .match({id: Number(teamUserId)})
+    .then(({data}) => {
+      if (data === null) {
+        return Promise.reject('The user was not found, please refresh the page and try again');
+      }
+      return Promise.resolve(data[0]);
+    });
 };
 
 export const fetchTeamUsers = async (teamId) => {
@@ -145,6 +158,7 @@ export const fetchTeamUsers = async (teamId) => {
         const user = data.find(user => user.email === teamUser.email);
 
         return {
+          id: teamUser.id,
           userId: user.id,
           name: user.name,
           avatarUrl: user.avatar_url,

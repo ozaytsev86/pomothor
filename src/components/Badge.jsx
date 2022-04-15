@@ -1,10 +1,10 @@
 import {Badge as EUIBadge, CrossIcon, IconButton} from 'evergreen-ui';
 import {UNIT_1} from '../constants/StyleVariables';
 
-export const Badge = ({id, children, color = 'neutral', onClickRemove = null, ...rest}) => {
+export const Badge = ({children, color = 'neutral', onClickRemove = null, ...rest}) => {
   const handleOnClickRemove = () => {
     if (onClickRemove) {
-      onClickRemove(id);
+      onClickRemove();
     }
   };
 
@@ -16,11 +16,16 @@ export const Badge = ({id, children, color = 'neutral', onClickRemove = null, ..
       color={color}
       width="fit-content"
       {...rest}
-      onClick={handleOnClickRemove}
     >
       {children}
       {onClickRemove && (
-        <IconButton height={16} icon={CrossIcon} appearance="minimal" marginLeft={UNIT_1}/>
+        <IconButton
+          height={16}
+          icon={CrossIcon}
+          appearance="minimal"
+          marginLeft={UNIT_1}
+          onClick={handleOnClickRemove}
+        />
       )}
     </EUIBadge>
   );
