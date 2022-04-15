@@ -1,8 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
 import {Strong} from 'evergreen-ui';
-import {formatToTwoNumbers} from './Countdown.helper';
+import {formatToTwoNumbers} from '../../utils/Number';
 
-export const Countdown = ({time = null, color = 'gray900', onTick, onComplete}) => {
+export const Countdown = ({isOnWork = false, time = null, color = 'gray900', onTick, onComplete}) => {
   const [currentMinutes, setCurrentMinutes] = useState();
   const [currentSeconds, setCurrentSeconds] = useState();
   const minutesRef = useRef(time ? time.minutes : null);
@@ -24,8 +24,8 @@ export const Countdown = ({time = null, color = 'gray900', onTick, onComplete}) 
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (secondsRef.current !== null) {
 
+      if (secondsRef.current !== null) {
         if (secondsRef.current === 0) {
           secondsRef.current = 59;
           minutesRef.current = minutesRef - 1;
@@ -44,6 +44,8 @@ export const Countdown = ({time = null, color = 'gray900', onTick, onComplete}) 
     minutesRef.current = time ? time.minutes : null;
     secondsRef.current = time ? time.seconds : null;
   }, [time]);
+
+  document.title = `${isOnWork ? '🔴' : '🟢'}${formatToTwoNumbers(minutesRef.current)}:${formatToTwoNumbers(secondsRef.current)}`;
 
   return (
     <Strong color={color}>

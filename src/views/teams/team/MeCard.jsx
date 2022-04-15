@@ -117,6 +117,7 @@ export const MeCard = () => {
         {!pomodoro.isOnWork && <Badge color="green" marginBottom={UNIT_2}>on break</Badge>}
         {pomodoro.time && (
           <Countdown
+            isOnWork={pomodoro.isOnWork}
             time={pomodoro.time}
             color={pomodoro.isOnWork ? 'red500' : 'green500'}
             onComplete={handleRemovePomodoro}/>

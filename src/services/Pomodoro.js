@@ -85,7 +85,6 @@ export const fetchPomodoro = ({userId}) => {
     .select()
     .eq('userId', userId)
     .then(({data}) => {
-
       if (data.length > 0) {
         const {minutes, seconds} = getTime(userId, data[0]);
 
