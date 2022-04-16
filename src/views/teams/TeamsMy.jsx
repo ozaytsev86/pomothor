@@ -8,6 +8,7 @@ import {BiLogOutCircle, BiPencil, BiTask, BiX} from 'react-icons/bi';
 import {Badge} from '../../components/Badge';
 import {Card} from '../../components/card/Card';
 import {useAlertStore} from '../../hooks/UseAlertStore';
+import {NoRecords} from '../../components/NoRecords';
 
 export const TeamsMy = () => {
   const {createSuccessAlert} = useAlertStore();
@@ -50,7 +51,7 @@ export const TeamsMy = () => {
 
   const handleOnClickLeave = (teamId) => {
     leavedTeamIdRef.current = teamId;
-    leaveTeam({teamId, userEmail: userInfo.email});
+    leaveTeam({teamId, email: userInfo.email});
   };
 
   if (isLoadingTeams) {
@@ -60,6 +61,7 @@ export const TeamsMy = () => {
   return (
     <Pane padding={UNIT_4}>
       <Heading size={100} paddingBottom={UNIT_2}>Created Teams</Heading>
+      {<NoRecords arr={teams.createdTeams}/>}
       {teams.createdTeams.map(({id, name, isPrivate}) => (
         <Card hoverable key={id}>
           <Pane
@@ -106,8 +108,9 @@ export const TeamsMy = () => {
         </Card>
       ))}
 
-      <Heading size={100} paddingTop={UNIT_4} paddingBottom={UNIT_2}>Assigned Teams</Heading>
-      {teams.assignedTeams.map(({id, name, isPrivate}) => (
+      <Heading size={100} paddingTop={UNIT_4} paddingBottom={UNIT_2}>Joined Teams</Heading>
+      {<NoRecords arr={teams.joinedTeams}/>}
+      {teams.joinedTeams.map(({id, name, isPrivate}) => (
         <Card hoverable key={id}>
           <Pane
             display="flex"

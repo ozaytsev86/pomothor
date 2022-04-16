@@ -8,9 +8,10 @@ import {BiLogInCircle, BiTask} from 'react-icons/bi';
 import {Loading} from '../../components/Loading';
 import {useNavigate} from 'react-router-dom';
 import {buildUrl} from '../../utils/Builders';
-import {TEAMS_ID} from '../../constants/Routes';
+import {TEAMS_ID, TEAMS_NOT_FOUND} from '../../constants/Routes';
 import {Badge} from '../../components/Badge';
 import {useAlertStore} from '../../hooks/UseAlertStore';
+import {NoRecords} from '../../components/NoRecords';
 
 export const Teams = () => {
   const {createSuccessAlert} = useAlertStore();
@@ -25,7 +26,8 @@ export const Teams = () => {
 
   const {
     isLoading: isLoadingJoinTeam,
-    mutateAsync: joinTeam
+    mutateAsync: joinTeam,
+    error: errorJoinTeam,
   } = useJoinTeam({
     onSuccess: () => {
       navigate(buildUrl(TEAMS_ID, 'id', joinedTeamIdRef.current));
@@ -42,13 +44,17 @@ export const Teams = () => {
     createSuccessAlert('Copied!');
   };
 
+  if (errorJoinTeam) {
+    navigate(TEAMS_NOT_FOUND);
+  }
+
   if (isLoadingTeams) {
     return <Loading loading/>;
   }
 
   return (
     <Pane padding={UNIT_4}>
-      {teams.length === 0 && <Pane gridColumn="span 6" textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
+      {<NoRecords arr={teams}/>}
       {teams.map(({name, id, isPrivate}) => (
         <Card hoverable key={id}>
           <Pane

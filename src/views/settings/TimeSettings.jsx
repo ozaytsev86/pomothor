@@ -6,6 +6,7 @@ import {useCreateTiming, useFetchTimings, useRemoveTiming} from '../../services/
 import {useAppStore} from '../../hooks/UseAppStore';
 import {Loading} from '../../components/Loading';
 import {Card} from '../../components/card/Card';
+import {NoRecords} from '../../components/NoRecords';
 
 // TODO: add form validations
 
@@ -166,7 +167,7 @@ export const TimeSettings = () => {
         </Pane>
         <Pane position="relative" borderRadius={BORDER_RADIUS_M}>
           <Loading loading={isLoadingTimings}/>
-          {!isLoadingTimings && timings.length === 0 && <Pane textAlign="center" paddingTop={UNIT_2}>No records found</Pane>}
+          {!isLoadingTimings && <NoRecords arr={timings}/>}
           {timings.map(({id, name, workTime, breakTime, pomodoros, longBreakTime}) => (
             <Card
               hoverable

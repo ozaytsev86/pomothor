@@ -26,28 +26,30 @@ export const fetchTeams = async (userEmail) => {
     .eq('email', userEmail)
     .then(({data}) => data);
 
-  const teamIdsFilter = teamsIds.map(t => `id.eq.${t.teamId}`).join();
-
   const publicTeams = await supabase
     .from('teams')
     .select()
     .match({isPrivate: false})
     .then(({data}) => data);
 
-  const userAssignedTeams = await supabase
-    .from('teams')
-    .select()
-    .or(teamIdsFilter)
-    .then(({data}) => data);
-
   const allTeams = publicTeams;
 
-  if (userAssignedTeams.length > 0) {
-    userAssignedTeams.forEach(team => {
-      if (allTeams.filter(t => t.id === team.id).length === 0) {
-        allTeams.push(team);
-      }
-    });
+  if (teamsIds.length > 0) {
+    const teamIdsFilter = teamsIds.map(t => `id.eq.${t.teamId}`).join();
+
+    const userJoinedTeams = await supabase
+      .from('teams')
+      .select()
+      .or(teamIdsFilter)
+      .then(({data}) => data);
+
+    if (userJoinedTeams.length > 0) {
+      userJoinedTeams.forEach(team => {
+        if (allTeams.filter(t => t.id === team.id).length === 0) {
+          allTeams.push(team);
+        }
+      });
+    }
   }
 
   return allTeams.sort(sortBy('id'));
@@ -68,24 +70,25 @@ export const fetchMyTeams = async ({userId, userEmail}) => {
     .match({creatorId: userId})
     .then(({data}) => data);
 
-  const userAssignedTeamsAll = await supabase
+  const userJoinedTeamsAll = await supabase
     .from('teams')
     .select()
     .or(teamIdsFilter)
     .then(({data}) => data);
 
-  const assignedTeams = [];
+  const joinedTeams = [];
 
-  if (userAssignedTeamsAll.length > 0) {
-    userAssignedTeamsAll.forEach(team => {
+  if (userJoinedTeamsAll?.length > 0) {
+    userJoinedTeamsAll.forEach(team => {
       if (createdTeams.filter(t => t.id === team.id).length === 0) {
-        assignedTeams.push(team);
+        joinedTeams.push(team);
       }
     });
   }
+
   return {
     createdTeams,
-    assignedTeams: assignedTeams.sort(sortBy('id'))
+    joinedTeams: joinedTeams.sort(sortBy('id'))
   };
 };
 
@@ -96,13 +99,15 @@ export const fetchTeam = (id) => {
     .eq('id', Number(id))
     .then(({data}) => {
       if (data.length === 0) {
-        return Promise.reject('Team not found');
+        return Promise.reject('The team was not found');
       }
       return Promise.resolve(data[0]);
     });
 };
 
 export const joinTeam = async ({teamId, email}) => {
+  await fetchTeam(teamId);
+
   const teamUser = await supabase
     .from('teams_users')
     .select()
@@ -141,13 +146,46 @@ export const joinTeam = async ({teamId, email}) => {
 };
 
 export const removeTeam = async ({teamId, creatorId}) => {
-  // get the team
+  const team = await fetchTeam(teamId);
+
+  if (team.creatorId === creatorId) {
+    return supabase
+      .from('teams_users')
+      .delete()
+      .match({teamId: Number(teamId)})
+      .then(({data}) => {
+        if (data === null) {
+          return Promise.reject(`There was an error removing users from the team "${team.name}"`);
+        }
+        return supabase
+          .from('teams')
+          .delete()
+          .match({id: Number(teamId), creatorId})
+          .then(({data}) => {
+            if (data === null) {
+              return Promise.reject(`There was an error removing the team "${team.name}"`);
+            }
+            return Promise.resolve(data);
+          });
+      });
+  } else {
+    return Promise.reject(`You don't have permission to delete the team "${team.name}"`);
+  }
   // remove teams_users where teamId
   // remove teams where teamId
 };
 
 export const leaveTeam = async ({teamId, email}) => {
-  // remove tams_users where teamId and email
+  return supabase
+    .from('teams_users')
+    .delete()
+    .match({teamId, email})
+    .then(({data}) => {
+      if (data.length === 0) {
+        return Promise.reject('The team was not found');
+      }
+      return Promise.resolve(data[0]);
+    });
 };
 
 export const inviteUserToTeam = async ({teamId, email, creatorId}) => {

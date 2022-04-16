@@ -74,6 +74,7 @@ export const useRemoveTeam = ({onSuccess}) => {
   return useMutationWithError(
     removeTeam,
     {
+      successMessage: 'The team was successfully removed',
       onSuccess: () => {
         queryClient.invalidateQueries(Queries.MyTeams);
         onSuccess();
@@ -88,6 +89,7 @@ export const useLeaveTeam = ({onSuccess}) => {
   return useMutationWithError(
     leaveTeam,
     {
+      successMessage: 'The team was successfully left',
       onSuccess: () => {
         queryClient.invalidateQueries(Queries.MyTeams);
         onSuccess();

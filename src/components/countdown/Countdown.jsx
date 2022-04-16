@@ -36,7 +36,10 @@ export const Countdown = ({isOnWork = false, time = null, color = 'gray900', onT
         setCurrentSeconds(secondsRef.current);
       }
     }, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      document.title = 'Pomothor';
+    };
   }, []);
 
   useEffect(() => {
