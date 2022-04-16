@@ -10,13 +10,15 @@ import {Card} from '../../components/card/Card';
 import {useAlertStore} from '../../hooks/UseAlertStore';
 import {NoRecords} from '../../components/NoRecords';
 import {RemoveButtonWithConfirmation} from '../../components/RemoveButtonWithConfirmation';
+import {EditTeamModal} from './EditTeamModal';
 
 export const TeamsMy = () => {
   const {createSuccessAlert} = useAlertStore();
   const {userInfo} = useAppStore();
   const removedTeamIdRef = React.useRef(null);
   const leavedTeamIdRef = React.useRef(null);
-  const [isVisibleRemoveTeamModal, setIsVisibleRemoveTeamModal] = useState(false);
+  const selectedTeamRef = React.useRef(null);
+  const [isVisibleEditTeamModal, setIsVisibleEditTeamModal] = useState(false);
 
   const {
     isLoading: isLoadingTeams,
@@ -44,6 +46,15 @@ export const TeamsMy = () => {
   const handleCopyToClipboard = (teamId) => {
     navigator.clipboard.writeText(`${window.location.href}/${teamId}`);
     createSuccessAlert('Copied!');
+  };
+
+  const handleOnClickEdit = (team) => {
+    selectedTeamRef.current = team;
+    setIsVisibleEditTeamModal(true);
+  };
+  const handleOnCloseEdit = () => {
+    selectedTeamRef.current = null;
+    setIsVisibleEditTeamModal(false);
   };
 
   const handleOnClickRemove = (teamId) => {
@@ -94,6 +105,7 @@ export const TeamsMy = () => {
                   iconSize={UNIT_3}
                   appearance="minimal"
                   icon={BiPencil}
+                  onClick={() => handleOnClickEdit({id, name, isPrivate})}
                 />
               </Tooltip>
               <RemoveButtonWithConfirmation onClickYes={() => handleOnClickRemove(id)}/>
@@ -137,6 +149,7 @@ export const TeamsMy = () => {
           </Pane>
         </Card>
       ))}
+      {isVisibleEditTeamModal && <EditTeamModal visible team={selectedTeamRef.current} onClose={handleOnCloseEdit}/>}
     </Pane>
   );
 };

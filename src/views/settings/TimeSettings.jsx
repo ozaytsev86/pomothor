@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
-import {Button, Heading, IconButton, Pane, Position, Text, TextInputField, Tooltip} from 'evergreen-ui';
+import {Button, Heading, Pane, Text, TextInputField} from 'evergreen-ui';
 import {BORDER_RADIUS_M, BORDER_RADIUS_XL, UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
-import {BiAlarmAdd, BiX} from 'react-icons/bi';
+import {BiAlarmAdd} from 'react-icons/bi';
 import {useCreateTiming, useFetchTimings, useRemoveTiming} from '../../services/Settings.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {Loading} from '../../components/Loading';
 import {Card} from '../../components/card/Card';
 import {NoRecords} from '../../components/NoRecords';
+import {RemoveButtonWithConfirmation} from '../../components/RemoveButtonWithConfirmation';
 
 // TODO: add form validations
 
@@ -78,7 +79,7 @@ export const TimeSettings = () => {
         borderRadius={BORDER_RADIUS_XL}
         backgroundColor="white"
         className="u-box-shadow-1"
-        width={600}
+        width={650}
         marginBottom={UNIT_4}
         position="relative"
       >
@@ -156,8 +157,8 @@ export const TimeSettings = () => {
           </Pane>
         </Pane>
       </Pane>
-      <Pane width="600px">
-        <Pane display="grid" gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr" gridGap={UNIT_2} paddingBottom={UNIT_2}>
+      <Pane width="650px">
+        <Pane display="grid" gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.7fr" gridGap={UNIT_2} paddingBottom={UNIT_2}>
           <Heading size={100}>Name</Heading>
           <Heading size={100} display="flex" justifyContent="center">Work Time</Heading>
           <Heading size={100} display="flex" justifyContent="center">Break Time</Heading>
@@ -174,7 +175,7 @@ export const TimeSettings = () => {
               key={id}
               width="100%"
               display="grid"
-              gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.3fr"
+              gridTemplateColumns="2fr 0.5fr 0.5fr 0.5fr 0.8fr 0.7fr"
               gridGap={UNIT_2}
             >
               <Text display="flex" alignSelf="center">{name}</Text>
@@ -183,20 +184,7 @@ export const TimeSettings = () => {
               <Text display="flex" alignSelf="center" justifyContent="center">{pomodoros}</Text>
               <Text display="flex" alignSelf="center" justifyContent="center">{longBreakTime}</Text>
               <Pane display="flex" justifyContent="flex-end" position="relative">
-                <Loading
-                  overlay
-                  small
-                  loading={id === removedTimingIdRef.current && isRemovingTiming}
-                />
-                <Tooltip content="Remove" position={Position.TOP}>
-                  <IconButton
-                    iconSize={UNIT_3}
-                    appearance="minimal"
-                    intent="danger"
-                    icon={BiX}
-                    onClick={() => handleOnClickRemove(id)}
-                  />
-                </Tooltip>
+                <RemoveButtonWithConfirmation onClickYes={() => handleOnClickRemove(id)}/>
               </Pane>
             </Card>
           ))}

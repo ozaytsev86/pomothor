@@ -19,6 +19,20 @@ export const createTeam = async ({name, creatorId, creatorEmail, isPrivate}) => 
     });
 };
 
+export const updateTeam = async ({teamId, creatorId, name, isPrivate}) => {
+  return supabase
+    .from('teams')
+    .update([{name, isPrivate}])
+    .match({id: teamId, creatorId})
+    .then((data) => {
+      if (data.error) {
+        return Promise.reject('We weren\'t able to updated the team, please try again later');
+      } else {
+        return Promise.resolve();
+      }
+    });
+};
+
 export const fetchTeams = async (userEmail) => {
   const teamsIds = await supabase
     .from('teams_users')

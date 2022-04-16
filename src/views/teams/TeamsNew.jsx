@@ -68,7 +68,7 @@ export const TeamsNew = () => {
         <TextInputField
           required
           autoFocus
-          isInvalid={error}
+          isInvalid={Boolean(error)}
           type="text"
           marginBottom={0}
           label="Team Name"

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {createTeam, fetchMyTeams, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam, leaveTeam, removeTeam, removeUserFromTheTeam} from './Teams';
+import {createTeam, fetchMyTeams, fetchTeam, fetchTeams, fetchTeamUser, fetchTeamUsers, inviteUserToTeam, joinTeam, leaveTeam, removeTeam, removeUserFromTheTeam, updateTeam} from './Teams';
 import {useMutationWithError, useQueryWithError} from '../hooks/UseQueries';
 import {Queries} from '../constants/Queries';
-import {useQueryClient} from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
+import {useAlertStore} from '../hooks/UseAlertStore';
 
 export const useCreateTeam = ({onSuccess}) => {
   const queryClient = useQueryClient();
@@ -14,6 +15,22 @@ export const useCreateTeam = ({onSuccess}) => {
       onSuccess: ({id}) => {
         queryClient.invalidateQueries(Queries.Teams);
         onSuccess(id);
+      }
+    }
+  );
+};
+
+export const useUpdateTeam = ({onSuccess}) => {
+  const queryClient = useQueryClient();
+  const {createSuccessAlert} = useAlertStore();
+
+  return useMutation(
+    updateTeam,
+    {
+      onSuccess: () => {
+        createSuccessAlert('The team was successfully edited');
+        queryClient.invalidateQueries(Queries.MyTeams);
+        onSuccess();
       }
     }
   );
