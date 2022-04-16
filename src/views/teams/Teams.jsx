@@ -3,7 +3,7 @@ import {useFetchTeams, useJoinTeam} from '../../services/Teams.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
 import {Card} from '../../components/card/Card';
-import React from 'react';
+import React, {useState} from 'react';
 import {BiLogInCircle, BiTask} from 'react-icons/bi';
 import {Loading} from '../../components/Loading';
 import {useNavigate} from 'react-router-dom';
@@ -16,6 +16,7 @@ import {NoRecords} from '../../components/NoRecords';
 export const Teams = () => {
   const {createSuccessAlert} = useAlertStore();
   const {userInfo} = useAppStore();
+  const [isVisibleCreateTeamModal, setIsVisibleCreateTeamModal] = useState(false);
   const navigate = useNavigate();
   const joinedTeamIdRef = React.useRef(null);
 
@@ -27,7 +28,7 @@ export const Teams = () => {
   const {
     isLoading: isLoadingJoinTeam,
     mutateAsync: joinTeam,
-    error: errorJoinTeam,
+    error: errorJoinTeam
   } = useJoinTeam({
     onSuccess: () => {
       navigate(buildUrl(TEAMS_ID, 'id', joinedTeamIdRef.current));

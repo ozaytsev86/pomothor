@@ -2,19 +2,21 @@ import {Button, Heading, IconButton, Pane, Position, Tooltip} from 'evergreen-ui
 import {useFetchMyTeams, useLeaveTeam, useRemoveTeam} from '../../services/Teams.query';
 import {useAppStore} from '../../hooks/UseAppStore';
 import {UNIT_2, UNIT_3, UNIT_4} from '../../constants/StyleVariables';
-import React from 'react';
+import React, {useState} from 'react';
 import {Loading} from '../../components/Loading';
-import {BiLogOutCircle, BiPencil, BiTask, BiX} from 'react-icons/bi';
+import {BiLogOutCircle, BiPencil, BiTask} from 'react-icons/bi';
 import {Badge} from '../../components/Badge';
 import {Card} from '../../components/card/Card';
 import {useAlertStore} from '../../hooks/UseAlertStore';
 import {NoRecords} from '../../components/NoRecords';
+import {RemoveButtonWithConfirmation} from '../../components/RemoveButtonWithConfirmation';
 
 export const TeamsMy = () => {
   const {createSuccessAlert} = useAlertStore();
   const {userInfo} = useAppStore();
   const removedTeamIdRef = React.useRef(null);
   const leavedTeamIdRef = React.useRef(null);
+  const [isVisibleRemoveTeamModal, setIsVisibleRemoveTeamModal] = useState(false);
 
   const {
     isLoading: isLoadingTeams,
@@ -94,15 +96,7 @@ export const TeamsMy = () => {
                   icon={BiPencil}
                 />
               </Tooltip>
-              <Tooltip content="Remove" position={Position.TOP}>
-                <IconButton
-                  iconSize={UNIT_3}
-                  appearance="minimal"
-                  intent="danger"
-                  icon={BiX}
-                  onClick={() => handleOnClickRemove(id)}
-                />
-              </Tooltip>
+              <RemoveButtonWithConfirmation onClickYes={() => handleOnClickRemove(id)}/>
             </Pane>
           </Pane>
         </Card>

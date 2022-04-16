@@ -25,11 +25,6 @@ export const TeamsNew = () => {
     }
   });
 
-  const handleOnChangeForm = (e) => {
-    setError(null);
-    setForm({...form, name: e.target.value});
-  };
-
   const handleOnClickCreateTeam = () => {
     let valid = true;
 
@@ -78,7 +73,7 @@ export const TeamsNew = () => {
           marginBottom={0}
           label="Team Name"
           description="Min length 3, max 50, only space and alphanumeric characters are allowed"
-          width={300}
+          width={400}
           value={form.name}
           validationMessage={error}
           onChange={e => setForm({...form, name: e.target.value})}

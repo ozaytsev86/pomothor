@@ -1,5 +1,5 @@
 import {UNIT_2} from '../constants/StyleVariables';
-import {Pane} from 'evergreen-ui';
+import {Heading, Pane} from 'evergreen-ui';
 import React from 'react';
 
 export const NoRecords = ({arr}) => {
@@ -8,6 +8,6 @@ export const NoRecords = ({arr}) => {
   }
 
   return (
-    arr.length === 0 && <Pane gridColumn="span 6" textAlign="center" paddingTop={UNIT_2}>No records found</Pane>
+    arr.length === 0 && <Pane gridColumn="span 6" textAlign="center" paddingTop={UNIT_2}><Heading size={200}>No records found</Heading></Pane>
   );
 };
