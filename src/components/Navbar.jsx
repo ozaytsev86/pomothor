@@ -1,5 +1,5 @@
 import {supabase} from '../services/Api';
-import {Avatar, Button, Heading, Menu, Pane, Popover, Position} from 'evergreen-ui';
+import {Avatar, Badge, Button, Heading, Menu, Pane, Popover, Position} from 'evergreen-ui';
 import {BiCog, BiGroup, BiHome, BiLogOut, BiPlus} from 'react-icons/bi';
 import Logo from '../statics/images/logo.png';
 import {NavLink, useNavigate} from 'react-router-dom';
@@ -30,7 +30,8 @@ export const Navbar = () => {
     >
       <NavLink to="/" className="u-display-flex u-align-items-center u-text-decoration-none">
         <Avatar src={Logo} size={UNIT_4} className="u-mr-2"/>
-        <Heading size={500}>Pomothor</Heading>
+        <Heading size={500} marginRight={UNIT_2}>Pomothor</Heading>
+        <Badge color="purple" display="flex" alignSelf="baseline">BETA</Badge>
       </NavLink>
       <Pane
         display="flex"
