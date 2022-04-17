@@ -1,58 +1,80 @@
-import React from 'react';
-import {NavLink} from 'react-router-dom';
-import {AppBar, Toolbar, Button, Typography} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core';
+import {supabase} from '../services/Api';
+import {Avatar, Badge, Button, Heading, Menu, Pane, Popover, Position} from 'evergreen-ui';
+import {BiCog, BiGroup, BiHome, BiLogOut, BiPlus} from 'react-icons/bi';
+import Logo from '../statics/images/logo.png';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {HOME, SETTINGS, TEAMS, TEAMS_MY, TEAMS_NEW} from '../constants/Routes';
+import {UNIT_2, UNIT_3, UNIT_4} from '../constants/StyleVariables';
+import {useAppStore} from '../hooks/UseAppStore';
 
-import {locale} from '../locale/EnUs';
-import logo from '../statics/images/logo.png';
-import {routes} from '../constants/Routes';
+export const Navbar = () => {
+  const {userInfo} = useAppStore();
+  const navigate = useNavigate();
 
-const useStyles = makeStyles(theme => ({
-  appBar: {
-    background: 'linear-gradient(45deg, #64b5f6 30%, #2196f3 90%)',
-  },
-  title: {
-    flexGrow: 1,
-    display: 'flex',
-    alignItems: 'center'
-  },
-  logo: {
-    height: '36px',
-    marginRight: theme.spacing(2)
-  },
-  menuLink: {
-    marginRight: theme.spacing(2)
-  },
-  menuLinkActive: {
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  const handleLogout = async () => {
+    supabase.auth.signOut().catch(console.error);
+  };
+
+  if (!userInfo) {
+    return null;
   }
-}));
-
-export const Navbar = (props) => {
-  const classes = useStyles();
-
-  const isTeamActive = (match, location) => location.pathname.includes(routes.Teams) && !location.pathname.includes(routes.TeamsNew);
 
   return (
-    <AppBar position="static" className={classes.appBar}>
-      <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          <img src={logo} className={classes.logo} alt={locale.Pomothor} />
-          {locale.Pomothor}
-        </Typography>
-        {
-          props.user
-            ? <>
-                <NavLink exact to={routes.Home} activeClassName={classes.menuLinkActive} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.Home}</NavLink>
-                <NavLink exact to={routes.TeamsNew} activeClassName={classes.menuLinkActive} className="MuiButtonBase-root MuiButton-root MuiButton-colorInherit">{locale.CreateTeam}</NavLink>
-                <NavLink to={routes.Teams} isActive={isTeamActive} activeClassName={classes.menuLinkActive} className={`MuiButtonBase-root MuiButton-root MuiButton-colorInherit ${classes.menuLink}`}>{locale.Teams}</NavLink>
-                <Button color="inherit" variant="outlined" onClick={props.onSignOut}>{locale.SignOut}</Button>
-              </>
-            : <Button color="inherit" variant="outlined" onClick={props.onSignIn}>{locale.SignInWithGoogle}</Button>
-        }
-      </Toolbar>
-    </AppBar>
+    <Pane
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      padding={UNIT_2}
+      background="white"
+      className="u-box-shadow-1"
+    >
+      <NavLink to="/" className="u-display-flex u-align-items-center u-text-decoration-none">
+        <Avatar src={Logo} size={UNIT_4} className="u-mr-2"/>
+        <Heading size={500} marginRight={UNIT_2}>Pomothor</Heading>
+        <Badge color="purple" display="flex" alignSelf="baseline">BETA</Badge>
+      </NavLink>
+      <Pane
+        display="flex"
+        alignItems="center"
+      >
+        <Pane marginRight={UNIT_2}>
+          <Button appearance="minimal" onClick={() => navigate(HOME)}>
+            <BiHome fontSize={UNIT_3} className="u-mr-1"/>Home
+          </Button>
+          <Button appearance="minimal" onClick={() => navigate(TEAMS_NEW)}>
+            <BiPlus fontSize={UNIT_3} className="u-mr-1"/>Create a Team
+          </Button>
+          <Button appearance="minimal" onClick={() => navigate(TEAMS)}>
+            <BiGroup fontSize={UNIT_3} className="u-mr-1"/>Teams
+          </Button>
+        </Pane>
+        <Popover
+          position={Position.BOTTOM_RIGHT}
+          content={
+            <Menu>
+              <Menu.Group>
+                <Menu.Item onClick={() => navigate(SETTINGS)}>
+                  <Pane display="flex" alignItems="center">
+                    <BiCog className="u-mr-1"/>Settings
+                  </Pane>
+                </Menu.Item>
+                <Menu.Item onClick={() => navigate(TEAMS_MY)}>
+                  <Pane display="flex" alignItems="center">
+                    <BiGroup className="u-mr-1"/>My Teams
+                  </Pane>
+                </Menu.Item>
+                <Menu.Item onClick={handleLogout}>
+                  <Pane display="flex" alignItems="center">
+                    <BiLogOut className="u-mr-1"/>Logout
+                  </Pane>
+                </Menu.Item>
+              </Menu.Group>
+            </Menu>
+          }
+        >
+          <Avatar size={UNIT_4} src={userInfo.user_metadata.avatar_url} className="u-cursor-pointer"/>
+        </Popover>
+      </Pane>
+    </Pane>
   );
 };
-
-// export const Navbar = withRouter(NavbarComponent);

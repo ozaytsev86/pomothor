@@ -1,0 +1,3 @@
+.u-height-full-content {
+  height: calc(96vh - var(--navbar-height));
+}

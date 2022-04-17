@@ -1,11 +1,10 @@
-const routes = {
-  Home: '/',
-  Teams: '/teams',
-  TeamsId: '/teams/:teamId',
-  TeamsNew: '/teams/new',
-  TeamNotFound: '/teams/team-not-found',
-};
-
-export {
-  routes
-};
+export const HOME = '/';
+export const TEAMS = '/teams';
+export const TEAMS_NEW = '/teams/new';
+export const TEAMS_MY = '/teams/my';
+export const TEAMS_ID = '/teams/:id';
+export const TEAMS_NOT_FOUND = '/teams/not-found';
+export const TEAMS_NOT_INVITED = '/teams/not-invited';
+export const TEAMS_NOT_ACCEPTED = '/teams/not-accepted';
+export const TEAMS_NOT_JOINED = '/teams/not-joined';
+export const SETTINGS = '/settings';

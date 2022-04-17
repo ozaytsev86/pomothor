@@ -1,3 +1,1 @@
-const formatToTwoNumbers = (number) => number.toString().length === 1 ? `0${number}` : number;
-
-export {formatToTwoNumbers};
+export const formatToTwoNumbers = (number) => typeof number === 'number' ? number.toString().length === 1 ? `0${number}` : number : '-';

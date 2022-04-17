@@ -1,0 +1,11 @@
+:root {
+  --unit-1: 4px;
+  --unit-2: 8px;
+  --unit-3: 16px;
+  --unit-4: 32px;
+  --unit-5: 64px;
+
+  --navbar-height: 48px;
+
+  --gray50: #FAFBFF;
+}
